@@ -115,7 +115,24 @@
     .category-items-dropdown.open { display: flex; }
     .dropdown-item { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
 
-    .filter-box { background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); padding: 12px; border-radius: var(--radius-md); margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+    /* FILTRO EXPANSÍVEL MINIMALISTA */
+    .filter-wrapper { margin-bottom: 12px; }
+    .btn-toggle-filter {
+      width: 100%; background: #0D1117; border: 1px solid var(--card-border);
+      color: var(--text-muted); padding: 8px 12px; border-radius: var(--radius-md);
+      font-size: 11px; font-weight: 600; cursor: pointer; display: flex;
+      align-items: center; justify-content: space-between; transition: all 0.2s;
+    }
+    .btn-toggle-filter:hover { border-color: var(--accent-yellow); color: var(--text-main); }
+    .btn-toggle-filter.active-filter { border-color: var(--accent-yellow); color: var(--accent-yellow); }
+
+    .filter-collapsible {
+      display: none; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border);
+      padding: 12px; border-radius: var(--radius-md); margin-top: 8px;
+      flex-direction: column; gap: 10px;
+    }
+    .filter-collapsible.open { display: flex; }
+
     .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .date-input-wrapper { display: flex; align-items: center; gap: 6px; background: #0D1117; border: 1px solid var(--card-border); padding: 6px 10px; border-radius: var(--radius-md); }
     .date-input-wrapper svg { stroke: var(--text-muted); flex-shrink: 0; }
@@ -214,7 +231,6 @@
 
       <!-- VISÃO UNIFICADA: BALANÇO + GRÁFICOS + VENCIMENTOS -->
       <div id="sub-financas-resumo" class="sub-view active">
-        <!-- Card de Balanço -->
         <div class="card">
           <div class="card-title">
             <span>Balanço do Casal</span>
@@ -235,13 +251,11 @@
           </div>
         </div>
 
-        <!-- Próximos Vencimentos -->
         <div class="card">
           <div class="card-title">Próximos Vencimentos ⏳</div>
           <div class="due-list" id="due-list"></div>
         </div>
 
-        <!-- Análise Gráfica com Dropdown por Categoria -->
         <div class="card">
           <div class="card-title">Análise de Gastos</div>
           <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Clique na categoria para abrir o detalhamento das compras.</p>
@@ -249,7 +263,7 @@
         </div>
       </div>
 
-      <!-- VISÃO DE LANÇAMENTOS COM FILTROS DE DATA E CATEGORIA -->
+      <!-- VISÃO DE LANÇAMENTOS COM FILTRO EXPANSÍVEL -->
       <div id="sub-financas-lancamentos" class="sub-view">
         <div class="card">
           <div class="card-title"><span id="form-title">Novo Lançamento</span></div>
@@ -324,56 +338,63 @@
         <div class="card">
           <div class="card-title">Histórico de Lançamentos</div>
 
-          <!-- Filtros Elegantes -->
-          <div class="filter-box">
-            <!-- Filtro por Intervalo de Datas -->
-            <div>
-              <label>Período (Datas)</label>
+          <!-- BOTÃO EXPANSÍVEL DE FILTROS MINIMALISTA -->
+          <div class="filter-wrapper">
+            <button class="btn-toggle-filter" id="btn-toggle-filter" onclick="toggleFilterDrawer()">
+              <span id="filter-btn-label">🔍 Filtrar Histórico</span>
+              <span id="filter-arrow">▾</span>
+            </button>
+
+            <div class="filter-collapsible" id="filter-collapsible">
+              <div>
+                <label>Período (Datas)</label>
+                <div class="filter-grid">
+                  <div class="date-input-wrapper">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <input type="date" id="filter-date-start" onchange="renderFinancas()">
+                  </div>
+                  <div class="date-input-wrapper">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <input type="date" id="filter-date-end" onchange="renderFinancas()">
+                  </div>
+                </div>
+              </div>
+
               <div class="filter-grid">
-                <div class="date-input-wrapper">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                  <input type="date" id="filter-date-start" onchange="renderFinancas()">
+                <div>
+                  <label>Âmbito</label>
+                  <select id="filter-scope" onchange="renderFinancas()">
+                    <option value="TODOS">Todos</option>
+                    <option value="Compartilhado">Compartilhado</option>
+                    <option value="Pessoal">Pessoal</option>
+                  </select>
                 </div>
-                <div class="date-input-wrapper">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                  <input type="date" id="filter-date-end" onchange="renderFinancas()">
+                <div>
+                  <label>Quem Pagou</label>
+                  <select id="filter-payer" onchange="renderFinancas()">
+                    <option value="TODOS">Todos</option>
+                    <option value="Você">Você</option>
+                    <option value="Namorada">Namorada</option>
+                  </select>
                 </div>
               </div>
-            </div>
 
-            <!-- Filtro por Tipo / Categoria / Quem Pagou -->
-            <div class="filter-grid">
               <div>
-                <label>Âmbito</label>
-                <select id="filter-scope" onchange="renderFinancas()">
-                  <option value="TODOS">Todos</option>
-                  <option value="Compartilhado">Compartilhado</option>
-                  <option value="Pessoal">Pessoal</option>
+                <label>Categoria</label>
+                <select id="filter-category" onchange="renderFinancas()">
+                  <option value="TODOS">Todas Categorias</option>
+                  <option value="Moradia">🏠 Moradia</option>
+                  <option value="Contas">⚡ Contas da Casa</option>
+                  <option value="Assinaturas">📺 Assinaturas</option>
+                  <option value="Mercado">🛒 Mercado</option>
+                  <option value="Restaurantes">🍽️ Restaurantes</option>
+                  <option value="Lazer">🍿 Lazer</option>
+                  <option value="Educação">🎓 Educação</option>
+                  <option value="Outros">📦 Outros</option>
                 </select>
               </div>
-              <div>
-                <label>Quem Pagou</label>
-                <select id="filter-payer" onchange="renderFinancas()">
-                  <option value="TODOS">Todos</option>
-                  <option value="Você">Você</option>
-                  <option value="Namorada">Namorada</option>
-                </select>
-              </div>
-            </div>
 
-            <div>
-              <label>Categoria</label>
-              <select id="filter-category" onchange="renderFinancas()">
-                <option value="TODOS">Todas Categorias</option>
-                <option value="Moradia">🏠 Moradia</option>
-                <option value="Contas">⚡ Contas da Casa</option>
-                <option value="Assinaturas">📺 Assinaturas</option>
-                <option value="Mercado">🛒 Mercado</option>
-                <option value="Restaurantes">🍽️ Restaurantes</option>
-                <option value="Lazer">🍿 Lazer</option>
-                <option value="Educação">🎓 Educação</option>
-                <option value="Outros">📦 Outros</option>
-              </select>
+              <button type="button" style="background:transparent; border:none; color:var(--accent-yellow); font-size:11px; font-weight:700; cursor:pointer; text-align:right; margin-top:4px;" onclick="resetFilters()">Limpar Filtros</button>
             </div>
           </div>
 
@@ -513,6 +534,22 @@
 
     function hideBanner() { document.getElementById('moka-reminders').style.display = 'none'; }
 
+    function toggleFilterDrawer() {
+      const drawer = document.getElementById('filter-collapsible');
+      const arrow = document.getElementById('filter-arrow');
+      drawer.classList.toggle('open');
+      arrow.innerText = drawer.classList.contains('open') ? '▴' : '▾';
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-date-start').value = '';
+      document.getElementById('filter-date-end').value = '';
+      document.getElementById('filter-scope').value = 'TODOS';
+      document.getElementById('filter-payer').value = 'TODOS';
+      document.getElementById('filter-category').value = 'TODOS';
+      renderFinancas();
+    }
+
     function initFirebase() {
       db.ref('expenses').on('value', snapshot => {
         const data = snapshot.val();
@@ -568,9 +605,7 @@
 
     function toggleCategoryDropdown(catKey) {
       const el = document.getElementById(`dropdown-${catKey}`);
-      if (el) {
-        el.classList.toggle('open');
-      }
+      if (el) el.classList.toggle('open');
     }
 
     // --- FINANÇAS ---
@@ -654,7 +689,7 @@
       let total1 = 0, total2 = 0;
       const today = new Date();
 
-      // Filtros da aba de Lançamentos
+      // Filtros
       const filterStartDate = document.getElementById('filter-date-start').value;
       const filterEndDate = document.getElementById('filter-date-end').value;
       const filterScope = document.getElementById('filter-scope').value;
@@ -662,14 +697,24 @@
       const filterCat = document.getElementById('filter-category').value;
 
       let filteredExpenses = [...expenses];
+      let activeFilterCount = 0;
 
-      if (filterStartDate) filteredExpenses = filteredExpenses.filter(e => e.date >= filterStartDate);
-      if (filterEndDate) filteredExpenses = filteredExpenses.filter(e => e.date <= filterEndDate);
-      if (filterScope !== 'TODOS') filteredExpenses = filteredExpenses.filter(e => e.scope === filterScope);
-      if (filterPayer !== 'TODOS') filteredExpenses = filteredExpenses.filter(e => e.payer === filterPayer);
-      if (filterCat !== 'TODOS') filteredExpenses = filteredExpenses.filter(e => e.category === filterCat);
+      if (filterStartDate) { filteredExpenses = filteredExpenses.filter(e => e.date >= filterStartDate); activeFilterCount++; }
+      if (filterEndDate) { filteredExpenses = filteredExpenses.filter(e => e.date <= filterEndDate); activeFilterCount++; }
+      if (filterScope !== 'TODOS') { filteredExpenses = filteredExpenses.filter(e => e.scope === filterScope); activeFilterCount++; }
+      if (filterPayer !== 'TODOS') { filteredExpenses = filteredExpenses.filter(e => e.payer === filterPayer); activeFilterCount++; }
+      if (filterCat !== 'TODOS') { filteredExpenses = filteredExpenses.filter(e => e.category === filterCat); activeFilterCount++; }
 
-      // Render da Lista Principal de Lançamentos (com Filtros)
+      const toggleBtn = document.getElementById('btn-toggle-filter');
+      const labelBtn = document.getElementById('filter-btn-label');
+      if (activeFilterCount > 0) {
+        toggleBtn.classList.add('active-filter');
+        labelBtn.innerText = `🔍 Filtros Ativos (${activeFilterCount})`;
+      } else {
+        toggleBtn.classList.remove('active-filter');
+        labelBtn.innerText = `🔍 Filtrar Histórico`;
+      }
+
       filteredExpenses.forEach(item => {
         const icon = categoryIcons[item.category] || '📦';
         const itemEl = document.createElement('div');
@@ -707,14 +752,12 @@
         listShared.appendChild(itemEl);
       });
 
-      // Cálculo do Balanço e Próximos Vencimentos
       expenses.forEach(item => {
         if (item.scope === 'Compartilhado' && item.paid) {
           if (item.payer === 'Você') total1 += item.amount;
           else if (item.payer === 'Namorada') total2 += item.amount;
         }
 
-        // Vencimentos Próximos (Sem estar pago, vencendo em até 7 dias ou atrasado)
         const dueDate = new Date(item.date);
         const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
         if (!item.paid && diffDays <= 7) {
@@ -765,7 +808,6 @@
       renderCategoryBreakdown();
     }
 
-    // Render das Categorias com Abertura Dropdown
     function renderCategoryBreakdown() {
       const container = document.getElementById('category-breakdown');
       container.innerHTML = '';
