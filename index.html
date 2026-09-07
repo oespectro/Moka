@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Moka - Finanças e Vida a Dois</title>
   
-  <!-- Configurações PWA (Instalação como App no Celular) -->
+  <!-- Configurações PWA (Tela Cheia no Android & iOS) -->
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Moka">
@@ -27,13 +28,36 @@
       --accent-blue: #58A6FF;
       --accent-green: #3FB950;
       --accent-red: #F85149;
+      --accent-purple: #A371F7;
       --radius-lg: 20px;
       --radius-md: 12px;
       --radius-sm: 8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 12px; padding-bottom: 90px; }
+    /* Correção do Scroll Lateral e Limite da Tela */
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+
+    body { 
+      background-color: var(--bg-dark); 
+      color: var(--text-main); 
+      display: flex; 
+      justify-content: center; 
+      min-height: 100vh; 
+      padding: 12px; 
+      padding-bottom: 90px; 
+    }
 
     .app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 16px; }
 
@@ -74,12 +98,14 @@
     .sub-view { display: none; flex-direction: column; gap: 16px; }
     .sub-view.active { display: flex; }
 
+    /* Alerta e Bolha Ocultável */
     .alert-banner {
       background: rgba(255, 179, 0, 0.08); border: 1px solid rgba(255, 179, 0, 0.25);
-      padding: 14px; border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 6px;
-      font-size: 12px; color: #FFE082;
+      padding: 12px 14px; border-radius: var(--radius-md); display: flex; align-items: center;
+      justify-content: space-between; font-size: 12px; color: #FFE082; position: relative;
     }
     .alert-header { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--accent-yellow); }
+    .btn-close-banner { background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 2px 6px; }
 
     .card {
       background: var(--card-dark); border-radius: var(--radius-lg); padding: 18px;
@@ -91,13 +117,6 @@
       color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px;
     }
 
-    .info-tooltip {
-      position: relative; display: inline-flex; align-items: center; justify-content: center;
-      width: 16px; height: 16px; border-radius: 50%; background: var(--card-border);
-      color: var(--text-muted); font-size: 10px; font-weight: 700; font-style: normal;
-      cursor: pointer; margin-left: 4px;
-    }
-
     .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
     .balance-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); padding: 12px; border-radius: var(--radius-md); text-align: center; }
     .balance-box .label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
@@ -107,6 +126,7 @@
       background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.2);
       padding: 12px; border-radius: var(--radius-md); text-align: center;
       color: var(--accent-blue); font-weight: 600; font-size: 13px;
+      display: flex; flex-direction: column; gap: 8px; align-items: center;
     }
 
     .category-breakdown { display: flex; flex-direction: column; gap: 10px; }
@@ -145,9 +165,13 @@
     .item-title { font-size: 13px; font-weight: 600; color: var(--text-main); }
     .item-sub { font-size: 11px; color: var(--text-muted); }
 
+    /* Destaque Vencimento Próximo */
+    .due-soon { border-color: var(--accent-yellow) !important; background: rgba(255, 179, 0, 0.05) !important; }
+
     .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
     .badge-paid { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
     .badge-pending { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+    .badge-personal { background: rgba(163, 113, 247, 0.15); color: var(--accent-purple); }
 
     .btn-action { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border: 1px solid rgba(63, 185, 80, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
     .btn-disabled { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: default; }
@@ -184,9 +208,13 @@
       </div>
     </header>
 
+    <!-- Alerta Ocultável -->
     <div class="alert-banner" id="moka-reminders">
-      <div class="alert-header">🐱 Moka Lembretes</div>
-      <div id="reminder-text">Sincronizado na Nuvem!</div>
+      <div>
+        <div class="alert-header">🐱 Moka Lembretes</div>
+        <div id="reminder-text">Conectado ao Firebase na Nuvem!</div>
+      </div>
+      <button class="btn-close-banner" onclick="hideBanner()">✕</button>
     </div>
 
     <!-- PILAR 1: FINANÇAS -->
@@ -212,7 +240,10 @@
               <div class="val" id="total-user2">R$ 0,00</div>
             </div>
           </div>
-          <div class="settlement-card" id="settlement-msg">Calculando...</div>
+          <div class="settlement-card" id="settlement-msg">
+            <span id="settlement-text">Calculando...</span>
+            <button id="btn-settle-up" class="btn-action" style="display:none; margin-top:4px;" onclick="settleBalance()">Quitar Acerto do Casal</button>
+          </div>
         </div>
 
         <div class="card">
@@ -267,16 +298,22 @@
               </div>
             </div>
 
+            <!-- Categorias Organizadas por Natureza -->
             <div class="form-group">
               <label>Categoria</label>
               <select id="category">
-                <option value="Moradia">🏠 Moradia</option>
-                <option value="Assinaturas">📺 Assinaturas</option>
-                <option value="Mercado">🛒 Mercado</option>
-                <option value="Lazer">🍿 Lazer</option>
-                <option value="Restaurantes">🍽️ Restaurantes</option>
-                <option value="Contas">⚡ Contas</option>
-                <option value="Outros">📦 Outros</option>
+                <optgroup label="Custos Fixos (Recorrentes)">
+                  <option value="Moradia">🏠 Moradia</option>
+                  <option value="Contas">⚡ Contas da Casa</option>
+                  <option value="Assinaturas">📺 Assinaturas & Streaming</option>
+                </optgroup>
+                <optgroup label="Custos Variáveis / Esporádicos">
+                  <option value="Mercado">🛒 Mercado & Feira</option>
+                  <option value="Restaurantes">🍽️ Restaurantes & iFood</option>
+                  <option value="Lazer">🍿 Lazer & Rolês</option>
+                  <option value="Educação">🎓 Cursos & Educação</option>
+                  <option value="Outros">📦 Outros</option>
+                </optgroup>
               </select>
             </div>
 
@@ -285,7 +322,7 @@
         </div>
 
         <div class="card">
-          <div class="card-title">Lançamentos do Casal</div>
+          <div class="card-title">Lançamentos da Casa</div>
           <div class="expense-list" id="expense-list"></div>
         </div>
       </div>
@@ -293,7 +330,7 @@
       <div id="sub-financas-pessoal" class="sub-view">
         <div class="card">
           <div class="card-title">Meu Canto</div>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Gastos pessoais não entram na divisão do casal e servem para seu controle próprio.</p>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Gastos pessoais aparecem com etiqueta especial e não entram na divisão 50/50.</p>
           <div class="expense-list" id="pessoal-list"></div>
         </div>
       </div>
@@ -305,7 +342,7 @@
             <input type="text" id="vault-title" placeholder="Nome da Meta (Ex: Viagem de Fim de Ano)" required>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <input type="number" id="vault-target" placeholder="Meta Total (R$)" required>
-              <input type="number" id="vault-current" placeholder="Valor Atual (R$)" required>
+              <input type="number" id="vault-monthly" placeholder="Meta Mensal/Parceiro (R$)" required>
             </div>
             <button type="submit" class="btn-submit">+ Criar Novo Cofre</button>
           </form>
@@ -424,8 +461,12 @@
     let roles = [];
 
     const categoryIcons = {
-      'Moradia': '🏠', 'Assinaturas': '📺', 'Mercado': '🛒', 'Lazer': '🍿', 'Restaurantes': '🍽️', 'Contas': '⚡', 'Outros': '📦'
+      'Moradia': '🏠', 'Assinaturas': '📺', 'Mercado': '🛒', 'Lazer': '🍿', 'Restaurantes': '🍽️', 'Contas': '⚡', 'Educação': '🎓', 'Outros': '📦'
     };
+
+    function hideBanner() {
+      document.getElementById('moka-reminders').style.display = 'none';
+    }
 
     function initFirebase() {
       db.ref('expenses').on('value', snapshot => {
@@ -502,17 +543,48 @@
       db.ref(`expenses/${fbKey}`).update({ paid: !currentStatus });
     }
 
+    // Quitar o Acerto do Casal
+    function settleBalance() {
+      const today = new Date().toISOString().slice(0, 10);
+      db.ref('expenses').push({
+        payer: 'Ajuste',
+        scope: 'Compartilhado',
+        desc: 'Quitação de Acerto do Casal',
+        amount: 0,
+        category: 'Outros',
+        date: today,
+        paid: true
+      });
+
+      // Marca todos os pendentes anteriores como quitados
+      expenses.forEach(e => {
+        if (!e.paid && e.scope === 'Compartilhado') {
+          db.ref(`expenses/${e.fbKey}`).update({ paid: true });
+        }
+      });
+
+      alert("Acerto do casal quitado com sucesso!");
+    }
+
     function renderFinancas() {
       const listShared = document.getElementById('expense-list');
       const listPersonal = document.getElementById('pessoal-list');
       listShared.innerHTML = ''; listPersonal.innerHTML = '';
 
       let total1 = 0, total2 = 0;
+      const today = new Date();
 
       expenses.forEach(item => {
         const icon = categoryIcons[item.category] || '📦';
+        const dueDate = new Date(item.date);
+        const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+        const isDueSoon = !item.paid && diffDays >= 0 && diffDays <= 3;
+
         const itemEl = document.createElement('div');
-        itemEl.className = 'list-item';
+        itemEl.className = `list-item ${isDueSoon ? 'due-soon' : ''}`;
+        
+        const personalBadge = item.scope === 'Pessoal' ? `<span class="badge badge-personal">PESSOAL</span> ` : '';
+
         itemEl.innerHTML = `
           <div class="item-main">
             <div class="item-info">
@@ -525,21 +597,25 @@
             <div style="font-weight:700; font-size:13px;">R$ ${item.amount.toFixed(2)}</div>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; pt:6px; border-top:1px solid rgba(255,255,255,0.05);">
-            <span class="badge ${item.paid ? 'badge-paid' : 'badge-pending'}">${item.paid ? 'QUITADO' : 'PENDENTE'}</span>
+            <div>
+              ${personalBadge}
+              <span class="badge ${item.paid ? 'badge-paid' : 'badge-pending'}">${item.paid ? 'QUITADO' : 'PENDENTE'}</span>
+            </div>
             ${item.paid 
               ? `<button class="btn-disabled" onclick="togglePaid('${item.fbKey}', ${item.paid})">✓ Pago</button>`
               : `<button class="btn-action" onclick="togglePaid('${item.fbKey}', ${item.paid})">Quitar</button>`}
           </div>
         `;
 
-        if (item.scope === 'Compartilhado') {
-          listShared.appendChild(itemEl);
-          if (item.paid) {
-            if (item.payer === 'Você') total1 += item.amount;
-            else total2 += item.amount;
-          }
-        } else {
-          listPersonal.appendChild(itemEl);
+        // Aparece na lista geral e também na aba "Meu Canto" se for pessoal
+        listShared.appendChild(itemEl);
+
+        if (item.scope === 'Pessoal') {
+          const cloneEl = itemEl.cloneNode(true);
+          listPersonal.appendChild(cloneEl);
+        } else if (item.paid) {
+          if (item.payer === 'Você') total1 += item.amount;
+          else if (item.payer === 'Namorada') total2 += item.amount;
         }
       });
 
@@ -548,12 +624,22 @@
 
       const grandTotal = total1 + total2;
       const fairShare = grandTotal / 2;
-      const msgEl = document.getElementById('settlement-msg');
+      const msgEl = document.getElementById('settlement-text');
+      const btnSettle = document.getElementById('btn-settle-up');
 
-      if (grandTotal === 0) msgEl.innerHTML = "Nenhum gasto pago registrado.";
-      else if (total1 === total2) msgEl.innerHTML = "🎉 Balanço em perfeito equilíbrio!";
-      else if (total1 > total2) msgEl.innerHTML = `Namorada acerta <b>R$ ${(total1 - fairShare).toFixed(2)}</b> com Você`;
-      else msgEl.innerHTML = `Você acerta <b>R$ ${(total2 - fairShare).toFixed(2)}</b> com a Namorada`;
+      if (grandTotal === 0) {
+        msgEl.innerHTML = "Nenhum gasto pago registrado.";
+        btnSettle.style.display = 'none';
+      } else if (total1 === total2) {
+        msgEl.innerHTML = "🎉 Balanço em perfeito equilíbrio!";
+        btnSettle.style.display = 'none';
+      } else if (total1 > total2) {
+        msgEl.innerHTML = `Namorada acerta <b>R$ ${(total1 - fairShare).toFixed(2)}</b> com Você`;
+        btnSettle.style.display = 'block';
+      } else {
+        msgEl.innerHTML = `Você acerta <b>R$ ${(total2 - fairShare).toFixed(2)}</b> com a Namorada`;
+        btnSettle.style.display = 'block';
+      }
 
       renderCategoryBreakdown();
     }
@@ -602,12 +688,22 @@
       db.ref('vaults').push({
         title: document.getElementById('vault-title').value,
         target: parseFloat(document.getElementById('vault-target').value),
-        current: parseFloat(document.getElementById('vault-current').value)
+        monthly: parseFloat(document.getElementById('vault-monthly').value),
+        current: 0
       });
       document.getElementById('vault-title').value = '';
       document.getElementById('vault-target').value = '';
-      document.getElementById('vault-current').value = '';
+      document.getElementById('vault-monthly').value = '';
     });
+
+    function addDeposit(fbKey, currentVal) {
+      const depositStr = prompt("Valor do novo depósito para este cofre (R$):");
+      if (!depositStr) return;
+      const deposit = parseFloat(depositStr.replace(',', '.'));
+      if (isNaN(deposit) || deposit <= 0) return;
+
+      db.ref(`vaults/${fbKey}`).update({ current: currentVal + deposit });
+    }
 
     function renderVaults() {
       const list = document.getElementById('vaults-list');
@@ -619,9 +715,11 @@
         item.innerHTML = `
           <div class="item-title">${v.title}</div>
           <div class="item-sub">Acumulado: R$ ${v.current.toFixed(2)} de R$ ${v.target.toFixed(2)} (${pct}%)</div>
+          <div class="item-sub">Meta por parceiro: <b>R$ ${(v.monthly / 2).toFixed(2)}/mês</b></div>
           <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; margin-top:4px;">
             <div style="width:${pct}%; height:100%; background:var(--accent-yellow); border-radius:3px;"></div>
           </div>
+          <button class="btn-action" style="margin-top:6px; align-self:flex-start;" onclick="addDeposit('${v.fbKey}', ${v.current})">+ Fazer Depósito</button>
         `;
         list.appendChild(item);
       });
