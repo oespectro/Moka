@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Moka - Finanças e Vida a Dois</title>
   
-  <!-- Configurações PWA (Tela Cheia no Android & iOS) -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,7 +12,6 @@
   <meta name="theme-color" content="#161B22">
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f431.svg">
 
-  <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -34,30 +32,9 @@
       --radius-sm: 8px;
     }
 
-    /* Correção do Scroll Lateral e Limite da Tela */
-    html, body {
-      width: 100%;
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-      -webkit-tap-highlight-color: transparent; 
-    }
-
-    body { 
-      background-color: var(--bg-dark); 
-      color: var(--text-main); 
-      display: flex; 
-      justify-content: center; 
-      min-height: 100vh; 
-      padding: 12px; 
-      padding-bottom: 90px; 
-    }
+    html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 12px; padding-bottom: 90px; }
 
     .app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 16px; }
 
@@ -90,7 +67,7 @@
     .nav-item.active svg { stroke: var(--accent-yellow); }
 
     .sub-tabs { display: flex; background: #161B22; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 3px; gap: 2px; }
-    .sub-tab { flex: 1; text-align: center; padding: 8px 4px; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+    .sub-tab { flex: 1; text-align: center; padding: 8px 4px; font-size: 10px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all 0.2s; }
     .sub-tab.active { background: var(--card-border); color: var(--accent-yellow); }
 
     .main-section { display: none; flex-direction: column; gap: 16px; }
@@ -98,11 +75,10 @@
     .sub-view { display: none; flex-direction: column; gap: 16px; }
     .sub-view.active { display: flex; }
 
-    /* Alerta e Bolha Ocultável */
     .alert-banner {
       background: rgba(255, 179, 0, 0.08); border: 1px solid rgba(255, 179, 0, 0.25);
       padding: 12px 14px; border-radius: var(--radius-md); display: flex; align-items: center;
-      justify-content: space-between; font-size: 12px; color: #FFE082; position: relative;
+      justify-content: space-between; font-size: 12px; color: #FFE082;
     }
     .alert-header { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--accent-yellow); }
     .btn-close-banner { background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 2px 6px; }
@@ -157,7 +133,7 @@
       border-radius: var(--radius-md); font-size: 14px; font-weight: 700; cursor: pointer;
     }
 
-    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list { display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto; }
+    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; }
     .list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius-md); background: #0D1117; border: 1px solid var(--card-border); }
     .item-main { display: flex; align-items: center; justify-content: space-between; }
     .item-info { display: flex; align-items: center; gap: 10px; }
@@ -165,7 +141,6 @@
     .item-title { font-size: 13px; font-weight: 600; color: var(--text-main); }
     .item-sub { font-size: 11px; color: var(--text-muted); }
 
-    /* Destaque Vencimento Próximo */
     .due-soon { border-color: var(--accent-yellow) !important; background: rgba(255, 179, 0, 0.05) !important; }
 
     .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
@@ -175,6 +150,9 @@
 
     .btn-action { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border: 1px solid rgba(63, 185, 80, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
     .btn-disabled { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: default; }
+
+    .btn-icon { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; padding: 2px 4px; }
+    .btn-icon:hover { color: var(--text-main); }
 
     .market-checkbox { width: 18px; height: 18px; accent-color: var(--accent-yellow); cursor: pointer; }
     .list-item.checked .item-title { text-decoration: line-through; color: var(--text-muted); }
@@ -208,11 +186,10 @@
       </div>
     </header>
 
-    <!-- Alerta Ocultável -->
     <div class="alert-banner" id="moka-reminders">
       <div>
         <div class="alert-header">🐱 Moka Lembretes</div>
-        <div id="reminder-text">Conectado ao Firebase na Nuvem!</div>
+        <div id="reminder-text">Sincronizado na Nuvem!</div>
       </div>
       <button class="btn-close-banner" onclick="hideBanner()">✕</button>
     </div>
@@ -220,15 +197,17 @@
     <!-- PILAR 1: FINANÇAS -->
     <div id="section-financas" class="main-section active">
       <div class="sub-tabs">
-        <div class="sub-tab active" onclick="switchSubView('financas', 'casal', this)">Casal</div>
-        <div class="sub-tab" onclick="switchSubView('financas', 'pessoal', this)">Meu Canto</div>
+        <div class="sub-tab active" onclick="switchSubView('financas', 'resumo', this)">Balanço</div>
+        <div class="sub-tab" onclick="switchSubView('financas', 'lancamentos', this)">Lançamentos</div>
+        <div class="sub-tab" onclick="switchSubView('financas', 'relatorios', this)">Gráficos 📊</div>
         <div class="sub-tab" onclick="switchSubView('financas', 'cofres', this)">Cofres 🎯</div>
       </div>
 
-      <div id="sub-financas-casal" class="sub-view active">
+      <!-- Visão 1: Resumo / Balanço -->
+      <div id="sub-financas-resumo" class="sub-view active">
         <div class="card">
           <div class="card-title">
-            <span>Balanço</span>
+            <span>Balanço do Casal</span>
           </div>
           <div class="balance-grid">
             <div class="balance-box">
@@ -245,15 +224,14 @@
             <button id="btn-settle-up" class="btn-action" style="display:none; margin-top:4px;" onclick="settleBalance()">Quitar Acerto do Casal</button>
           </div>
         </div>
+      </div>
 
+      <!-- Visão 2: Novo Lançamento e Lista Completa -->
+      <div id="sub-financas-lancamentos" class="sub-view">
         <div class="card">
-          <div class="card-title">Gastos por Categoria</div>
-          <div class="category-breakdown" id="category-breakdown"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Novo Lançamento</div>
+          <div class="card-title"><span id="form-title">Novo Lançamento</span></div>
           <form id="expense-form">
+            <input type="hidden" id="edit-fbkey" value="">
             <div class="form-group">
               <label>Quem Pagou?</label>
               <div class="radio-group">
@@ -298,7 +276,6 @@
               </div>
             </div>
 
-            <!-- Categorias Organizadas por Natureza -->
             <div class="form-group">
               <label>Categoria</label>
               <select id="category">
@@ -317,24 +294,46 @@
               </select>
             </div>
 
-            <button type="submit" class="btn-submit">+ Salvar no Moka</button>
+            <button type="submit" class="btn-submit" id="btn-save-expense">+ Salvar Lançamento</button>
           </form>
         </div>
 
         <div class="card">
-          <div class="card-title">Lançamentos da Casa</div>
+          <div class="card-title">Histórico de Lançamentos</div>
           <div class="expense-list" id="expense-list"></div>
         </div>
       </div>
 
-      <div id="sub-financas-pessoal" class="sub-view">
+      <!-- Visão 3: Relatórios e Gráficos com Filtros -->
+      <div id="sub-financas-relatorios" class="sub-view">
         <div class="card">
-          <div class="card-title">Meu Canto</div>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Gastos pessoais aparecem com etiqueta especial e não entram na divisão 50/50.</p>
-          <div class="expense-list" id="pessoal-list"></div>
+          <div class="card-title">Análise de Gastos</div>
+          
+          <!-- Filtros de Análise -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:14px;">
+            <div>
+              <label>Quem Pagou</label>
+              <select id="filter-payer" onchange="renderCategoryBreakdown()">
+                <option value="TODOS">Todos do Casal</option>
+                <option value="Você">Apenas Você</option>
+                <option value="Namorada">Apenas Namorada</option>
+              </select>
+            </div>
+            <div>
+              <label>Natureza</label>
+              <select id="filter-nature" onchange="renderCategoryBreakdown()">
+                <option value="TODOS">Todas Naturezas</option>
+                <option value="FIXO">Custos Fixos</option>
+                <option value="VARIAVEL">Custos Variáveis</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="category-breakdown" id="category-breakdown"></div>
         </div>
       </div>
 
+      <!-- Visão 4: Cofres -->
       <div id="sub-financas-cofres" class="sub-view">
         <div class="card">
           <div class="card-title">Cofre dos Sonhos 🎯</div>
@@ -464,9 +463,9 @@
       'Moradia': '🏠', 'Assinaturas': '📺', 'Mercado': '🛒', 'Lazer': '🍿', 'Restaurantes': '🍽️', 'Contas': '⚡', 'Educação': '🎓', 'Outros': '📦'
     };
 
-    function hideBanner() {
-      document.getElementById('moka-reminders').style.display = 'none';
-    }
+    const fixedCategories = ['Moradia', 'Contas', 'Assinaturas'];
+
+    function hideBanner() { document.getElementById('moka-reminders').style.display = 'none'; }
 
     function initFirebase() {
       db.ref('expenses').on('value', snapshot => {
@@ -524,6 +523,8 @@
     // --- FINANÇAS ---
     document.getElementById('expense-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      const editKey = document.getElementById('edit-fbkey').value;
+
       const newExpense = {
         payer: document.querySelector('input[name="payer"]:checked').value,
         scope: document.querySelector('input[name="scope"]:checked').value,
@@ -534,42 +535,67 @@
         paid: false
       };
 
-      db.ref('expenses').push(newExpense);
+      if (editKey) {
+        db.ref(`expenses/${editKey}`).update(newExpense);
+        document.getElementById('edit-fbkey').value = '';
+        document.getElementById('form-title').innerText = 'Novo Lançamento';
+        document.getElementById('btn-save-expense').innerText = '+ Salvar Lançamento';
+      } else {
+        db.ref('expenses').push(newExpense);
+      }
+
       document.getElementById('desc').value = '';
       document.getElementById('amount').value = '';
     });
+
+    function editExpense(fbKey) {
+      const item = expenses.find(e => e.fbKey === fbKey);
+      if (!item) return;
+
+      document.getElementById('edit-fbkey').value = fbKey;
+      document.getElementById('desc').value = item.desc;
+      document.getElementById('amount').value = item.amount;
+      document.getElementById('expense-date').value = item.date;
+      document.getElementById('category').value = item.category;
+
+      document.querySelector(`input[name="payer"][value="${item.payer}"]`).checked = true;
+      document.querySelector(`input[name="scope"][value="${item.scope}"]`).checked = true;
+
+      document.getElementById('form-title').innerText = '✏️ Editar Lançamento';
+      document.getElementById('btn-save-expense').innerText = 'Atualizar Lançamento';
+
+      // Muda para a sub-aba de lançamentos se necessário
+      switchSubView('financas', 'lancamentos', document.querySelectorAll('.sub-tab')[1]);
+    }
+
+    function deleteExpense(fbKey) {
+      if (confirm("Tem certeza que deseja excluir este lançamento?")) {
+        db.ref(`expenses/${fbKey}`).remove();
+      }
+    }
 
     function togglePaid(fbKey, currentStatus) {
       db.ref(`expenses/${fbKey}`).update({ paid: !currentStatus });
     }
 
-    // Quitar o Acerto do Casal
     function settleBalance() {
       const today = new Date().toISOString().slice(0, 10);
       db.ref('expenses').push({
-        payer: 'Ajuste',
-        scope: 'Compartilhado',
-        desc: 'Quitação de Acerto do Casal',
-        amount: 0,
-        category: 'Outros',
-        date: today,
-        paid: true
+        payer: 'Ajuste', scope: 'Compartilhado', desc: 'Quitação de Acerto do Casal',
+        amount: 0, category: 'Outros', date: today, paid: true
       });
 
-      // Marca todos os pendentes anteriores como quitados
       expenses.forEach(e => {
         if (!e.paid && e.scope === 'Compartilhado') {
           db.ref(`expenses/${e.fbKey}`).update({ paid: true });
         }
       });
-
       alert("Acerto do casal quitado com sucesso!");
     }
 
     function renderFinancas() {
       const listShared = document.getElementById('expense-list');
-      const listPersonal = document.getElementById('pessoal-list');
-      listShared.innerHTML = ''; listPersonal.innerHTML = '';
+      listShared.innerHTML = '';
 
       let total1 = 0, total2 = 0;
       const today = new Date();
@@ -594,7 +620,13 @@
                 <div class="item-sub">Pago por <b>${item.payer}</b> • ${item.date}</div>
               </div>
             </div>
-            <div style="font-weight:700; font-size:13px;">R$ ${item.amount.toFixed(2)}</div>
+            <div style="text-align:right;">
+              <div style="font-weight:700; font-size:13px;">R$ ${item.amount.toFixed(2)}</div>
+              <div style="margin-top:2px;">
+                <button class="btn-icon" onclick="editExpense('${item.fbKey}')" title="Editar">✏️</button>
+                <button class="btn-icon" onclick="deleteExpense('${item.fbKey}')" title="Excluir">🗑️</button>
+              </div>
+            </div>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; pt:6px; border-top:1px solid rgba(255,255,255,0.05);">
             <div>
@@ -607,13 +639,9 @@
           </div>
         `;
 
-        // Aparece na lista geral e também na aba "Meu Canto" se for pessoal
         listShared.appendChild(itemEl);
 
-        if (item.scope === 'Pessoal') {
-          const cloneEl = itemEl.cloneNode(true);
-          listPersonal.appendChild(cloneEl);
-        } else if (item.paid) {
+        if (item.scope === 'Compartilhado' && item.paid) {
           if (item.payer === 'Você') total1 += item.amount;
           else if (item.payer === 'Namorada') total2 += item.amount;
         }
@@ -648,17 +676,31 @@
       const container = document.getElementById('category-breakdown');
       container.innerHTML = '';
 
-      const paidShared = expenses.filter(e => e.paid && e.scope === 'Compartilhado');
+      const payerFilter = document.getElementById('filter-payer').value;
+      const natureFilter = document.getElementById('filter-nature').value;
+
+      let filtered = expenses.filter(e => e.paid && e.scope === 'Compartilhado');
+
+      if (payerFilter !== 'TODOS') {
+        filtered = filtered.filter(e => e.payer === payerFilter);
+      }
+
+      if (natureFilter === 'FIXO') {
+        filtered = filtered.filter(e => fixedCategories.includes(e.category));
+      } else if (natureFilter === 'VARIAVEL') {
+        filtered = filtered.filter(e => !fixedCategories.includes(e.category));
+      }
+
       const categoryTotals = {};
       let grandTotalPaid = 0;
 
-      paidShared.forEach(e => {
+      filtered.forEach(e => {
         categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
         grandTotalPaid += e.amount;
       });
 
       if (grandTotalPaid === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhum gasto pago para categorizar.</div>`;
+        container.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhum gasto pago encontrado para este filtro.</div>`;
         return;
       }
 
@@ -767,7 +809,7 @@
       });
 
       marketItems.filter(i => i.checked).forEach(i => db.ref(`market/${i.fbKey}`).remove());
-      alert("Gasto cadastrado no Firebase!");
+      alert("Gasto cadastrado no Moka!");
     }
 
     // --- TAREFAS ---
