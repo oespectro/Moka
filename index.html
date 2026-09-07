@@ -444,22 +444,58 @@
         </div>
       </div>
 
-      <!-- TAREFAS COM RECOMPENSA SECRETA -->
+      <!-- TAREFAS REFORMULADAS: JUNTOS, RECORRÊNCIA, REVEZAMENTO E BALDE DE CONCLUÍDAS -->
       <div id="sub-casa-tarefas" class="sub-view">
         <div class="card">
-          <div class="card-title">Tarefas & Recompensas 🏆</div>
+          <div class="card-title">Nova Tarefa 🏆</div>
           <form id="task-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="task-input" placeholder="Nova tarefa (Ex: Dar remédio pra Moka)" required>
-              <select id="task-assignee" style="width:110px;">
-                <option value="Você">Você</option>
-                <option value="Namorada">Namorada</option>
-              </select>
+            <input type="text" id="task-input" placeholder="O que precisa ser feito? (Ex: Lavar a louça)" required>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+              <div>
+                <label>Responsável</label>
+                <select id="task-assignee">
+                  <option value="Você">Você</option>
+                  <option value="Namorada">Namorada</option>
+                  <option value="Juntos 👥">Juntos 👥</option>
+                </select>
+              </div>
+              <div>
+                <label>Recorrência</label>
+                <select id="task-recurrence">
+                  <option value="Pontual">Única (Pontual)</option>
+                  <option value="Toda Segunda">Toda Segunda</option>
+                  <option value="Toda Terça">Toda Terça</option>
+                  <option value="Toda Quarta">Toda Quarta</option>
+                  <option value="Toda Quinta">Toda Quinta</option>
+                  <option value="Toda Sexta">Toda Sexta</option>
+                  <option value="Todo Sábado">Todo Sábado</option>
+                  <option value="Todo Domingo">Todo Domingo</option>
+                  <option value="Semanal">Semanal (Livre)</option>
+                  <option value="Quinzenal">Quinzenal</option>
+                  <option value="Mensal">Mensal</option>
+                </select>
+              </div>
             </div>
+
+            <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text-muted); padding:4px 0;">
+              <input type="checkbox" id="task-rotate" style="width:16px; height:16px; accent-color:var(--accent-yellow);">
+              <label for="task-rotate" style="margin:0; font-size:11px; text-transform:none; cursor:pointer;">🔄 Alternar/Revezar parceiro a cada conclusão</label>
+            </div>
+
             <input type="text" id="task-reward" placeholder="🎁 Recompensa Secreta Opcional (Ex: Massagem de 15 min)">
-            <button type="submit" class="btn-submit">+ Criar Tarefa com Recompensa</button>
+            <button type="submit" class="btn-submit">+ Adicionar Tarefa</button>
           </form>
-          <div class="tasks-list" id="tasks-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Tarefas Ativas 📌</div>
+          <div class="tasks-list" id="tasks-active-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Balde de Concluídas 📦</div>
+          <div class="tasks-list" id="tasks-completed-list"></div>
         </div>
       </div>
 
@@ -502,7 +538,6 @@
         </div>
       </div>
 
-      <!-- SUB-ABA LOVE NOTES & VALES -->
       <div id="sub-roles-notes" class="sub-view">
         <div class="card">
           <div class="card-title">Enviar Love Note ou Vale 🎁</div>
@@ -1035,22 +1070,28 @@
       alert("Gasto cadastrado no Moka!");
     }
 
-    // --- TAREFAS COM RECOMPENSA SECRETA ---
+    // --- TAREFAS REFORMULADAS ---
     document.getElementById('task-form').addEventListener('submit', (e) => {
       e.preventDefault();
       db.ref('tasks').push({
         title: document.getElementById('task-input').value,
         assignee: document.getElementById('task-assignee').value,
+        recurrence: document.getElementById('task-recurrence').value,
+        rotate: document.getElementById('task-rotate').checked,
         reward: document.getElementById('task-reward').value.trim(),
         done: false
       });
       document.getElementById('task-input').value = '';
       document.getElementById('task-reward').value = '';
+      document.getElementById('task-rotate').checked = false;
     });
 
     function renderTasks() {
-      const list = document.getElementById('tasks-list');
-      list.innerHTML = '';
+      const activeList = document.getElementById('tasks-active-list');
+      const completedList = document.getElementById('tasks-completed-list');
+      activeList.innerHTML = '';
+      completedList.innerHTML = '';
+
       tasks.forEach(t => {
         const item = document.createElement('div');
         item.className = 'list-item';
@@ -1064,21 +1105,68 @@
           }
         }
 
-        item.innerHTML = `
-          <div class="item-main">
-            <div>
-              <div class="item-title" style="${t.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${t.title}</div>
-              <div class="item-sub">Responsável: <b>${t.assignee}</b></div>
+        const recurrenceBadge = t.recurrence && t.recurrence !== 'Pontual' ? `<span class="badge" style="background:rgba(88, 166, 255, 0.15); color:var(--accent-blue);">🔁 ${t.recurrence}</span> ` : '';
+
+        if (!t.done) {
+          // TAREFAS ATIVAS
+          item.innerHTML = `
+            <div class="item-main">
+              <div>
+                <div class="item-title">${t.title}</div>
+                <div class="item-sub">Responsável: <b>${t.assignee}</b> ${t.rotate ? '• 🔄 Revezamento' : ''}</div>
+              </div>
+              <button class="btn-action" onclick="completeTask('${t.fbKey}')">Concluir</button>
             </div>
-            <button class="${t.done ? 'btn-disabled' : 'btn-action'}" onclick="toggleTask('${t.fbKey}', ${t.done})">${t.done ? '✓ Feito' : 'Concluir'}</button>
-          </div>
-          ${rewardHTML}
-        `;
-        list.appendChild(item);
+            <div style="display:flex; gap:4px; align-items:center;">
+              ${recurrenceBadge}
+            </div>
+            ${rewardHTML}
+          `;
+          activeList.appendChild(item);
+        } else {
+          // BALDE DE CONCLUÍDAS (Sem opção de voltar)
+          item.innerHTML = `
+            <div class="item-main">
+              <div>
+                <div class="item-title" style="text-decoration:line-through; color:var(--text-muted);">${t.title}</div>
+                <div class="item-sub">Feito por: <b>${t.assignee}</b></div>
+              </div>
+              <button class="btn-disabled">✓ Concluído</button>
+            </div>
+            ${rewardHTML}
+          `;
+          completedList.appendChild(item);
+        }
       });
+
+      if (activeList.children.length === 0) {
+        activeList.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhuma tarefa pendente! Tudo em dia. 🎉</div>`;
+      }
+      if (completedList.children.length === 0) {
+        completedList.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Balde de concluídas vazio.</div>`;
+      }
     }
 
-    function toggleTask(fbKey, status) { db.ref(`tasks/${fbKey}`).update({ done: !status }); }
+    function completeTask(fbKey) {
+      const task = tasks.find(t => t.fbKey === fbKey);
+      if (!task) return;
+
+      // Marca a atual como concluída
+      db.ref(`tasks/${fbKey}`).update({ done: true });
+
+      // Se tiver opção de revezamento/alternância, gera a próxima para o parceiro
+      if (task.rotate && task.assignee !== 'Juntos 👥') {
+        const nextAssignee = task.assignee === 'Você' ? 'Namorada' : 'Você';
+        db.ref('tasks').push({
+          title: task.title,
+          assignee: nextAssignee,
+          recurrence: task.recurrence,
+          rotate: true,
+          reward: task.reward || '',
+          done: false
+        });
+      }
+    }
 
     // --- EVENTOS ---
     document.getElementById('event-form').addEventListener('submit', (e) => {
