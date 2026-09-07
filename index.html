@@ -27,6 +27,7 @@
       --accent-green: #3FB950;
       --accent-red: #F85149;
       --accent-purple: #A371F7;
+      --accent-pink: #FF7B72;
       --radius-lg: 20px;
       --radius-md: 12px;
       --radius-sm: 8px;
@@ -139,11 +140,11 @@
 
     .form-group { margin-bottom: 14px; }
     label { display: flex; align-items: center; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    input, select {
+    input, select, textarea {
       width: 100%; padding: 10px 12px; border: 1px solid var(--card-border); border-radius: var(--radius-md);
       font-size: 13px; outline: none; background-color: #0D1117; color: var(--text-main); transition: all 0.2s;
     }
-    input:focus, select:focus { border-color: var(--accent-yellow); }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent-yellow); }
 
     .radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .radio-btn input { position: absolute; opacity: 0; cursor: pointer; }
@@ -159,13 +160,19 @@
       border-radius: var(--radius-md); font-size: 14px; font-weight: 700; cursor: pointer;
     }
 
-    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; }
+    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list, .notes-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; }
     .list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius-md); background: #0D1117; border: 1px solid var(--card-border); }
     .item-main { display: flex; align-items: center; justify-content: space-between; }
     .item-info { display: flex; align-items: center; gap: 10px; }
     .tag-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--card-border); display: flex; align-items: center; justify-content: center; font-size: 16px; }
     .item-title { font-size: 13px; font-weight: 600; color: var(--text-main); }
     .item-sub { font-size: 11px; color: var(--text-muted); }
+
+    .reward-box {
+      background: rgba(255, 123, 114, 0.08); border: 1px dashed rgba(255, 123, 114, 0.3);
+      padding: 8px 12px; border-radius: var(--radius-md); font-size: 12px; color: var(--accent-pink);
+      display: flex; align-items: center; gap: 6px; font-weight: 600;
+    }
 
     .due-soon { border-color: var(--accent-yellow) !important; background: rgba(255, 179, 0, 0.05) !important; }
 
@@ -228,7 +235,6 @@
         <div class="sub-tab" onclick="switchSubView('financas', 'cofres', this)">Cofres 🎯</div>
       </div>
 
-      <!-- VISÃO UNIFICADA: BALANÇO + GRÁFICOS + VENCIMENTOS -->
       <div id="sub-financas-resumo" class="sub-view active">
         <div class="card">
           <div class="card-title">
@@ -262,7 +268,6 @@
         </div>
       </div>
 
-      <!-- VISÃO DE LANÇAMENTOS COM FILTRO EXPANSÍVEL -->
       <div id="sub-financas-lancamentos" class="sub-view">
         <div class="card">
           <div class="card-title"><span id="form-title">Novo Lançamento</span></div>
@@ -400,7 +405,6 @@
         </div>
       </div>
 
-      <!-- VISÃO DE COFRES (COM EDIÇÃO E EXCLUSÃO) -->
       <div id="sub-financas-cofres" class="sub-view">
         <div class="card">
           <div class="card-title"><span id="vault-form-title">Cofre dos Sonhos 🎯</span></div>
@@ -422,7 +426,7 @@
     <div id="section-casa" class="main-section">
       <div class="sub-tabs">
         <div class="sub-tab active" onclick="switchSubView('casa', 'mercado', this)">Mercado 🛒</div>
-        <div class="sub-tab" onclick="switchSubView('casa', 'tarefas', this)">Tarefas 🧹</div>
+        <div class="sub-tab" onclick="switchSubView('casa', 'tarefas', this)">Tarefas 🏆</div>
         <div class="sub-tab" onclick="switchSubView('casa', 'calendario', this)">Datas 📅</div>
       </div>
 
@@ -440,16 +444,20 @@
         </div>
       </div>
 
+      <!-- TAREFAS COM RECOMPENSA SECRETA -->
       <div id="sub-casa-tarefas" class="sub-view">
         <div class="card">
-          <div class="card-title">Mural de Tarefas da Casa</div>
-          <form id="task-form" style="display:flex; gap:8px; margin-bottom:14px;">
-            <input type="text" id="task-input" placeholder="Nova tarefa (Ex: Dar remédio pra Moka)" required>
-            <select id="task-assignee" style="width:110px;">
-              <option value="Você">Você</option>
-              <option value="Namorada">Namorada</option>
-            </select>
-            <button type="submit" class="btn-submit" style="width: auto; padding: 0 16px;">+</button>
+          <div class="card-title">Tarefas & Recompensas 🏆</div>
+          <form id="task-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="task-input" placeholder="Nova tarefa (Ex: Dar remédio pra Moka)" required>
+              <select id="task-assignee" style="width:110px;">
+                <option value="Você">Você</option>
+                <option value="Namorada">Namorada</option>
+              </select>
+            </div>
+            <input type="text" id="task-reward" placeholder="🎁 Recompensa Secreta Opcional (Ex: Massagem de 15 min)">
+            <button type="submit" class="btn-submit">+ Criar Tarefa com Recompensa</button>
           </form>
           <div class="tasks-list" id="tasks-list"></div>
         </div>
@@ -468,23 +476,53 @@
       </div>
     </div>
 
-    <!-- PILAR 3: ROLÊS -->
+    <!-- PILAR 3: ROLÊS & LOVE NOTES -->
     <div id="section-roles" class="main-section">
-      <div class="card">
-        <div class="card-title">Moka Rolês & Indicações 🍿</div>
-        <form id="role-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
-          <input type="text" id="role-title" placeholder="Filme, Restaurante ou Show" required>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-            <select id="role-type">
-              <option value="Filme / Série">🎬 Filme / Série</option>
-              <option value="Restaurante">🍽️ Restaurante</option>
-              <option value="Show / Evento">🎟️ Show / Evento</option>
-            </select>
-            <input type="text" id="role-note" placeholder="Dica / Quem indicou">
-          </div>
-          <button type="submit" class="btn-submit">+ Salvar Ideia de Rolê</button>
-        </form>
-        <div class="roles-list" id="roles-list"></div>
+      <div class="sub-tabs">
+        <div class="sub-tab active" onclick="switchSubView('roles', 'lista', this)">Rolês 🍿</div>
+        <div class="sub-tab" onclick="switchSubView('roles', 'notes', this)">Love Notes & Vales 🎁</div>
+      </div>
+
+      <div id="sub-roles-lista" class="sub-view active">
+        <div class="card">
+          <div class="card-title">Moka Rolês & Indicações 🍿</div>
+          <form id="role-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            <input type="text" id="role-title" placeholder="Filme, Restaurante ou Show" required>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+              <select id="role-type">
+                <option value="Filme / Série">🎬 Filme / Série</option>
+                <option value="Restaurante">🍽️ Restaurante</option>
+                <option value="Show / Evento">🎟️ Show / Evento</option>
+              </select>
+              <input type="text" id="role-note" placeholder="Dica / Quem indicou">
+            </div>
+            <button type="submit" class="btn-submit">+ Salvar Ideia de Rolê</button>
+          </form>
+          <div class="roles-list" id="roles-list"></div>
+        </div>
+      </div>
+
+      <!-- SUB-ABA LOVE NOTES & VALES -->
+      <div id="sub-roles-notes" class="sub-view">
+        <div class="card">
+          <div class="card-title">Enviar Love Note ou Vale 🎁</div>
+          <form id="note-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+              <select id="note-sender">
+                <option value="Você">De: Você</option>
+                <option value="Namorada">De: Namorada</option>
+              </select>
+              <select id="note-type">
+                <option value="Vale Especial">🎟️ Vale Especial</option>
+                <option value="Recado Fofo">💌 Recado Fofo</option>
+              </select>
+            </div>
+            <input type="text" id="note-title" placeholder="Título (Ex: Vale Jantar, Te amo!)" required>
+            <textarea id="note-content" rows="2" placeholder="Mensagem ou regra do vale..." required></textarea>
+            <button type="submit" class="btn-submit" style="background:var(--accent-pink); color:white;">💌 Enviar Moka Note</button>
+          </form>
+          <div class="notes-list" id="notes-list"></div>
+        </div>
       </div>
     </div>
 
@@ -526,6 +564,7 @@
     let tasks = [];
     let events = [];
     let roles = [];
+    let notes = [];
 
     const categoryIcons = {
       'Moradia': '🏠', 'Assinaturas': '📺', 'Mercado': '🛒', 'Lazer': '🍿', 'Restaurantes': '🍽️', 'Contas': '⚡', 'Educação': '🎓', 'Outros': '📦'
@@ -584,6 +623,12 @@
         const data = snapshot.val();
         roles = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
         renderRoles();
+      });
+
+      db.ref('notes').on('value', snapshot => {
+        const data = snapshot.val();
+        notes = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
+        renderNotes();
       });
     }
 
@@ -990,15 +1035,17 @@
       alert("Gasto cadastrado no Moka!");
     }
 
-    // --- TAREFAS ---
+    // --- TAREFAS COM RECOMPENSA SECRETA ---
     document.getElementById('task-form').addEventListener('submit', (e) => {
       e.preventDefault();
       db.ref('tasks').push({
         title: document.getElementById('task-input').value,
         assignee: document.getElementById('task-assignee').value,
+        reward: document.getElementById('task-reward').value.trim(),
         done: false
       });
       document.getElementById('task-input').value = '';
+      document.getElementById('task-reward').value = '';
     });
 
     function renderTasks() {
@@ -1007,6 +1054,16 @@
       tasks.forEach(t => {
         const item = document.createElement('div');
         item.className = 'list-item';
+
+        let rewardHTML = '';
+        if (t.reward) {
+          if (t.done) {
+            rewardHTML = `<div class="reward-box">🎉 Revelado: ${t.reward}</div>`;
+          } else {
+            rewardHTML = `<div class="reward-box" style="opacity:0.7;">🔒 Recompensa Secreta Guardada!</div>`;
+          }
+        }
+
         item.innerHTML = `
           <div class="item-main">
             <div>
@@ -1015,6 +1072,7 @@
             </div>
             <button class="${t.done ? 'btn-disabled' : 'btn-action'}" onclick="toggleTask('${t.fbKey}', ${t.done})">${t.done ? '✓ Feito' : 'Concluir'}</button>
           </div>
+          ${rewardHTML}
         `;
         list.appendChild(item);
       });
@@ -1079,6 +1137,46 @@
     }
 
     function toggleRole(fbKey, status) { db.ref(`roles/${fbKey}`).update({ done: !status }); }
+
+    // --- LOVE NOTES & VALES ---
+    document.getElementById('note-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      db.ref('notes').push({
+        sender: document.getElementById('note-sender').value,
+        type: document.getElementById('note-type').value,
+        title: document.getElementById('note-title').value,
+        content: document.getElementById('note-content').value,
+        redeemed: false
+      });
+      document.getElementById('note-title').value = '';
+      document.getElementById('note-content').value = '';
+    });
+
+    function toggleNoteRedeem(fbKey, currentStatus) {
+      db.ref(`notes/${fbKey}`).update({ redeemed: !currentStatus });
+    }
+
+    function renderNotes() {
+      const list = document.getElementById('notes-list');
+      list.innerHTML = '';
+      notes.forEach(n => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <div class="item-main">
+            <div>
+              <div class="item-title" style="${n.redeemed ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${n.type === 'Vale Especial' ? '🎟️' : '💌'} ${n.title}</div>
+              <div class="item-sub">Enviado por <b>${n.sender}</b></div>
+            </div>
+            <button class="${n.redeemed ? 'btn-disabled' : 'btn-action'}" style="background:rgba(255, 123, 114, 0.2); color:var(--accent-pink); border-color:rgba(255, 123, 114, 0.4);" onclick="toggleNoteRedeem('${n.fbKey}', ${n.redeemed})">${n.redeemed ? '✓ Usado' : 'Resgatar Vale'}</button>
+          </div>
+          <div style="font-size:12px; color:var(--text-main); background:rgba(255,255,255,0.02); padding:8px; border-radius:8px; border:1px solid var(--card-border);">
+            ${n.content}
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
 
     initFirebase();
   </script>
