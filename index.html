@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Moka - Finanças e Vida a Dois</title>
+  
+  <!-- Configurações PWA (Instalação como App no Celular) -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Moka">
+  <meta name="theme-color" content="#161B22">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f431.svg">
+
+  <!-- SDKs do Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0D1117;
+      --card-dark: #161B22;
+      --card-border: #30363D;
+      --text-main: #F0F6FC;
+      --text-muted: #8B949E;
+      --accent-yellow: #FFB300;
+      --accent-blue: #58A6FF;
+      --accent-green: #3FB950;
+      --accent-red: #F85149;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 12px; padding-bottom: 90px; }
+
+    .app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 16px; }
+
+    header {
+      background: var(--card-dark); border: 1px solid var(--card-border);
+      padding: 16px 20px; border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .mascot-avatar {
+      width: 48px; height: 48px; background: #0D1117; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--card-border); padding: 4px;
+    }
+    .brand-title h1 { font-size: 20px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
+    .brand-title p { font-size: 11px; color: var(--accent-yellow); font-weight: 500; }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 440px; background: #161B22; border-top: 1px solid var(--card-border);
+      display: flex; justify-content: space-around; padding: 12px 0; z-index: 100;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: transparent; border: none; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer;
+    }
+    .nav-item svg { stroke: var(--text-muted); transition: stroke 0.2s; }
+    .nav-item.active { color: var(--accent-yellow); }
+    .nav-item.active svg { stroke: var(--accent-yellow); }
+
+    .sub-tabs { display: flex; background: #161B22; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 3px; gap: 2px; }
+    .sub-tab { flex: 1; text-align: center; padding: 8px 4px; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+    .sub-tab.active { background: var(--card-border); color: var(--accent-yellow); }
+
+    .main-section { display: none; flex-direction: column; gap: 16px; }
+    .main-section.active { display: flex; }
+    .sub-view { display: none; flex-direction: column; gap: 16px; }
+    .sub-view.active { display: flex; }
+
+    .alert-banner {
+      background: rgba(255, 179, 0, 0.08); border: 1px solid rgba(255, 179, 0, 0.25);
+      padding: 14px; border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 6px;
+      font-size: 12px; color: #FFE082;
+    }
+    .alert-header { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--accent-yellow); }
+
+    .card {
+      background: var(--card-dark); border-radius: var(--radius-lg); padding: 18px;
+      border: 1px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .card-title {
+      font-size: 14px; font-weight: 700; margin-bottom: 14px;
+      display: flex; align-items: center; justify-content: space-between;
+      color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .info-tooltip {
+      position: relative; display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%; background: var(--card-border);
+      color: var(--text-muted); font-size: 10px; font-weight: 700; font-style: normal;
+      cursor: pointer; margin-left: 4px;
+    }
+
+    .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .balance-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); padding: 12px; border-radius: var(--radius-md); text-align: center; }
+    .balance-box .label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .balance-box .val { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    
+    .settlement-card {
+      background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.2);
+      padding: 12px; border-radius: var(--radius-md); text-align: center;
+      color: var(--accent-blue); font-weight: 600; font-size: 13px;
+    }
+
+    .category-breakdown { display: flex; flex-direction: column; gap: 10px; }
+    .category-row { display: flex; flex-direction: column; gap: 4px; }
+    .category-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-main); }
+    .category-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+    .category-bar-fill { height: 100%; background: var(--accent-yellow); border-radius: 3px; transition: width 0.3s ease; }
+
+    .form-group { margin-bottom: 14px; }
+    label { display: flex; align-items: center; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--card-border); border-radius: var(--radius-md);
+      font-size: 13px; outline: none; background-color: #0D1117; color: var(--text-main); transition: all 0.2s;
+    }
+    input:focus, select:focus { border-color: var(--accent-yellow); }
+
+    .radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .radio-btn input { position: absolute; opacity: 0; cursor: pointer; }
+    .radio-btn label {
+      display: block; text-align: center; padding: 10px 4px; border: 1px solid var(--card-border);
+      border-radius: var(--radius-md); font-size: 11px; font-weight: 600; color: var(--text-muted);
+      cursor: pointer; background: #0D1117; margin: 0;
+    }
+    .radio-btn input:checked + label { background: var(--card-border); color: var(--accent-yellow); border-color: var(--accent-yellow); }
+
+    .btn-submit {
+      width: 100%; background: var(--accent-yellow); color: #0D1117; border: none; padding: 12px;
+      border-radius: var(--radius-md); font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+
+    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list { display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto; }
+    .list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius-md); background: #0D1117; border: 1px solid var(--card-border); }
+    .item-main { display: flex; align-items: center; justify-content: space-between; }
+    .item-info { display: flex; align-items: center; gap: 10px; }
+    .tag-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--card-border); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .item-title { font-size: 13px; font-weight: 600; color: var(--text-main); }
+    .item-sub { font-size: 11px; color: var(--text-muted); }
+
+    .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+    .badge-paid { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+    .badge-pending { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+
+    .btn-action { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border: 1px solid rgba(63, 185, 80, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .btn-disabled { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: default; }
+
+    .market-checkbox { width: 18px; height: 18px; accent-color: var(--accent-yellow); cursor: pointer; }
+    .list-item.checked .item-title { text-decoration: line-through; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <header>
+      <div class="brand">
+        <div class="mascot-avatar">
+          <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="18,10 38,38 10,32" fill="#30363D" />
+            <polygon points="82,10 90,32 62,38" fill="#30363D" />
+            <polygon points="22,16 34,35 15,31" fill="#FF8A65" />
+            <polygon points="78,16 85,31 66,35" fill="#FF8A65" />
+            <circle cx="50" cy="52" r="38" fill="#30363D" />
+            <path d="M 50,42 Q 30,35 20,55 Q 18,78 50,88 Q 82,78 80,55 Q 70,35 50,42 Z" fill="#F0F6FC" />
+            <ellipse cx="36" cy="50" rx="8" ry="10" fill="#FFB300" />
+            <ellipse cx="64" cy="50" rx="8" ry="10" fill="#FFB300" />
+            <ellipse cx="36" cy="50" rx="3" ry="8" fill="#0D1117" />
+            <ellipse cx="64" cy="50" rx="3" ry="8" fill="#0D1117" />
+            <polygon points="50,62 46,58 54,58" fill="#FF8A65" />
+            <path d="M 50,62 Q 45,67 40,64 M 50,62 Q 55,67 60,64" stroke="#0D1117" stroke-width="2" stroke-linecap="round" fill="none" />
+          </svg>
+        </div>
+        <div class="brand-title">
+          <h1>Moka</h1>
+          <p>Gestão & Vida a Dois</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="alert-banner" id="moka-reminders">
+      <div class="alert-header">🐱 Moka Lembretes</div>
+      <div id="reminder-text">Sincronizado na Nuvem!</div>
+    </div>
+
+    <!-- PILAR 1: FINANÇAS -->
+    <div id="section-financas" class="main-section active">
+      <div class="sub-tabs">
+        <div class="sub-tab active" onclick="switchSubView('financas', 'casal', this)">Casal</div>
+        <div class="sub-tab" onclick="switchSubView('financas', 'pessoal', this)">Meu Canto</div>
+        <div class="sub-tab" onclick="switchSubView('financas', 'cofres', this)">Cofres 🎯</div>
+      </div>
+
+      <div id="sub-financas-casal" class="sub-view active">
+        <div class="card">
+          <div class="card-title">
+            <span>Balanço</span>
+          </div>
+          <div class="balance-grid">
+            <div class="balance-box">
+              <div class="label">Você Pagou</div>
+              <div class="val" id="total-user1">R$ 0,00</div>
+            </div>
+            <div class="balance-box">
+              <div class="label">Namorada Pagou</div>
+              <div class="val" id="total-user2">R$ 0,00</div>
+            </div>
+          </div>
+          <div class="settlement-card" id="settlement-msg">Calculando...</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Gastos por Categoria</div>
+          <div class="category-breakdown" id="category-breakdown"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Novo Lançamento</div>
+          <form id="expense-form">
+            <div class="form-group">
+              <label>Quem Pagou?</label>
+              <div class="radio-group">
+                <div class="radio-btn">
+                  <input type="radio" id="payer1" name="payer" value="Você" checked>
+                  <label for="payer1">Você</label>
+                </div>
+                <div class="radio-btn">
+                  <input type="radio" id="payer2" name="payer" value="Namorada">
+                  <label for="payer2">Namorada</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Âmbito</label>
+              <div class="radio-group">
+                <div class="radio-btn">
+                  <input type="radio" id="scope1" name="scope" value="Compartilhado" checked>
+                  <label for="scope1">Compartilhado</label>
+                </div>
+                <div class="radio-btn">
+                  <input type="radio" id="scope2" name="scope" value="Pessoal">
+                  <label for="scope2">Pessoal</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Descrição</label>
+              <input type="text" id="desc" placeholder="Ex: Mercado, Aluguel" required>
+            </div>
+
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div>
+                <label>Valor (R$)</label>
+                <input type="number" step="0.01" id="amount" placeholder="0,00" required>
+              </div>
+              <div>
+                <label>Vencimento</label>
+                <input type="date" id="expense-date" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Categoria</label>
+              <select id="category">
+                <option value="Moradia">🏠 Moradia</option>
+                <option value="Assinaturas">📺 Assinaturas</option>
+                <option value="Mercado">🛒 Mercado</option>
+                <option value="Lazer">🍿 Lazer</option>
+                <option value="Restaurantes">🍽️ Restaurantes</option>
+                <option value="Contas">⚡ Contas</option>
+                <option value="Outros">📦 Outros</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-submit">+ Salvar no Moka</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Lançamentos do Casal</div>
+          <div class="expense-list" id="expense-list"></div>
+        </div>
+      </div>
+
+      <div id="sub-financas-pessoal" class="sub-view">
+        <div class="card">
+          <div class="card-title">Meu Canto</div>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Gastos pessoais não entram na divisão do casal e servem para seu controle próprio.</p>
+          <div class="expense-list" id="pessoal-list"></div>
+        </div>
+      </div>
+
+      <div id="sub-financas-cofres" class="sub-view">
+        <div class="card">
+          <div class="card-title">Cofre dos Sonhos 🎯</div>
+          <form id="vault-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            <input type="text" id="vault-title" placeholder="Nome da Meta (Ex: Viagem de Fim de Ano)" required>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+              <input type="number" id="vault-target" placeholder="Meta Total (R$)" required>
+              <input type="number" id="vault-current" placeholder="Valor Atual (R$)" required>
+            </div>
+            <button type="submit" class="btn-submit">+ Criar Novo Cofre</button>
+          </form>
+          <div class="vaults-list" id="vaults-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILAR 2: CASA -->
+    <div id="section-casa" class="main-section">
+      <div class="sub-tabs">
+        <div class="sub-tab active" onclick="switchSubView('casa', 'mercado', this)">Mercado 🛒</div>
+        <div class="sub-tab" onclick="switchSubView('casa', 'tarefas', this)">Tarefas 🧹</div>
+        <div class="sub-tab" onclick="switchSubView('casa', 'calendario', this)">Datas 📅</div>
+      </div>
+
+      <div id="sub-casa-mercado" class="sub-view active">
+        <div class="card">
+          <div class="card-title">Lista de Mercado</div>
+          <form id="market-form" style="display:flex; gap:8px; margin-bottom:14px;">
+            <input type="text" id="market-input" placeholder="Adicionar item (Ex: Sabão, Arroz)" required>
+            <button type="submit" class="btn-submit" style="width: auto; padding: 0 16px;">+</button>
+          </form>
+          <div class="market-list" id="market-list"></div>
+          <div style="margin-top: 14px; pt: 10px; border-top: 1px solid var(--card-border);">
+            <button type="button" class="btn-submit" onclick="convertMarketToExpense()" style="background: var(--accent-green); color: white;">🛒 Finalizar Compra & Converter em Gasto</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="sub-casa-tarefas" class="sub-view">
+        <div class="card">
+          <div class="card-title">Mural de Tarefas da Casa</div>
+          <form id="task-form" style="display:flex; gap:8px; margin-bottom:14px;">
+            <input type="text" id="task-input" placeholder="Nova tarefa (Ex: Dar remédio pra Moka)" required>
+            <select id="task-assignee" style="width:110px;">
+              <option value="Você">Você</option>
+              <option value="Namorada">Namorada</option>
+            </select>
+            <button type="submit" class="btn-submit" style="width: auto; padding: 0 16px;">+</button>
+          </form>
+          <div class="tasks-list" id="tasks-list"></div>
+        </div>
+      </div>
+
+      <div id="sub-casa-calendario" class="sub-view">
+        <div class="card">
+          <div class="card-title">Calendário & Datas Especiais</div>
+          <form id="event-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            <input type="text" id="event-title" placeholder="Nome do Evento (Ex: Aniversário de Namoro)" required>
+            <input type="date" id="event-date" required>
+            <button type="submit" class="btn-submit">+ Salvar Data Especial</button>
+          </form>
+          <div class="events-list" id="events-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILAR 3: ROLÊS -->
+    <div id="section-roles" class="main-section">
+      <div class="card">
+        <div class="card-title">Moka Rolês & Indicações 🍿</div>
+        <form id="role-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+          <input type="text" id="role-title" placeholder="Filme, Restaurante ou Show" required>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <select id="role-type">
+              <option value="Filme / Série">🎬 Filme / Série</option>
+              <option value="Restaurante">🍽️ Restaurante</option>
+              <option value="Show / Evento">🎟️ Show / Evento</option>
+            </select>
+            <input type="text" id="role-note" placeholder="Dica / Quem indicou">
+          </div>
+          <button type="submit" class="btn-submit">+ Salvar Ideia de Rolê</button>
+        </form>
+        <div class="roles-list" id="roles-list"></div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="switchMainSection('financas', this)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <span>Finanças</span>
+      </button>
+      <button class="nav-item" onclick="switchMainSection('casa', this)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Casa</span>
+      </button>
+      <button class="nav-item" onclick="switchMainSection('roles', this)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span>Rolês</span>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAj8jvjRWAoPx0bXOrWwvFarluxA7lZwAk",
+      authDomain: "moka-couple-finance.firebaseapp.com",
+      databaseURL: "https://moka-couple-finance-default-rtdb.firebaseio.com",
+      projectId: "moka-couple-finance",
+      storageBucket: "moka-couple-finance.firebasestorage.app",
+      messagingSenderId: "309921510474",
+      appId: "1:309921510474:web:78be6e87d052782fa762b3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    document.getElementById('expense-date').valueAsDate = new Date();
+
+    let expenses = [];
+    let vaults = [];
+    let marketItems = [];
+    let tasks = [];
+    let events = [];
+    let roles = [];
+
+    const categoryIcons = {
+      'Moradia': '🏠', 'Assinaturas': '📺', 'Mercado': '🛒', 'Lazer': '🍿', 'Restaurantes': '🍽️', 'Contas': '⚡', 'Outros': '📦'
+    };
+
+    function initFirebase() {
+      db.ref('expenses').on('value', snapshot => {
+        const data = snapshot.val();
+        expenses = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
+        renderFinancas();
+      });
+
+      db.ref('vaults').on('value', snapshot => {
+        const data = snapshot.val();
+        vaults = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
+        renderVaults();
+      });
+
+      db.ref('market').on('value', snapshot => {
+        const data = snapshot.val();
+        marketItems = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
+        renderMarket();
+      });
+
+      db.ref('tasks').on('value', snapshot => {
+        const data = snapshot.val();
+        tasks = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
+        renderTasks();
+      });
+
+      db.ref('events').on('value', snapshot => {
+        const data = snapshot.val();
+        events = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
+        renderEvents();
+      });
+
+      db.ref('roles').on('value', snapshot => {
+        const data = snapshot.val();
+        roles = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
+        renderRoles();
+      });
+    }
+
+    function switchMainSection(sectionName, btnEl) {
+      document.querySelectorAll('.main-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.bottom-nav .nav-item').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`section-${sectionName}`).classList.add('active');
+      btnEl.classList.add('active');
+    }
+
+    function switchSubView(section, subName, tabEl) {
+      const sectionEl = document.getElementById(`section-${section}`);
+      sectionEl.querySelectorAll('.sub-view').forEach(v => v.classList.remove('active'));
+      sectionEl.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(`sub-${section}-${subName}`).classList.add('active');
+      tabEl.classList.add('active');
+    }
+
+    // --- FINANÇAS ---
+    document.getElementById('expense-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newExpense = {
+        payer: document.querySelector('input[name="payer"]:checked').value,
+        scope: document.querySelector('input[name="scope"]:checked').value,
+        desc: document.getElementById('desc').value,
+        amount: parseFloat(document.getElementById('amount').value),
+        date: document.getElementById('expense-date').value,
+        category: document.getElementById('category').value,
+        paid: false
+      };
+
+      db.ref('expenses').push(newExpense);
+      document.getElementById('desc').value = '';
+      document.getElementById('amount').value = '';
+    });
+
+    function togglePaid(fbKey, currentStatus) {
+      db.ref(`expenses/${fbKey}`).update({ paid: !currentStatus });
+    }
+
+    function renderFinancas() {
+      const listShared = document.getElementById('expense-list');
+      const listPersonal = document.getElementById('pessoal-list');
+      listShared.innerHTML = ''; listPersonal.innerHTML = '';
+
+      let total1 = 0, total2 = 0;
+
+      expenses.forEach(item => {
+        const icon = categoryIcons[item.category] || '📦';
+        const itemEl = document.createElement('div');
+        itemEl.className = 'list-item';
+        itemEl.innerHTML = `
+          <div class="item-main">
+            <div class="item-info">
+              <div class="tag-icon">${icon}</div>
+              <div>
+                <div class="item-title">${item.desc}</div>
+                <div class="item-sub">Pago por <b>${item.payer}</b> • ${item.date}</div>
+              </div>
+            </div>
+            <div style="font-weight:700; font-size:13px;">R$ ${item.amount.toFixed(2)}</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; pt:6px; border-top:1px solid rgba(255,255,255,0.05);">
+            <span class="badge ${item.paid ? 'badge-paid' : 'badge-pending'}">${item.paid ? 'QUITADO' : 'PENDENTE'}</span>
+            ${item.paid 
+              ? `<button class="btn-disabled" onclick="togglePaid('${item.fbKey}', ${item.paid})">✓ Pago</button>`
+              : `<button class="btn-action" onclick="togglePaid('${item.fbKey}', ${item.paid})">Quitar</button>`}
+          </div>
+        `;
+
+        if (item.scope === 'Compartilhado') {
+          listShared.appendChild(itemEl);
+          if (item.paid) {
+            if (item.payer === 'Você') total1 += item.amount;
+            else total2 += item.amount;
+          }
+        } else {
+          listPersonal.appendChild(itemEl);
+        }
+      });
+
+      document.getElementById('total-user1').innerText = `R$ ${total1.toFixed(2)}`;
+      document.getElementById('total-user2').innerText = `R$ ${total2.toFixed(2)}`;
+
+      const grandTotal = total1 + total2;
+      const fairShare = grandTotal / 2;
+      const msgEl = document.getElementById('settlement-msg');
+
+      if (grandTotal === 0) msgEl.innerHTML = "Nenhum gasto pago registrado.";
+      else if (total1 === total2) msgEl.innerHTML = "🎉 Balanço em perfeito equilíbrio!";
+      else if (total1 > total2) msgEl.innerHTML = `Namorada acerta <b>R$ ${(total1 - fairShare).toFixed(2)}</b> com Você`;
+      else msgEl.innerHTML = `Você acerta <b>R$ ${(total2 - fairShare).toFixed(2)}</b> com a Namorada`;
+
+      renderCategoryBreakdown();
+    }
+
+    function renderCategoryBreakdown() {
+      const container = document.getElementById('category-breakdown');
+      container.innerHTML = '';
+
+      const paidShared = expenses.filter(e => e.paid && e.scope === 'Compartilhado');
+      const categoryTotals = {};
+      let grandTotalPaid = 0;
+
+      paidShared.forEach(e => {
+        categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
+        grandTotalPaid += e.amount;
+      });
+
+      if (grandTotalPaid === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhum gasto pago para categorizar.</div>`;
+        return;
+      }
+
+      Object.keys(categoryTotals).forEach(cat => {
+        const total = categoryTotals[cat];
+        const percentage = Math.round((total / grandTotalPaid) * 100);
+        const icon = categoryIcons[cat] || '📦';
+
+        const row = document.createElement('div');
+        row.className = 'category-row';
+        row.innerHTML = `
+          <div class="category-info">
+            <span>${icon} ${cat}</span>
+            <span><b>R$ ${total.toFixed(2)}</b> (${percentage}%)</span>
+          </div>
+          <div class="category-bar-bg">
+            <div class="category-bar-fill" style="width: ${percentage}%;"></div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // --- COFRES ---
+    document.getElementById('vault-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      db.ref('vaults').push({
+        title: document.getElementById('vault-title').value,
+        target: parseFloat(document.getElementById('vault-target').value),
+        current: parseFloat(document.getElementById('vault-current').value)
+      });
+      document.getElementById('vault-title').value = '';
+      document.getElementById('vault-target').value = '';
+      document.getElementById('vault-current').value = '';
+    });
+
+    function renderVaults() {
+      const list = document.getElementById('vaults-list');
+      list.innerHTML = '';
+      vaults.forEach(v => {
+        const pct = Math.min(Math.round((v.current / v.target) * 100), 100);
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <div class="item-title">${v.title}</div>
+          <div class="item-sub">Acumulado: R$ ${v.current.toFixed(2)} de R$ ${v.target.toFixed(2)} (${pct}%)</div>
+          <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; margin-top:4px;">
+            <div style="width:${pct}%; height:100%; background:var(--accent-yellow); border-radius:3px;"></div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // --- MERCADO ---
+    document.getElementById('market-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('market-input');
+      db.ref('market').push({ name: input.value, checked: false });
+      input.value = '';
+    });
+
+    function renderMarket() {
+      const list = document.getElementById('market-list');
+      list.innerHTML = '';
+      marketItems.forEach(item => {
+        const itemEl = document.createElement('div');
+        itemEl.className = `list-item ${item.checked ? 'checked' : ''}`;
+        itemEl.innerHTML = `
+          <div class="item-main">
+            <div class="item-info">
+              <input type="checkbox" class="market-checkbox" ${item.checked ? 'checked' : ''} onclick="toggleMarket('${item.fbKey}', ${item.checked})">
+              <div class="item-title">${item.name}</div>
+            </div>
+            <button onclick="deleteMarket('${item.fbKey}')" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
+          </div>
+        `;
+        list.appendChild(itemEl);
+      });
+    }
+
+    function toggleMarket(fbKey, status) { db.ref(`market/${fbKey}`).update({ checked: !status }); }
+    function deleteMarket(fbKey) { db.ref(`market/${fbKey}`).remove(); }
+
+    function convertMarketToExpense() {
+      const valStr = prompt("Valor total da compra no mercado (R$):");
+      if (!valStr) return;
+      const amount = parseFloat(valStr.replace(',', '.'));
+      if (isNaN(amount) || amount <= 0) return;
+
+      db.ref('expenses').push({
+        payer: 'Você', scope: 'Compartilhado', desc: 'Compra de Mercado',
+        amount, category: 'Mercado', date: new Date().toISOString().slice(0, 10), paid: true
+      });
+
+      marketItems.filter(i => i.checked).forEach(i => db.ref(`market/${i.fbKey}`).remove());
+      alert("Gasto cadastrado no Firebase!");
+    }
+
+    // --- TAREFAS ---
+    document.getElementById('task-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      db.ref('tasks').push({
+        title: document.getElementById('task-input').value,
+        assignee: document.getElementById('task-assignee').value,
+        done: false
+      });
+      document.getElementById('task-input').value = '';
+    });
+
+    function renderTasks() {
+      const list = document.getElementById('tasks-list');
+      list.innerHTML = '';
+      tasks.forEach(t => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <div class="item-main">
+            <div>
+              <div class="item-title" style="${t.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${t.title}</div>
+              <div class="item-sub">Responsável: <b>${t.assignee}</b></div>
+            </div>
+            <button class="${t.done ? 'btn-disabled' : 'btn-action'}" onclick="toggleTask('${t.fbKey}', ${t.done})">${t.done ? '✓ Feito' : 'Concluir'}</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function toggleTask(fbKey, status) { db.ref(`tasks/${fbKey}`).update({ done: !status }); }
+
+    // --- EVENTOS ---
+    document.getElementById('event-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      db.ref('events').push({
+        title: document.getElementById('event-title').value,
+        date: document.getElementById('event-date').value
+      });
+      document.getElementById('event-title').value = '';
+    });
+
+    function renderEvents() {
+      const list = document.getElementById('events-list');
+      list.innerHTML = '';
+      events.forEach(ev => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <div class="item-title">${ev.title}</div>
+          <div class="item-sub">Data: <b>${ev.date}</b></div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // --- ROLÊS ---
+    document.getElementById('role-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      db.ref('roles').push({
+        title: document.getElementById('role-title').value,
+        type: document.getElementById('role-type').value,
+        note: document.getElementById('role-note').value,
+        done: false
+      });
+      document.getElementById('role-title').value = '';
+      document.getElementById('role-note').value = '';
+    });
+
+    function renderRoles() {
+      const list = document.getElementById('roles-list');
+      list.innerHTML = '';
+      roles.forEach(r => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <div class="item-main">
+            <div>
+              <div class="item-title" style="${r.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${r.title}</div>
+              <div class="item-sub">${r.type} ${r.note ? '• ' + r.note : ''}</div>
+            </div>
+            <button class="${r.done ? 'btn-disabled' : 'btn-action'}" onclick="toggleRole('${r.fbKey}', ${r.done})">${r.done ? '✓ Já Fomos' : 'Quero Ir'}</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function toggleRole(fbKey, status) { db.ref(`roles/${fbKey}`).update({ done: !status }); }
+
+    initFirebase();
+  </script>
+</body>
+</html>
