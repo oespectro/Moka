@@ -115,7 +115,6 @@
     .category-items-dropdown.open { display: flex; }
     .dropdown-item { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
 
-    /* FILTRO EXPANSÍVEL MINIMALISTA */
     .filter-wrapper { margin-bottom: 12px; }
     .btn-toggle-filter {
       width: 100%; background: #0D1117; border: 1px solid var(--card-border);
@@ -338,7 +337,6 @@
         <div class="card">
           <div class="card-title">Histórico de Lançamentos</div>
 
-          <!-- BOTÃO EXPANSÍVEL DE FILTROS MINIMALISTA -->
           <div class="filter-wrapper">
             <button class="btn-toggle-filter" id="btn-toggle-filter" onclick="toggleFilterDrawer()">
               <span id="filter-btn-label">🔍 Filtrar Histórico</span>
@@ -402,17 +400,18 @@
         </div>
       </div>
 
-      <!-- VISÃO DE COFRES -->
+      <!-- VISÃO DE COFRES (COM EDIÇÃO E EXCLUSÃO) -->
       <div id="sub-financas-cofres" class="sub-view">
         <div class="card">
-          <div class="card-title">Cofre dos Sonhos 🎯</div>
+          <div class="card-title"><span id="vault-form-title">Cofre dos Sonhos 🎯</span></div>
           <form id="vault-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            <input type="hidden" id="edit-vault-fbkey" value="">
             <input type="text" id="vault-title" placeholder="Nome da Meta (Ex: Viagem de Fim de Ano)" required>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <input type="number" id="vault-target" placeholder="Meta Total (R$)" required>
               <input type="number" id="vault-monthly" placeholder="Meta Mensal/Parceiro (R$)" required>
             </div>
-            <button type="submit" class="btn-submit">+ Criar Novo Cofre</button>
+            <button type="submit" class="btn-submit" id="btn-save-vault">+ Criar Novo Cofre</button>
           </form>
           <div class="vaults-list" id="vaults-list"></div>
         </div>
@@ -689,7 +688,6 @@
       let total1 = 0, total2 = 0;
       const today = new Date();
 
-      // Filtros
       const filterStartDate = document.getElementById('filter-date-start').value;
       const filterEndDate = document.getElementById('filter-date-end').value;
       const filterScope = document.getElementById('filter-scope').value;
@@ -868,16 +866,49 @@
     // --- COFRES ---
     document.getElementById('vault-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      db.ref('vaults').push({
+      const editKey = document.getElementById('edit-vault-fbkey').value;
+
+      const newVault = {
         title: document.getElementById('vault-title').value,
         target: parseFloat(document.getElementById('vault-target').value),
-        monthly: parseFloat(document.getElementById('vault-monthly').value),
-        current: 0
-      });
+        monthly: parseFloat(document.getElementById('vault-monthly').value)
+      };
+
+      if (editKey) {
+        db.ref(`vaults/${editKey}`).update(newVault);
+        document.getElementById('edit-vault-fbkey').value = '';
+        document.getElementById('vault-form-title').innerText = 'Cofre dos Sonhos 🎯';
+        document.getElementById('btn-save-vault').innerText = '+ Criar Novo Cofre';
+      } else {
+        db.ref('vaults').push({
+          ...newVault,
+          current: 0
+        });
+      }
+
       document.getElementById('vault-title').value = '';
       document.getElementById('vault-target').value = '';
       document.getElementById('vault-monthly').value = '';
     });
+
+    function editVault(fbKey) {
+      const v = vaults.find(item => item.fbKey === fbKey);
+      if (!v) return;
+
+      document.getElementById('edit-vault-fbkey').value = fbKey;
+      document.getElementById('vault-title').value = v.title;
+      document.getElementById('vault-target').value = v.target;
+      document.getElementById('vault-monthly').value = v.monthly;
+
+      document.getElementById('vault-form-title').innerText = '✏️ Editar Cofre';
+      document.getElementById('btn-save-vault').innerText = 'Atualizar Cofre';
+    }
+
+    function deleteVault(fbKey) {
+      if (confirm("Tem certeza que deseja excluir este cofre?")) {
+        db.ref(`vaults/${fbKey}`).remove();
+      }
+    }
 
     function addDeposit(fbKey, currentVal) {
       const depositStr = prompt("Valor do novo depósito para este cofre (R$):");
@@ -896,7 +927,13 @@
         const item = document.createElement('div');
         item.className = 'list-item';
         item.innerHTML = `
-          <div class="item-title">${v.title}</div>
+          <div class="item-main">
+            <div class="item-title">${v.title}</div>
+            <div>
+              <button class="btn-icon" onclick="editVault('${v.fbKey}')" title="Editar Cofre">✏️</button>
+              <button class="btn-icon" onclick="deleteVault('${v.fbKey}')" title="Excluir Cofre">🗑️</button>
+            </div>
+          </div>
           <div class="item-sub">Acumulado: R$ ${v.current.toFixed(2)} de R$ ${v.target.toFixed(2)} (${pct}%)</div>
           <div class="item-sub">Meta por parceiro: <b>R$ ${(v.monthly / 2).toFixed(2)}/mês</b></div>
           <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; margin-top:4px;">
