@@ -29,16 +29,16 @@
       --accent-red: #F85149;
       --accent-purple: #A371F7;
       --accent-pink: #FF7B72;
-      --radius-lg: 20px;
-      --radius-md: 12px;
-      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
     }
 
     html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 12px; padding-bottom: 90px; }
 
-    .app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 16px; position: relative; }
+    .app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 14px; position: relative; }
 
     /* AUTH SCREEN */
     .auth-container { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 440px; margin: auto; }
@@ -64,25 +64,24 @@
     /* HEADER & BOTOES OUTLINE */
     header {
       background: var(--card-dark); border: 1px solid var(--card-border);
-      padding: 12px 16px; border-radius: var(--radius-lg);
+      padding: 10px 14px; border-radius: var(--radius-lg);
       display: flex; align-items: center; justify-content: space-between;
       box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative;
     }
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
     .mascot-avatar {
-      width: 44px; height: 44px; background: #0D1117; border-radius: 50%;
+      width: 38px; height: 38px; background: #0D1117; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      border: 1px solid var(--card-border); padding: 4px;
+      border: 1px solid var(--card-border); padding: 3px;
     }
-    .brand-title h1 { font-size: 19px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
-    .brand-title p { font-size: 11px; color: var(--accent-yellow); font-weight: 500; }
+    .brand-title h1 { font-size: 17px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
+    .brand-title p { font-size: 10px; color: var(--accent-yellow); font-weight: 500; }
 
-    /* AÇÕES DO CABEÇALHO (SPACING & OUTLINE ICONS) */
-    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
 
     .btn-header-outline {
       background: transparent; border: 1px solid var(--card-border); color: var(--text-muted);
-      width: 40px; height: 40px; border-radius: var(--radius-md);
+      width: 36px; height: 36px; border-radius: var(--radius-md);
       display: flex; align-items: center; justify-content: center; cursor: pointer;
       transition: all 0.2s ease; position: relative; padding: 0;
     }
@@ -91,7 +90,7 @@
     .btn-header-outline:hover svg { stroke: var(--accent-yellow); }
 
     .noti-badge-dot {
-      position: absolute; top: 7px; right: 7px; width: 7px; height: 7px;
+      position: absolute; top: 6px; right: 6px; width: 6px; height: 6px;
       background: var(--accent-yellow); border-radius: 50%; display: none;
       box-shadow: 0 0 6px var(--accent-yellow);
     }
@@ -99,14 +98,14 @@
 
     /* MENU SUSPENSO DE NOTIFICAÇÕES (DROPDOWN) */
     .noti-dropdown {
-      position: absolute; top: 62px; right: 16px; width: 280px;
+      position: absolute; top: 56px; right: 14px; width: 280px;
       background: var(--card-dark); border: 1px solid var(--card-border);
-      border-radius: var(--radius-md); padding: 14px; box-shadow: 0 10px 28px rgba(0,0,0,0.6);
-      z-index: 150; display: none; flex-direction: column; gap: 10px;
+      border-radius: var(--radius-md); padding: 12px; box-shadow: 0 10px 28px rgba(0,0,0,0.6);
+      z-index: 150; display: none; flex-direction: column; gap: 8px;
     }
     .noti-dropdown.open { display: flex; }
-    .noti-dropdown-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
-    .noti-dropdown-header h4 { font-size: 12px; font-weight: 700; color: var(--accent-yellow); text-transform: uppercase; }
+    .noti-dropdown-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 6px; }
+    .noti-dropdown-header h4 { font-size: 11px; font-weight: 700; color: var(--accent-yellow); text-transform: uppercase; }
 
     /* MENU HAMBÚRGUER (DRAWER) */
     .menu-overlay {
@@ -124,8 +123,8 @@
     }
     .menu-drawer.open { right: 0; }
     .menu-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
-    .menu-header h2 { font-size: 16px; font-weight: 700; color: var(--text-main); }
-    .btn-close-menu { background: transparent; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
+    .menu-header h2 { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    .btn-close-menu { background: transparent; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
 
     /* MODAL FLUTUANTE DE GESTÃO DE CARTÕES */
     .modal-overlay {
@@ -138,70 +137,70 @@
     .modal-card {
       background: var(--card-dark); border: 1px solid var(--card-border);
       border-radius: var(--radius-lg); width: 100%; max-width: 400px; max-height: 90vh;
-      display: flex; flex-direction: column; gap: 14px; padding: 20px;
+      display: flex; flex-direction: column; gap: 12px; padding: 18px;
       box-shadow: 0 12px 32px rgba(0,0,0,0.6); overflow-y: auto; position: relative;
     }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
-    .modal-header h3 { font-size: 16px; font-weight: 700; color: var(--text-main); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
+    .modal-header h3 { font-size: 15px; font-weight: 700; color: var(--text-main); }
 
     .bottom-nav {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
       width: 100%; max-width: 440px; background: #161B22; border-top: 1px solid var(--card-border);
-      display: flex; justify-content: space-around; padding: 12px 0; z-index: 100;
+      display: flex; justify-content: space-around; padding: 10px 0; z-index: 100;
     }
     .nav-item {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      background: transparent; border: none; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      background: transparent; border: none; color: var(--text-muted); font-size: 10px; font-weight: 700; cursor: pointer;
     }
     .nav-item svg { stroke: var(--text-muted); transition: stroke 0.2s; }
     .nav-item.active { color: var(--accent-yellow); }
     .nav-item.active svg { stroke: var(--accent-yellow); }
 
     .sub-tabs { display: flex; background: #161B22; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 3px; gap: 2px; }
-    .sub-tab { flex: 1; text-align: center; padding: 8px 4px; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+    .sub-tab { flex: 1; text-align: center; padding: 6px 4px; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 6px; transition: all 0.2s; }
     .sub-tab.active { background: var(--card-border); color: var(--accent-yellow); }
 
-    .main-section { display: none; flex-direction: column; gap: 16px; }
+    .main-section { display: none; flex-direction: column; gap: 14px; }
     .main-section.active { display: flex; }
-    .sub-view { display: none; flex-direction: column; gap: 16px; }
+    .sub-view { display: none; flex-direction: column; gap: 14px; }
     .sub-view.active { display: flex; }
 
     .card {
-      background: var(--card-dark); border-radius: var(--radius-lg); padding: 18px;
+      background: var(--card-dark); border-radius: var(--radius-lg); padding: 14px 16px;
       border: 1px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     .card-title {
-      font-size: 14px; font-weight: 700; margin-bottom: 14px;
+      font-size: 12px; font-weight: 700; margin-bottom: 10px;
       display: flex; align-items: center; justify-content: space-between;
       color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px;
     }
 
-    .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-    .balance-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); padding: 12px; border-radius: var(--radius-md); text-align: center; }
-    .balance-box .label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-    .balance-box .val { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .balance-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); padding: 10px; border-radius: var(--radius-md); text-align: center; }
+    .balance-box .label { font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
+    .balance-box .val { font-size: 14px; font-weight: 700; color: var(--text-main); }
     
     .settlement-card {
       background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.2);
-      padding: 12px; border-radius: var(--radius-md); text-align: center;
-      color: var(--accent-blue); font-weight: 600; font-size: 13px;
-      display: flex; flex-direction: column; gap: 8px; align-items: center;
+      padding: 10px; border-radius: var(--radius-md); text-align: center;
+      color: var(--accent-blue); font-weight: 600; font-size: 12px;
+      display: flex; flex-direction: column; gap: 6px; align-items: center;
     }
 
-    .category-breakdown { display: flex; flex-direction: column; gap: 10px; }
-    .category-row { display: flex; flex-direction: column; gap: 6px; cursor: pointer; background: rgba(255,255,255,0.01); padding: 8px; border-radius: var(--radius-md); border: 1px solid transparent; }
+    .category-breakdown { display: flex; flex-direction: column; gap: 8px; }
+    .category-row { display: flex; flex-direction: column; gap: 4px; cursor: pointer; background: rgba(255,255,255,0.01); padding: 6px 8px; border-radius: var(--radius-md); border: 1px solid transparent; }
     .category-row:hover { border-color: var(--card-border); }
-    .category-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-main); }
-    .category-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+    .category-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-main); }
+    .category-bar-bg { width: 100%; height: 5px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
     .category-bar-fill { height: 100%; background: var(--accent-yellow); border-radius: 3px; transition: width 0.3s ease; }
-    .category-items-dropdown { display: none; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px dashed var(--card-border); margin-top: 4px; }
+    .category-items-dropdown { display: none; flex-direction: column; gap: 4px; padding-top: 6px; border-top: 1px dashed var(--card-border); margin-top: 4px; }
     .category-items-dropdown.open { display: flex; }
-    .dropdown-item { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+    .dropdown-item { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); }
 
-    .filter-wrapper { margin-bottom: 12px; }
+    .filter-wrapper { margin-bottom: 10px; }
     .btn-toggle-filter {
       width: 100%; background: #0D1117; border: 1px solid var(--card-border);
-      color: var(--text-muted); padding: 8px 12px; border-radius: var(--radius-md);
+      color: var(--text-muted); padding: 6px 10px; border-radius: var(--radius-md);
       font-size: 11px; font-weight: 600; cursor: pointer; display: flex;
       align-items: center; justify-content: space-between; transition: all 0.2s;
     }
@@ -210,87 +209,95 @@
 
     .filter-collapsible {
       display: none; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border);
-      padding: 12px; border-radius: var(--radius-md); margin-top: 8px;
-      flex-direction: column; gap: 10px;
+      padding: 10px; border-radius: var(--radius-md); margin-top: 6px;
+      flex-direction: column; gap: 8px;
     }
     .filter-collapsible.open { display: flex; }
 
-    .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .date-input-wrapper { display: flex; align-items: center; gap: 6px; background: #0D1117; border: 1px solid var(--card-border); padding: 6px 10px; border-radius: var(--radius-md); }
+    .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .date-input-wrapper { display: flex; align-items: center; gap: 4px; background: #0D1117; border: 1px solid var(--card-border); padding: 4px 8px; border-radius: var(--radius-sm); }
     .date-input-wrapper svg { stroke: var(--text-muted); flex-shrink: 0; }
     .date-input-wrapper input { border: none; padding: 0; background: transparent; font-size: 11px; }
 
-    .form-group { margin-bottom: 14px; }
-    label { display: flex; align-items: center; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    /* ESTILOS DE FORMULÁRIO ULTRA MINIMALISTA */
+    .form-group-compact { display: flex; flex-direction: column; gap: 3px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+
+    label.lbl-compact { display: block; font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1px; }
+    
     input, select, textarea {
-      width: 100%; padding: 10px 12px; border: 1px solid var(--card-border); border-radius: var(--radius-md);
-      font-size: 13px; outline: none; background-color: #0D1117; color: var(--text-main); transition: all 0.2s;
+      width: 100%; padding: 7px 10px; border: 1px solid var(--card-border); border-radius: var(--radius-sm);
+      font-size: 12px; outline: none; background-color: #0D1117; color: var(--text-main); transition: all 0.2s;
     }
     input:focus, select:focus, textarea:focus { border-color: var(--accent-yellow); }
 
-    .radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .radio-btn input { position: absolute; opacity: 0; cursor: pointer; }
-    .radio-btn label {
-      display: block; text-align: center; padding: 10px 4px; border: 1px solid var(--card-border);
-      border-radius: var(--radius-md); font-size: 11px; font-weight: 600; color: var(--text-muted);
-      cursor: pointer; background: #0D1117; margin: 0;
+    /* SEGMENTED CONTROLS ULTRA COMPACTOS */
+    .radio-segmented { display: flex; background: #0D1117; border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 2px; gap: 2px; }
+    .radio-segmented .radio-btn { flex: 1; position: relative; }
+    .radio-segmented input { position: absolute; opacity: 0; cursor: pointer; width: 100%; height: 100%; top:0; left:0; margin:0; }
+    .radio-segmented label {
+      display: flex; align-items: center; justify-content: center; padding: 5px 2px;
+      border-radius: 4px; font-size: 10px; font-weight: 600; color: var(--text-muted);
+      cursor: pointer; background: transparent; margin: 0; text-transform: none; text-align: center;
+      transition: all 0.15s ease;
     }
-    .radio-btn input:checked + label { background: var(--card-border); color: var(--accent-yellow); border-color: var(--accent-yellow); }
+    .radio-segmented input:checked + label { background: var(--card-border); color: var(--accent-yellow); font-weight: 700; }
 
     .btn-submit {
-      width: 100%; background: var(--accent-yellow); color: #0D1117; border: none; padding: 12px;
-      border-radius: var(--radius-md); font-size: 14px; font-weight: 700; cursor: pointer;
+      width: 100%; background: var(--accent-yellow); color: #0D1117; border: none; padding: 9px;
+      border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer;
     }
     .btn-secondary {
-      width: 100%; background: transparent; color: var(--text-main); border: 1px solid var(--card-border); padding: 12px;
-      border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer;
+      width: 100%; background: transparent; color: var(--text-main); border: 1px solid var(--card-border); padding: 8px;
+      border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;
     }
 
-    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list, .notes-list, .cards-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; }
-    .list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius-md); background: #0D1117; border: 1px solid var(--card-border); }
+    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list, .notes-list, .cards-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
+    .list-item { display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: var(--radius-md); background: #0D1117; border: 1px solid var(--card-border); }
     .item-main { display: flex; align-items: center; justify-content: space-between; }
-    .item-info { display: flex; align-items: center; gap: 10px; }
-    .tag-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--card-border); display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .item-title { font-size: 13px; font-weight: 600; color: var(--text-main); }
-    .item-sub { font-size: 11px; color: var(--text-muted); }
+    .item-info { display: flex; align-items: center; gap: 8px; }
+    .tag-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--card-border); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .item-title { font-size: 12px; font-weight: 600; color: var(--text-main); }
+    .item-sub { font-size: 10px; color: var(--text-muted); }
 
     .reward-box {
       background: rgba(255, 123, 114, 0.08); border: 1px dashed rgba(255, 123, 114, 0.3);
-      padding: 8px 12px; border-radius: var(--radius-md); font-size: 12px; color: var(--accent-pink);
+      padding: 6px 10px; border-radius: var(--radius-sm); font-size: 11px; color: var(--accent-pink);
       display: flex; align-items: center; gap: 6px; font-weight: 600;
     }
 
     .due-soon { border-color: var(--accent-yellow) !important; background: rgba(255, 179, 0, 0.05) !important; }
 
-    .badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+    .badge { font-size: 8px; font-weight: 700; padding: 2px 5px; border-radius: 4px; text-transform: uppercase; }
     .badge-paid { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
     .badge-pending { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
     .badge-personal { background: rgba(163, 113, 247, 0.15); color: var(--accent-purple); }
     .badge-split { background: rgba(88, 166, 255, 0.15); color: var(--accent-blue); }
     .badge-card { background: rgba(255, 179, 0, 0.15); color: var(--accent-yellow); }
 
-    .btn-action { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border: 1px solid rgba(63, 185, 80, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
-    .btn-disabled { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: default; }
+    .btn-action { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border: 1px solid rgba(63, 185, 80, 0.4); padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: 600; cursor: pointer; }
+    .btn-disabled { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 3px 8px; border-radius: 5px; font-size: 10px; cursor: default; }
 
-    .btn-icon { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; padding: 2px 4px; }
+    .btn-icon { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; padding: 2px 4px; }
     .btn-icon:hover { color: var(--text-main); }
 
-    .market-checkbox { width: 18px; height: 18px; accent-color: var(--accent-yellow); cursor: pointer; }
+    .market-checkbox { width: 16px; height: 16px; accent-color: var(--accent-yellow); cursor: pointer; }
     .list-item.checked .item-title { text-decoration: line-through; color: var(--text-muted); }
 
     .alt-split-box {
       display: none; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
-      padding: 12px; border-radius: var(--radius-md); margin-bottom: 14px; flex-direction: column; gap: 10px;
+      padding: 10px; border-radius: var(--radius-sm); flex-direction: column; gap: 8px;
     }
     .alt-split-box.open { display: flex; }
-    .slider-container { display: flex; align-items: center; gap: 10px; }
+    .slider-container { display: flex; align-items: center; gap: 8px; }
     .slider-container input[type="range"] { flex: 1; accent-color: var(--accent-yellow); cursor: pointer; }
-    .slider-label { font-size: 12px; font-weight: 700; color: var(--accent-yellow); min-width: 80px; text-align: right; }
+    .slider-label { font-size: 11px; font-weight: 700; color: var(--accent-yellow); min-width: 70px; text-align: right; }
     
-    .split-values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
-    .split-value-card { background: #0D1117; border: 1px solid var(--card-border); padding: 8px 10px; border-radius: var(--radius-sm); text-align: center; }
-    .split-value-card .p-title { font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
-    .split-value-card .p-val { font-size: 12px; font-weight: 700; color: var(--accent-yellow); }
+    .split-values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 2px; }
+    .split-value-card { background: #0D1117; border: 1px solid var(--card-border); padding: 6px 8px; border-radius: var(--radius-sm); text-align: center; }
+    .split-value-card .p-title { font-size: 9px; color: var(--text-muted); margin-bottom: 1px; }
+    .split-value-card .p-val { font-size: 11px; font-weight: 700; color: var(--accent-yellow); }
   </style>
 </head>
 <body>
@@ -299,7 +306,7 @@
   <div id="auth-screen" class="auth-container" style="display:none;">
     <div class="auth-card">
       <div style="margin: 0 auto;" class="mascot-avatar">
-        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="18,10 38,38 10,32" fill="#30363D" />
           <polygon points="82,10 90,32 62,38" fill="#30363D" />
           <polygon points="22,16 34,35 15,31" fill="#FF8A65" />
@@ -324,7 +331,7 @@
 
       <div class="auth-divider"><span>ou com e-mail</span></div>
 
-      <form id="auth-form" style="display:flex; flex-direction:column; gap:10px;">
+      <form id="auth-form" style="display:flex; flex-direction:column; gap:8px;">
         <input type="email" id="auth-email" placeholder="Seu E-mail" required>
         <input type="password" id="auth-password" placeholder="Sua Senha" required>
         
@@ -345,7 +352,7 @@
     <header>
       <div class="brand">
         <div class="mascot-avatar">
-          <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <polygon points="18,10 38,38 10,32" fill="#30363D" />
             <polygon points="82,10 90,32 62,38" fill="#30363D" />
             <polygon points="22,16 34,35 15,31" fill="#FF8A65" />
@@ -369,7 +376,7 @@
       <div class="header-actions">
         <!-- BOTÃO DO SINO (SVG OUTLINE ELEGANTE) -->
         <button class="btn-header-outline" onclick="toggleNotifications()" title="Lembretes & Notificações">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
           </svg>
@@ -378,7 +385,7 @@
 
         <!-- BOTÃO HAMBÚRGUER (SVG OUTLINE ELEGANTE) -->
         <button class="btn-header-outline" onclick="toggleMenu()" title="Configurações">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -392,7 +399,7 @@
           <h4>🐱 Moka Lembretes</h4>
           <button class="btn-icon" onclick="dismissNotification()" title="Limpar Lembrete">✕</button>
         </div>
-        <div style="font-size:12px; color:var(--text-main);" id="dropdown-reminder-text">
+        <div style="font-size:11px; color:var(--text-main);" id="dropdown-reminder-text">
           Sincronizado na Nuvem!
         </div>
       </div>
@@ -406,9 +413,9 @@
         <button class="btn-close-menu" onclick="toggleMenu()">✕</button>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:16px;">
-        <div class="form-group">
-          <label>Seu Perfil</label>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="form-group-compact">
+          <label class="lbl-compact">Seu Perfil</label>
           <div style="font-size:12px; color:var(--text-main); font-weight:600;" id="user-email-display">-</div>
           <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
             Código do Casal: <b id="couple-code-display" style="color:var(--accent-yellow); font-family:monospace;">-</b>
@@ -420,9 +427,9 @@
           💳 Gestão de Cartões
         </button>
 
-        <div class="form-group" style="border-top:1px solid var(--card-border); pt:12px;">
-          <label>Divisão Padrão do Casal</label>
-          <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Ajuste a proporção padrão baseada nos salários:</p>
+        <div class="form-group-compact" style="border-top:1px solid var(--card-border); pt:10px;">
+          <label class="lbl-compact">Divisão Padrão do Casal</label>
+          <p style="font-size:10px; color:var(--text-muted); margin-bottom:6px;">Ajuste a proporção padrão baseada nos salários:</p>
           <div class="slider-container">
             <input type="range" id="default-split-slider" min="0" max="100" value="50" oninput="updateDefaultSplitLabel(this.value)">
             <span class="slider-label" id="default-split-pct-label">50% / 50%</span>
@@ -442,16 +449,16 @@
           <button class="btn-close-menu" onclick="closeCardsModal()">✕</button>
         </div>
 
-        <form id="card-form" style="display:flex; flex-direction:column; gap:10px;">
-          <input type="text" id="credit-card-nickname" placeholder="Apelido do Cartão (Ex: Nubank Roxo, XP)" required>
+        <form id="card-form" style="display:flex; flex-direction:column; gap:8px;">
+          <input type="text" id="credit-card-nickname" placeholder="Apelido do Cartão (Ex: Nubank, XP)" required>
           <input type="number" id="credit-card-due-day" placeholder="Dia de Vencimento da Fatura (1 a 31)" min="1" max="31" required>
           <button type="submit" class="btn-submit">+ Cadastrar Cartão</button>
         </form>
 
-        <div style="border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 4px;">
-          <label style="margin-bottom:8px;">Cartões Cadastrados</label>
-          <p style="font-size:10px; color:var(--text-muted); margin-bottom:10px;">Clique na estrela ⭐ para definir o cartão padrão das compras.</p>
-          <div class="cards-list" id="modal-cards-list" style="max-height: 220px;"></div>
+        <div style="border-top: 1px solid var(--card-border); padding-top: 8px; margin-top: 2px;">
+          <label class="lbl-compact" style="margin-bottom:6px;">Cartões Cadastrados</label>
+          <p style="font-size:10px; color:var(--text-muted); margin-bottom:8px;">Clique em ⭐ para definir o cartão padrão.</p>
+          <div class="cards-list" id="modal-cards-list" style="max-height: 200px;"></div>
         </div>
       </div>
     </div>
@@ -490,7 +497,7 @@
 
         <div class="card">
           <div class="card-title">Análise de Gastos</div>
-          <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Clique na categoria para abrir o detalhamento das compras.</p>
+          <p style="font-size:10px; color:var(--text-muted); margin-bottom:10px;">Clique na categoria para abrir o detalhamento das compras.</p>
           <div class="category-breakdown" id="category-breakdown"></div>
         </div>
       </div>
@@ -498,81 +505,107 @@
       <div id="sub-financas-lancamentos" class="sub-view">
         <div class="card">
           <div class="card-title"><span id="form-title">Novo Lançamento</span></div>
-          <form id="expense-form">
+          <form id="expense-form" style="display:flex; flex-direction:column; gap:8px;">
             <input type="hidden" id="edit-fbkey" value="">
             
-            <div class="form-group">
-              <label>Quem Pagou?</label>
-              <div class="radio-group">
-                <div class="radio-btn">
-                  <input type="radio" id="payer1" name="payer" value="Você" checked>
-                  <label for="payer1">Você</label>
+            <!-- LINHA 1: CONTROLES SEGMENTADOS INLINE ULTRA COMPACTOS -->
+            <div class="form-row-3">
+              <div class="form-group-compact">
+                <label class="lbl-compact">Quem Pagou</label>
+                <div class="radio-segmented">
+                  <div class="radio-btn">
+                    <input type="radio" id="payer1" name="payer" value="Você" checked>
+                    <label for="payer1">Você</label>
+                  </div>
+                  <div class="radio-btn">
+                    <input type="radio" id="payer2" name="payer" value="Namorada">
+                    <label for="payer2">Ela</label>
+                  </div>
                 </div>
-                <div class="radio-btn">
-                  <input type="radio" id="payer2" name="payer" value="Namorada">
-                  <label for="payer2">Namorada</label>
+              </div>
+
+              <div class="form-group-compact">
+                <label class="lbl-compact">Âmbito</label>
+                <div class="radio-segmented">
+                  <div class="radio-btn">
+                    <input type="radio" id="scope1" name="scope" value="Compartilhado" checked>
+                    <label for="scope1">Juntos</label>
+                  </div>
+                  <div class="radio-btn">
+                    <input type="radio" id="scope2" name="scope" value="Pessoal">
+                    <label for="scope2">Solo</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group-compact">
+                <label class="lbl-compact">Pagamento</label>
+                <div class="radio-segmented">
+                  <div class="radio-btn">
+                    <input type="radio" id="pay-pix" name="paymentMethod" value="Pix/Débito" checked onchange="toggleCreditCardSelect()">
+                    <label for="pay-pix">⚡ Pix</label>
+                  </div>
+                  <div class="radio-btn">
+                    <input type="radio" id="pay-card" name="paymentMethod" value="Cartão de Crédito" onchange="toggleCreditCardSelect()">
+                    <label for="pay-card">💳 Cartão</label>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="form-group">
-              <label>Âmbito</label>
-              <div class="radio-group">
-                <div class="radio-btn">
-                  <input type="radio" id="scope1" name="scope" value="Compartilhado" checked>
-                  <label for="scope1">Compartilhado</label>
-                </div>
-                <div class="radio-btn">
-                  <input type="radio" id="scope2" name="scope" value="Pessoal">
-                  <label for="scope2">Pessoal</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Forma de Pagamento</label>
-              <div class="radio-group">
-                <div class="radio-btn">
-                  <input type="radio" id="pay-pix" name="paymentMethod" value="Pix/Débito" checked onchange="toggleCreditCardSelect()">
-                  <label for="pay-pix">⚡ Pix / Débito</label>
-                </div>
-                <div class="radio-btn">
-                  <input type="radio" id="pay-card" name="paymentMethod" value="Cartão de Crédito" onchange="toggleCreditCardSelect()">
-                  <label for="pay-card">💳 Cartão Crédito</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group" id="card-select-wrapper" style="display:none;">
-              <label>Qual Cartão de Crédito?</label>
+            <!-- CARTÃO SELEÇÃO (EXIBIDO SE CARTÃO FOR ESCOLHIDO) -->
+            <div class="form-group-compact" id="card-select-wrapper" style="display:none;">
+              <label class="lbl-compact">Qual Cartão de Crédito?</label>
               <select id="selected-card-id" onchange="handleCardSelectionChange()">
                 <option value="">Nenhum cartão selecionado...</option>
               </select>
             </div>
 
-            <div class="form-group">
-              <label>Descrição</label>
-              <input type="text" id="desc" placeholder="Ex: Mercado, Aluguel" required>
-            </div>
-
-            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <div>
-                <label>Valor (R$)</label>
+            <!-- LINHA 2: DESCRIÇÃO & VALOR -->
+            <div class="form-row-2">
+              <div class="form-group-compact">
+                <label class="lbl-compact">Descrição</label>
+                <input type="text" id="desc" placeholder="Ex: Mercado, Aluguel" required>
+              </div>
+              <div class="form-group-compact">
+                <label class="lbl-compact">Valor (R$)</label>
                 <input type="number" step="0.01" id="amount" placeholder="0,00" required oninput="recalcSplitValues()">
               </div>
-              <div>
-                <label>Vencimento</label>
+            </div>
+
+            <!-- LINHA 3: VENCIMENTO & CATEGORIA -->
+            <div class="form-row-2">
+              <div class="form-group-compact">
+                <label class="lbl-compact">Vencimento</label>
                 <input type="date" id="expense-date" required>
+              </div>
+              <div class="form-group-compact">
+                <label class="lbl-compact">Categoria</label>
+                <select id="category">
+                  <optgroup label="Custos Fixos">
+                    <option value="Moradia">🏠 Moradia</option>
+                    <option value="Contas">⚡ Contas da Casa</option>
+                    <option value="Assinaturas">📺 Assinaturas</option>
+                  </optgroup>
+                  <optgroup label="Custos Variáveis">
+                    <option value="Mercado">🛒 Mercado</option>
+                    <option value="Restaurantes">🍽️ Restaurantes</option>
+                    <option value="Lazer">🍿 Lazer & Rolês</option>
+                    <option value="Educação">🎓 Educação</option>
+                    <option value="Outros">📦 Outros</option>
+                  </optgroup>
+                </select>
               </div>
             </div>
 
-            <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text-muted); margin-bottom:12px;">
-              <input type="checkbox" id="chk-alt-split" style="width:15px; height:15px; accent-color:var(--accent-yellow);" onchange="toggleAltSplitDrawer()">
-              <label for="chk-alt-split" style="margin:0; font-size:11px; text-transform:none; cursor:pointer;">⚙️ Divisão alternativa (% pontual nesta compra)</label>
+            <!-- CHECKBOX DE DIVISÃO ALTERNATIVA -->
+            <div style="display:flex; align-items:center; gap:6px; font-size:10px; color:var(--text-muted); margin: 2px 0;">
+              <input type="checkbox" id="chk-alt-split" style="width:13px; height:13px; accent-color:var(--accent-yellow);" onchange="toggleAltSplitDrawer()">
+              <label for="chk-alt-split" style="margin:0; font-size:10px; text-transform:none; cursor:pointer;">⚙️ Divisão alternativa (% pontual nesta compra)</label>
             </div>
 
             <div class="alt-split-box" id="alt-split-drawer">
-              <label style="margin-bottom:2px;">Ajustar Proporção</label>
+              <label class="lbl-compact">Ajustar Proporção</label>
               <div class="slider-container">
                 <input type="range" id="split-user1-pct" min="0" max="100" value="50" oninput="updateSplitLabel(this.value)">
                 <span class="slider-label" id="split-pct-label">50% / 50%</span>
@@ -590,25 +623,7 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label>Categoria</label>
-              <select id="category">
-                <optgroup label="Custos Fixos (Recorrentes)">
-                  <option value="Moradia">🏠 Moradia</option>
-                  <option value="Contas">⚡ Contas da Casa</option>
-                  <option value="Assinaturas">📺 Assinaturas & Streaming</option>
-                </optgroup>
-                <optgroup label="Custos Variáveis / Esporádicos">
-                  <option value="Mercado">🛒 Mercado & Feira</option>
-                  <option value="Restaurantes">🍽️ Restaurantes & iFood</option>
-                  <option value="Lazer">🍿 Lazer & Rolês</option>
-                  <option value="Educação">🎓 Cursos & Educação</option>
-                  <option value="Outros">📦 Outros</option>
-                </optgroup>
-              </select>
-            </div>
-
-            <button type="submit" class="btn-submit" id="btn-save-expense">+ Salvar Lançamento</button>
+            <button type="submit" class="btn-submit" id="btn-save-expense" style="margin-top:2px;">+ Salvar Lançamento</button>
           </form>
         </div>
 
@@ -623,14 +638,14 @@
 
             <div class="filter-collapsible" id="filter-collapsible">
               <div>
-                <label>Período (Datas)</label>
+                <label class="lbl-compact">Período (Datas)</label>
                 <div class="filter-grid">
                   <div class="date-input-wrapper">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     <input type="date" id="filter-date-start" onchange="renderFinancas()">
                   </div>
                   <div class="date-input-wrapper">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     <input type="date" id="filter-date-end" onchange="renderFinancas()">
                   </div>
                 </div>
@@ -638,7 +653,7 @@
 
               <div class="filter-grid">
                 <div>
-                  <label>Âmbito</label>
+                  <label class="lbl-compact">Âmbito</label>
                   <select id="filter-scope" onchange="renderFinancas()">
                     <option value="TODOS">Todos</option>
                     <option value="Compartilhado">Compartilhado</option>
@@ -646,7 +661,7 @@
                   </select>
                 </div>
                 <div>
-                  <label>Quem Pagou</label>
+                  <label class="lbl-compact">Quem Pagou</label>
                   <select id="filter-payer" onchange="renderFinancas()">
                     <option value="TODOS">Todos</option>
                     <option value="Você">Você</option>
@@ -656,7 +671,7 @@
               </div>
 
               <div>
-                <label>Categoria</label>
+                <label class="lbl-compact">Categoria</label>
                 <select id="filter-category" onchange="renderFinancas()">
                   <option value="TODOS">Todas Categorias</option>
                   <option value="Moradia">🏠 Moradia</option>
@@ -670,7 +685,7 @@
                 </select>
               </div>
 
-              <button type="button" style="background:transparent; border:none; color:var(--accent-yellow); font-size:11px; font-weight:700; cursor:pointer; text-align:right; margin-top:4px;" onclick="resetFilters()">Limpar Filtros</button>
+              <button type="button" style="background:transparent; border:none; color:var(--accent-yellow); font-size:10px; font-weight:700; cursor:pointer; text-align:right; margin-top:2px;" onclick="resetFilters()">Limpar Filtros</button>
             </div>
           </div>
 
@@ -681,10 +696,10 @@
       <div id="sub-financas-cofres" class="sub-view">
         <div class="card">
           <div class="card-title"><span id="vault-form-title">Cofre dos Sonhos 🎯</span></div>
-          <form id="vault-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+          <form id="vault-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
             <input type="hidden" id="edit-vault-fbkey" value="">
             <input type="text" id="vault-title" placeholder="Nome da Meta (Ex: Viagem de Fim de Ano)" required>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
               <input type="number" id="vault-target" placeholder="Meta Total (R$)" required>
               <input type="number" id="vault-monthly" placeholder="Meta Mensal/Parceiro (R$)" required>
             </div>
@@ -706,12 +721,12 @@
       <div id="sub-casa-mercado" class="sub-view active">
         <div class="card">
           <div class="card-title">Lista de Mercado</div>
-          <form id="market-form" style="display:flex; gap:8px; margin-bottom:14px;">
+          <form id="market-form" style="display:flex; gap:6px; margin-bottom:12px;">
             <input type="text" id="market-input" placeholder="Adicionar item (Ex: Sabão, Arroz)" required>
-            <button type="submit" class="btn-submit" style="width: auto; padding: 0 16px;">+</button>
+            <button type="submit" class="btn-submit" style="width: auto; padding: 0 14px;">+</button>
           </form>
           <div class="market-list" id="market-list"></div>
-          <div style="margin-top: 14px; pt: 10px; border-top: 1px solid var(--card-border);">
+          <div style="margin-top: 12px; pt: 8px; border-top: 1px solid var(--card-border);">
             <button type="button" class="btn-submit" onclick="convertMarketToExpense()" style="background: var(--accent-green); color: white;">🛒 Finalizar Compra & Converter em Gasto</button>
           </div>
         </div>
@@ -720,12 +735,12 @@
       <div id="sub-casa-tarefas" class="sub-view">
         <div class="card">
           <div class="card-title">Nova Tarefa 🏆</div>
-          <form id="task-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+          <form id="task-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
             <input type="text" id="task-input" placeholder="O que precisa ser feito? (Ex: Lavar a louça)" required>
             
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
               <div>
-                <label>Responsável</label>
+                <label class="lbl-compact">Responsável</label>
                 <select id="task-assignee">
                   <option value="Você">Você</option>
                   <option value="Namorada">Namorada</option>
@@ -733,7 +748,7 @@
                 </select>
               </div>
               <div>
-                <label>Recorrência</label>
+                <label class="lbl-compact">Recorrência</label>
                 <select id="task-recurrence">
                   <option value="Pontual">Única (Pontual)</option>
                   <option value="Toda Segunda">Toda Segunda</option>
@@ -750,9 +765,9 @@
               </div>
             </div>
 
-            <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text-muted); padding:4px 0;">
-              <input type="checkbox" id="task-rotate" style="width:16px; height:16px; accent-color:var(--accent-yellow);">
-              <label for="task-rotate" style="margin:0; font-size:11px; text-transform:none; cursor:pointer;">🔄 Alternar/Revezar parceiro a cada conclusão</label>
+            <div style="display:flex; align-items:center; gap:6px; font-size:10px; color:var(--text-muted); padding:2px 0;">
+              <input type="checkbox" id="task-rotate" style="width:14px; height:14px; accent-color:var(--accent-yellow);">
+              <label for="task-rotate" style="margin:0; font-size:10px; text-transform:none; cursor:pointer;">🔄 Alternar/Revezar parceiro a cada conclusão</label>
             </div>
 
             <input type="text" id="task-reward" placeholder="🎁 Recompensa Secreta Opcional (Ex: Massagem de 15 min)">
@@ -774,7 +789,7 @@
       <div id="sub-casa-calendario" class="sub-view">
         <div class="card">
           <div class="card-title">Calendário & Datas Especiais</div>
-          <form id="event-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+          <form id="event-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
             <input type="text" id="event-title" placeholder="Nome do Evento (Ex: Aniversário de Namoro)" required>
             <input type="date" id="event-date" required>
             <button type="submit" class="btn-submit">+ Salvar Data Especial</button>
@@ -794,9 +809,9 @@
       <div id="sub-roles-lista" class="sub-view active">
         <div class="card">
           <div class="card-title">Moka Rolês & Indicações 🍿</div>
-          <form id="role-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+          <form id="role-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
             <input type="text" id="role-title" placeholder="Filme, Restaurante ou Show" required>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
               <select id="role-type">
                 <option value="Filme / Série">🎬 Filme / Série</option>
                 <option value="Restaurante">🍽️ Restaurante</option>
@@ -813,8 +828,8 @@
       <div id="sub-roles-notes" class="sub-view">
         <div class="card">
           <div class="card-title">Enviar Love Note ou Vale 🎁</div>
-          <form id="note-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <form id="note-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
               <select id="note-sender">
                 <option value="Você">De: Você</option>
                 <option value="Namorada">De: Namorada</option>
@@ -835,15 +850,15 @@
 
     <nav class="bottom-nav">
       <button class="nav-item active" onclick="switchMainSection('financas', this)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
         <span>Finanças</span>
       </button>
       <button class="nav-item" onclick="switchMainSection('casa', this)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         <span>Casa</span>
       </button>
       <button class="nav-item" onclick="switchMainSection('roles', this)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
         <span>Rolês</span>
       </button>
     </nav>
@@ -1096,12 +1111,12 @@
 
         const item = document.createElement('div');
         item.className = 'list-item';
-        item.style.padding = '8px 12px';
+        item.style.padding = '6px 10px';
         item.innerHTML = `
           <div class="item-main">
             <div>
-              <div class="item-title" style="font-size:12px;">💳 ${card.nickname} ${card.isDefault ? '<span style="color:var(--accent-yellow);">⭐ (Padrão)</span>' : ''}</div>
-              <div class="item-sub" style="font-size:11px;">Vencimento: Todo dia <b>${card.dueDay}</b></div>
+              <div class="item-title" style="font-size:11px;">💳 ${card.nickname} ${card.isDefault ? '<span style="color:var(--accent-yellow);">⭐ (Padrão)</span>' : ''}</div>
+              <div class="item-sub" style="font-size:10px;">Vencimento: Todo dia <b>${card.dueDay}</b></div>
             </div>
             <div>
               ${!card.isDefault ? `<button class="btn-icon" onclick="setDefaultCard('${card.fbKey}')" title="Tornar Padrão">⭐</button>` : ''}
@@ -1122,7 +1137,7 @@
       }
 
       if (creditCards.length === 0) {
-        modalList.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhum cartão cadastrado.</div>`;
+        modalList.innerHTML = `<div style="text-align:center; padding:8px; color:var(--text-muted); font-size:11px;">Nenhum cartão cadastrado.</div>`;
         selectForm.innerHTML = '<option value="">Nenhum cartão cadastrado...</option>';
       }
     }
@@ -1131,7 +1146,7 @@
       const isCardSelected = document.getElementById('pay-card').checked;
       const wrapper = document.getElementById('card-select-wrapper');
       if (isCardSelected) {
-        wrapper.style.display = 'block';
+        wrapper.style.display = 'flex';
         handleCardSelectionChange();
       } else {
         wrapper.style.display = 'none';
@@ -1453,14 +1468,14 @@
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-weight:700; font-size:13px;">${formatBRL(item.amount)}</div>
+              <div style="font-weight:700; font-size:12px;">${formatBRL(item.amount)}</div>
               <div style="margin-top:2px;">
                 <button class="btn-icon" onclick="editExpense('${item.fbKey}')" title="Editar">✏️</button>
                 <button class="btn-icon" onclick="deleteExpense('${item.fbKey}')" title="Excluir">🗑️</button>
               </div>
             </div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; pt:6px; border-top:1px solid rgba(255,255,255,0.05);">
+          <div style="display:flex; justify-content:space-between; align-items:center; pt:4px; border-top:1px solid rgba(255,255,255,0.05);">
             <div style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;">
               ${personalBadge}
               ${cardBadge}
@@ -1514,7 +1529,7 @@
       });
 
       if (dueList.children.length === 0) {
-        dueList.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhuma conta a vencer nos próximos 7 dias. 🎉</div>`;
+        dueList.innerHTML = `<div style="text-align:center; padding:8px; color:var(--text-muted); font-size:11px;">Nenhuma conta a vencer nos próximos 7 dias. 🎉</div>`;
       }
 
       document.getElementById('total-user1').innerText = formatBRL(totalPaidUser1);
@@ -1555,7 +1570,7 @@
       });
 
       if (grandTotalPaid === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhum gasto pago para categorizar.</div>`;
+        container.innerHTML = `<div style="text-align:center; padding:8px; color:var(--text-muted); font-size:11px;">Nenhum gasto pago para categorizar.</div>`;
         return;
       }
 
@@ -1670,10 +1685,10 @@
           </div>
           <div class="item-sub">Acumulado: ${formatBRL(v.current)} de ${formatBRL(v.target)} (${pct}%)</div>
           <div class="item-sub">Meta por parceiro: <b>${formatBRL(v.monthly / 2)}/mês</b></div>
-          <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; margin-top:4px;">
+          <div style="width:100%; height:5px; background:rgba(255,255,255,0.05); border-radius:3px; margin-top:4px;">
             <div style="width:${pct}%; height:100%; background:var(--accent-yellow); border-radius:3px;"></div>
           </div>
-          <button class="btn-action" style="margin-top:6px; align-self:flex-start;" onclick="addDeposit('${v.fbKey}', ${v.current})">+ Fazer Depósito</button>
+          <button class="btn-action" style="margin-top:4px; align-self:flex-start;" onclick="addDeposit('${v.fbKey}', ${v.current})">+ Fazer Depósito</button>
         `;
         list.appendChild(item);
       });
@@ -1801,10 +1816,10 @@
       });
 
       if (activeList.children.length === 0) {
-        activeList.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhuma tarefa pendente! Tudo em dia. 🎉</div>`;
+        activeList.innerHTML = `<div style="text-align:center; padding:8px; color:var(--text-muted); font-size:11px;">Nenhuma tarefa pendente! Tudo em dia. 🎉</div>`;
       }
       if (completedList.children.length === 0) {
-        completedList.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Balde de concluídas vazio.</div>`;
+        completedList.innerHTML = `<div style="text-align:center; padding:8px; color:var(--text-muted); font-size:11px;">Balde de concluídas vazio.</div>`;
       }
     }
 
@@ -1925,7 +1940,7 @@
             </div>
             <button class="${n.redeemed ? 'btn-disabled' : 'btn-action'}" style="background:rgba(255, 123, 114, 0.2); color:var(--accent-pink); border-color:rgba(255, 123, 114, 0.4);" onclick="toggleNoteRedeem('${n.fbKey}', ${n.redeemed})">${n.redeemed ? '✓ Usado' : 'Resgatar Vale'}</button>
           </div>
-          <div style="font-size:12px; color:var(--text-main); background:rgba(255,255,255,0.02); padding:8px; border-radius:8px; border:1px solid var(--card-border);">
+          <div style="font-size:11px; color:var(--text-main); background:rgba(255,255,255,0.02); padding:6px 8px; border-radius:6px; border:1px solid var(--card-border);">
             ${n.content}
           </div>
         `;
