@@ -13,6 +13,7 @@
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f431.svg">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <style>
@@ -39,6 +40,18 @@
 
     .app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 16px; position: relative; }
 
+    /* AUTH SCREEN */
+    .auth-container {
+      display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 440px; margin: auto;
+    }
+    .auth-card {
+      background: var(--card-dark); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4); text-align: center;
+    }
+    .auth-title { font-size: 22px; font-weight: 700; color: var(--text-main); }
+    .auth-sub { font-size: 13px; color: var(--text-muted); margin-top: -8px; }
+
     header {
       background: var(--card-dark); border: 1px solid var(--card-border);
       padding: 16px 20px; border-radius: var(--radius-lg);
@@ -61,7 +74,6 @@
     }
     .btn-hamburger:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); }
 
-    /* MENU DRAWER (HAMBÚRGUER) */
     .menu-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200;
@@ -185,6 +197,10 @@
       width: 100%; background: var(--accent-yellow); color: #0D1117; border: none; padding: 12px;
       border-radius: var(--radius-md); font-size: 14px; font-weight: 700; cursor: pointer;
     }
+    .btn-secondary {
+      width: 100%; background: transparent; color: var(--text-main); border: 1px solid var(--card-border); padding: 12px;
+      border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer;
+    }
 
     .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list, .notes-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; }
     .list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius-md); background: #0D1117; border: 1px solid var(--card-border); }
@@ -217,7 +233,6 @@
     .market-checkbox { width: 18px; height: 18px; accent-color: var(--accent-yellow); cursor: pointer; }
     .list-item.checked .item-title { text-decoration: line-through; color: var(--text-muted); }
 
-    /* ESTILOS APRIMORADOS DO SLIDER COM VALORES EM R$ */
     .alt-split-box {
       display: none; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
       padding: 12px; border-radius: var(--radius-md); margin-bottom: 14px; flex-direction: column; gap: 10px;
@@ -240,7 +255,46 @@
 </head>
 <body>
 
-  <div class="app-container">
+  <!-- TELA DE AUTENTICAÇÃO -->
+  <div id="auth-screen" class="auth-container" style="display:none;">
+    <div class="auth-card">
+      <div style="margin: 0 auto;" class="mascot-avatar">
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="18,10 38,38 10,32" fill="#30363D" />
+          <polygon points="82,10 90,32 62,38" fill="#30363D" />
+          <polygon points="22,16 34,35 15,31" fill="#FF8A65" />
+          <polygon points="78,16 85,31 66,35" fill="#FF8A65" />
+          <circle cx="50" cy="52" r="38" fill="#30363D" />
+          <path d="M 50,42 Q 30,35 20,55 Q 18,78 50,88 Q 82,78 80,55 Q 70,35 50,42 Z" fill="#F0F6FC" />
+          <ellipse cx="36" cy="50" rx="8" ry="10" fill="#FFB300" />
+          <ellipse cx="64" cy="50" rx="8" ry="10" fill="#FFB300" />
+          <ellipse cx="36" cy="50" rx="3" ry="8" fill="#0D1117" />
+          <ellipse cx="64" cy="50" rx="3" ry="8" fill="#0D1117" />
+          <polygon points="50,62 46,58 54,58" fill="#FF8A65" />
+          <path d="M 50,62 Q 45,67 40,64 M 50,62 Q 55,67 60,64" stroke="#0D1117" stroke-width="2" stroke-linecap="round" fill="none" />
+        </svg>
+      </div>
+      <div class="auth-title">Moka</div>
+      <div class="auth-sub">HQ de Gestão & Vida a Dois 🐱</div>
+
+      <form id="auth-form" style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+        <input type="email" id="auth-email" placeholder="Seu E-mail" required>
+        <input type="password" id="auth-password" placeholder="Sua Senha" required>
+        
+        <div id="couple-code-wrapper" style="display:none;">
+          <input type="text" id="auth-couple-code" placeholder="Código do Casal (Ex: MOKA-XXXX)" style="text-transform:uppercase;">
+          <p style="font-size:10px; color:var(--text-muted); margin-top:4px;">Deixe em branco para criar um novo espaço de casal.</p>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btn-auth-submit">Entrar no Moka</button>
+      </form>
+
+      <button type="button" class="btn-secondary" id="btn-toggle-auth-mode" onclick="toggleAuthMode()">Não tem conta? Cadastrar-se</button>
+    </div>
+  </div>
+
+  <!-- CONTAINER DO APLICATIVO -->
+  <div class="app-container" id="app-screen" style="display:none;">
     <header>
       <div class="brand">
         <div class="mascot-avatar">
@@ -277,6 +331,15 @@
 
       <div style="display:flex; flex-direction:column; gap:16px;">
         <div class="form-group">
+          <label>Seu Perfil</label>
+          <div style="font-size:12px; color:var(--text-main); font-weight:600;" id="user-email-display">-</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+            Código do Casal: <b id="couple-code-display" style="color:var(--accent-yellow); font-family:monospace;">-</b>
+            <button class="btn-icon" onclick="copyCoupleCode()" title="Copiar Código">📋</button>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label>Divisão Padrão do Casal</label>
           <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Ajuste a proporção padrão baseada nos salários:</p>
           <div class="slider-container">
@@ -286,6 +349,7 @@
         </div>
 
         <button class="btn-submit" onclick="saveSettings()">Salvar Configurações</button>
+        <button class="btn-secondary" style="border-color:var(--accent-red); color:var(--accent-red);" onclick="logout()">Encerrar Sessão (Sair)</button>
       </div>
     </div>
 
@@ -388,13 +452,11 @@
               </div>
             </div>
 
-            <!-- CHECKBOX SUBTIL DE DIVISÃO ALTERNATIVA -->
             <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text-muted); margin-bottom:12px;">
               <input type="checkbox" id="chk-alt-split" style="width:15px; height:15px; accent-color:var(--accent-yellow);" onchange="toggleAltSplitDrawer()">
               <label for="chk-alt-split" style="margin:0; font-size:11px; text-transform:none; cursor:pointer;">⚙️ Divisão alternativa (% pontual nesta compra)</label>
             </div>
 
-            <!-- PAINEL COM SLIDER E VALORES EM REAIS -->
             <div class="alt-split-box" id="alt-split-drawer">
               <label style="margin-bottom:2px;">Ajustar Proporção</label>
               <div class="slider-container">
@@ -402,7 +464,6 @@
                 <span class="slider-label" id="split-pct-label">50% / 50%</span>
               </div>
 
-              <!-- VISUALIZAÇÃO EM VALORES EXATOS DE REAIS (R$) -->
               <div class="split-values-grid">
                 <div class="split-value-card">
                   <div class="p-title">Sua parte</div>
@@ -686,9 +747,14 @@
     };
 
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.database();
 
     document.getElementById('expense-date').valueAsDate = new Date();
+
+    let currentUser = null;
+    let currentCoupleId = null;
+    let isSignupMode = false;
 
     let expenses = [];
     let vaults = [];
@@ -709,7 +775,89 @@
 
     function hideBanner() { document.getElementById('moka-reminders').style.display = 'none'; }
 
-    // HAMBÚRGUER / MENU DRAWER
+    // FLUXO DE AUTENTICAÇÃO
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUser = user;
+        document.getElementById('user-email-display').innerText = user.email;
+        
+        // Busca o casal vinculado a este UID
+        db.ref(`users/${user.uid}`).once('value', snapshot => {
+          const userData = snapshot.val();
+          if (userData && userData.coupleId) {
+            currentCoupleId = userData.coupleId;
+            document.getElementById('couple-code-display').innerText = currentCoupleId;
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'flex';
+            initCoupleListeners();
+          } else {
+            // Se o usuário não tiver coupleId registrado por algum motivo
+            const generatedCode = 'MOKA-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            db.ref(`users/${user.uid}`).set({ coupleId: generatedCode, email: user.email });
+            currentCoupleId = generatedCode;
+            document.getElementById('couple-code-display').innerText = currentCoupleId;
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'flex';
+            initCoupleListeners();
+          }
+        });
+      } else {
+        currentUser = null;
+        currentCoupleId = null;
+        document.getElementById('auth-screen').style.display = 'flex';
+        document.getElementById('app-screen').style.display = 'none';
+      }
+    });
+
+    function toggleAuthMode() {
+      isSignupMode = !isSignupMode;
+      const titleBtn = document.getElementById('btn-auth-submit');
+      const toggleBtn = document.getElementById('btn-toggle-auth-mode');
+      const codeWrapper = document.getElementById('couple-code-wrapper');
+
+      if (isSignupMode) {
+        titleBtn.innerText = 'Criar Nova Conta';
+        toggleBtn.innerText = 'Já tem conta? Entrar';
+        codeWrapper.style.display = 'block';
+      } else {
+        titleBtn.innerText = 'Entrar no Moka';
+        toggleBtn.innerText = 'Não tem conta? Cadastrar-se';
+        codeWrapper.style.display = 'none';
+      }
+    }
+
+    document.getElementById('auth-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value.trim();
+      const pass = document.getElementById('auth-password').value;
+      const coupleCodeInput = document.getElementById('auth-couple-code').value.trim().toUpperCase();
+
+      if (isSignupMode) {
+        auth.createUserWithEmailAndPassword(email, pass).then(cred => {
+          const finalCoupleId = coupleCodeInput ? coupleCodeInput : ('MOKA-' + Math.random().toString(36).substring(2, 6).toUpperCase());
+          return db.ref(`users/${cred.user.uid}`).set({
+            email: email,
+            coupleId: finalCoupleId
+          });
+        }).catch(err => alert("Erro ao criar conta: " + err.message));
+      } else {
+        auth.signInWithEmailAndPassword(email, pass).catch(err => alert("Erro ao entrar: " + err.message));
+      }
+    });
+
+    function logout() {
+      auth.signOut();
+      toggleMenu();
+    }
+
+    function copyCoupleCode() {
+      if (currentCoupleId) {
+        navigator.clipboard.writeText(currentCoupleId);
+        alert(`Código do Casal (${currentCoupleId}) copiado! Envie para o(a) seu(sua) parceiro(a).`);
+      }
+    }
+
+    // MENU DRAWER
     function toggleMenu() {
       const overlay = document.getElementById('menu-overlay');
       const drawer = document.getElementById('menu-drawer');
@@ -724,8 +872,9 @@
     }
 
     function saveSettings() {
+      if (!currentCoupleId) return;
       defaultSplitPct = parseInt(document.getElementById('default-split-slider').value);
-      db.ref('settings/defaultSplitPct').set(defaultSplitPct);
+      db.ref(`couples/${currentCoupleId}/settings/defaultSplitPct`).set(defaultSplitPct);
       
       if (!document.getElementById('chk-alt-split').checked) {
         document.getElementById('split-user1-pct').value = defaultSplitPct;
@@ -783,8 +932,10 @@
       renderFinancas();
     }
 
-    function initFirebase() {
-      db.ref('settings/defaultSplitPct').on('value', snapshot => {
+    function initCoupleListeners() {
+      if (!currentCoupleId) return;
+
+      db.ref(`couples/${currentCoupleId}/settings/defaultSplitPct`).on('value', snapshot => {
         const val = snapshot.val();
         if (val !== null) {
           defaultSplitPct = parseInt(val);
@@ -798,43 +949,43 @@
         }
       });
 
-      db.ref('expenses').on('value', snapshot => {
+      db.ref(`couples/${currentCoupleId}/expenses`).on('value', snapshot => {
         const data = snapshot.val();
         expenses = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
         renderFinancas();
       });
 
-      db.ref('vaults').on('value', snapshot => {
+      db.ref(`couples/${currentCoupleId}/vaults`).on('value', snapshot => {
         const data = snapshot.val();
         vaults = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
         renderVaults();
       });
 
-      db.ref('market').on('value', snapshot => {
+      db.ref(`couples/${currentCoupleId}/market`).on('value', snapshot => {
         const data = snapshot.val();
         marketItems = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
         renderMarket();
       });
 
-      db.ref('tasks').on('value', snapshot => {
+      db.ref(`couples/${currentCoupleId}/tasks`).on('value', snapshot => {
         const data = snapshot.val();
         tasks = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
         renderTasks();
       });
 
-      db.ref('events').on('value', snapshot => {
+      db.ref(`couples/${currentCoupleId}/events`).on('value', snapshot => {
         const data = snapshot.val();
         events = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
         renderEvents();
       });
 
-      db.ref('roles').on('value', snapshot => {
+      db.ref(`couples/${currentCoupleId}/roles`).on('value', snapshot => {
         const data = snapshot.val();
         roles = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
         renderRoles();
       });
 
-      db.ref('notes').on('value', snapshot => {
+      db.ref(`couples/${currentCoupleId}/notes`).on('value', snapshot => {
         const data = snapshot.val();
         notes = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
         renderNotes();
@@ -864,6 +1015,7 @@
     // --- FINANÇAS ---
     document.getElementById('expense-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!currentCoupleId) return;
       const editKey = document.getElementById('edit-fbkey').value;
       const isAltSplit = document.getElementById('chk-alt-split').checked;
 
@@ -881,12 +1033,12 @@
       };
 
       if (editKey) {
-        db.ref(`expenses/${editKey}`).update(newExpense);
+        db.ref(`couples/${currentCoupleId}/expenses/${editKey}`).update(newExpense);
         document.getElementById('edit-fbkey').value = '';
         document.getElementById('form-title').innerText = 'Novo Lançamento';
         document.getElementById('btn-save-expense').innerText = '+ Salvar Lançamento';
       } else {
-        db.ref('expenses').push(newExpense);
+        db.ref(`couples/${currentCoupleId}/expenses`).push(newExpense);
       }
 
       document.getElementById('desc').value = '';
@@ -926,25 +1078,28 @@
     }
 
     function deleteExpense(fbKey) {
+      if (!currentCoupleId) return;
       if (confirm("Tem certeza que deseja excluir este lançamento?")) {
-        db.ref(`expenses/${fbKey}`).remove();
+        db.ref(`couples/${currentCoupleId}/expenses/${fbKey}`).remove();
       }
     }
 
     function togglePaid(fbKey, currentStatus) {
-      db.ref(`expenses/${fbKey}`).update({ paid: !currentStatus });
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/expenses/${fbKey}`).update({ paid: !currentStatus });
     }
 
     function settleBalance() {
+      if (!currentCoupleId) return;
       const today = new Date().toISOString().slice(0, 10);
-      db.ref('expenses').push({
+      db.ref(`couples/${currentCoupleId}/expenses`).push({
         payer: 'Ajuste', scope: 'Compartilhado', user1Pct: defaultSplitPct, desc: 'Quitação de Acerto do Casal',
         amount: 0, category: 'Outros', date: today, paid: true
       });
 
       expenses.forEach(e => {
         if (!e.paid && e.scope === 'Compartilhado') {
-          db.ref(`expenses/${e.fbKey}`).update({ paid: true });
+          db.ref(`couples/${currentCoupleId}/expenses/${e.fbKey}`).update({ paid: true });
         }
       });
       alert("Acerto do casal quitado com sucesso!");
@@ -1150,6 +1305,7 @@
     // --- COFRES ---
     document.getElementById('vault-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!currentCoupleId) return;
       const editKey = document.getElementById('edit-vault-fbkey').value;
 
       const newVault = {
@@ -1159,12 +1315,12 @@
       };
 
       if (editKey) {
-        db.ref(`vaults/${editKey}`).update(newVault);
+        db.ref(`couples/${currentCoupleId}/vaults/${editKey}`).update(newVault);
         document.getElementById('edit-vault-fbkey').value = '';
         document.getElementById('vault-form-title').innerText = 'Cofre dos Sonhos 🎯';
         document.getElementById('btn-save-vault').innerText = '+ Criar Novo Cofre';
       } else {
-        db.ref('vaults').push({
+        db.ref(`couples/${currentCoupleId}/vaults`).push({
           ...newVault,
           current: 0
         });
@@ -1189,18 +1345,20 @@
     }
 
     function deleteVault(fbKey) {
+      if (!currentCoupleId) return;
       if (confirm("Tem certeza que deseja excluir este cofre?")) {
-        db.ref(`vaults/${fbKey}`).remove();
+        db.ref(`couples/${currentCoupleId}/vaults/${fbKey}`).remove();
       }
     }
 
     function addDeposit(fbKey, currentVal) {
+      if (!currentCoupleId) return;
       const depositStr = prompt("Valor do novo depósito para este cofre (R$):");
       if (!depositStr) return;
       const deposit = parseFloat(depositStr.replace(',', '.'));
       if (isNaN(deposit) || deposit <= 0) return;
 
-      db.ref(`vaults/${fbKey}`).update({ current: currentVal + deposit });
+      db.ref(`couples/${currentCoupleId}/vaults/${fbKey}`).update({ current: currentVal + deposit });
     }
 
     function renderVaults() {
@@ -1232,8 +1390,9 @@
     // --- MERCADO ---
     document.getElementById('market-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!currentCoupleId) return;
       const input = document.getElementById('market-input');
-      db.ref('market').push({ name: input.value, checked: false });
+      db.ref(`couples/${currentCoupleId}/market`).push({ name: input.value, checked: false });
       input.value = '';
     });
 
@@ -1256,28 +1415,36 @@
       });
     }
 
-    function toggleMarket(fbKey, status) { db.ref(`market/${fbKey}`).update({ checked: !status }); }
-    function deleteMarket(fbKey) { db.ref(`market/${fbKey}`).remove(); }
+    function toggleMarket(fbKey, status) {
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/market/${fbKey}`).update({ checked: !status });
+    }
+    function deleteMarket(fbKey) {
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/market/${fbKey}`).remove();
+    }
 
     function convertMarketToExpense() {
+      if (!currentCoupleId) return;
       const valStr = prompt("Valor total da compra no mercado (R$):");
       if (!valStr) return;
       const amount = parseFloat(valStr.replace(',', '.'));
       if (isNaN(amount) || amount <= 0) return;
 
-      db.ref('expenses').push({
+      db.ref(`couples/${currentCoupleId}/expenses`).push({
         payer: 'Você', scope: 'Compartilhado', user1Pct: defaultSplitPct, desc: 'Compra de Mercado',
         amount, category: 'Mercado', date: new Date().toISOString().slice(0, 10), paid: true
       });
 
-      marketItems.filter(i => i.checked).forEach(i => db.ref(`market/${i.fbKey}`).remove());
+      marketItems.filter(i => i.checked).forEach(i => db.ref(`couples/${currentCoupleId}/market/${i.fbKey}`).remove());
       alert("Gasto cadastrado no Moka!");
     }
 
     // --- TAREFAS ---
     document.getElementById('task-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      db.ref('tasks').push({
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/tasks`).push({
         title: document.getElementById('task-input').value,
         assignee: document.getElementById('task-assignee').value,
         recurrence: document.getElementById('task-recurrence').value,
@@ -1350,14 +1517,15 @@
     }
 
     function completeTask(fbKey) {
+      if (!currentCoupleId) return;
       const task = tasks.find(t => t.fbKey === fbKey);
       if (!task) return;
 
-      db.ref(`tasks/${fbKey}`).update({ done: true });
+      db.ref(`couples/${currentCoupleId}/tasks/${fbKey}`).update({ done: true });
 
       if (task.rotate && task.assignee !== 'Juntos 👥') {
         const nextAssignee = task.assignee === 'Você' ? 'Namorada' : 'Você';
-        db.ref('tasks').push({
+        db.ref(`couples/${currentCoupleId}/tasks`).push({
           title: task.title,
           assignee: nextAssignee,
           recurrence: task.recurrence,
@@ -1371,7 +1539,8 @@
     // --- EVENTOS ---
     document.getElementById('event-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      db.ref('events').push({
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/events`).push({
         title: document.getElementById('event-title').value,
         date: document.getElementById('event-date').value
       });
@@ -1395,7 +1564,8 @@
     // --- ROLÊS ---
     document.getElementById('role-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      db.ref('roles').push({
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/roles`).push({
         title: document.getElementById('role-title').value,
         type: document.getElementById('role-type').value,
         note: document.getElementById('role-note').value,
@@ -1424,12 +1594,16 @@
       });
     }
 
-    function toggleRole(fbKey, status) { db.ref(`roles/${fbKey}`).update({ done: !status }); }
+    function toggleRole(fbKey, status) {
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/roles/${fbKey}`).update({ done: !status });
+    }
 
     // --- LOVE NOTES & VALES ---
     document.getElementById('note-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      db.ref('notes').push({
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/notes`).push({
         sender: document.getElementById('note-sender').value,
         type: document.getElementById('note-type').value,
         title: document.getElementById('note-title').value,
@@ -1441,7 +1615,8 @@
     });
 
     function toggleNoteRedeem(fbKey, currentStatus) {
-      db.ref(`notes/${fbKey}`).update({ redeemed: !currentStatus });
+      if (!currentCoupleId) return;
+      db.ref(`couples/${currentCoupleId}/notes/${fbKey}`).update({ redeemed: !currentStatus });
     }
 
     function renderNotes() {
@@ -1465,8 +1640,6 @@
         list.appendChild(item);
       });
     }
-
-    initFirebase();
   </script>
 </body>
 </html>
