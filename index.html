@@ -219,7 +219,7 @@
     .date-input-wrapper svg { stroke: var(--text-muted); flex-shrink: 0; }
     .date-input-wrapper input { border: none; padding: 0; background: transparent; font-size: 11px; }
 
-    /* ESTILOS DE FORMULÁRIO ULTRA MINIMALISTA */
+    /* FORMULÁRIO ULTRA MINIMALISTA BASEADO EM SELECTS */
     .form-group-compact { display: flex; flex-direction: column; gap: 3px; }
     .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
@@ -227,25 +227,13 @@
     label.lbl-compact { display: block; font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1px; }
     
     input, select, textarea {
-      width: 100%; padding: 7px 10px; border: 1px solid var(--card-border); border-radius: var(--radius-sm);
-      font-size: 12px; outline: none; background-color: #0D1117; color: var(--text-main); transition: all 0.2s;
+      width: 100%; padding: 6px 8px; border: 1px solid var(--card-border); border-radius: var(--radius-sm);
+      font-size: 11px; outline: none; background-color: #0D1117; color: var(--text-main); transition: all 0.2s;
     }
     input:focus, select:focus, textarea:focus { border-color: var(--accent-yellow); }
 
-    /* SEGMENTED CONTROLS ULTRA COMPACTOS */
-    .radio-segmented { display: flex; background: #0D1117; border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 2px; gap: 2px; }
-    .radio-segmented .radio-btn { flex: 1; position: relative; }
-    .radio-segmented input { position: absolute; opacity: 0; cursor: pointer; width: 100%; height: 100%; top:0; left:0; margin:0; }
-    .radio-segmented label {
-      display: flex; align-items: center; justify-content: center; padding: 5px 2px;
-      border-radius: 4px; font-size: 10px; font-weight: 600; color: var(--text-muted);
-      cursor: pointer; background: transparent; margin: 0; text-transform: none; text-align: center;
-      transition: all 0.15s ease;
-    }
-    .radio-segmented input:checked + label { background: var(--card-border); color: var(--accent-yellow); font-weight: 700; }
-
     .btn-submit {
-      width: 100%; background: var(--accent-yellow); color: #0D1117; border: none; padding: 9px;
+      width: 100%; background: var(--accent-yellow); color: #0D1117; border: none; padding: 8px;
       border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer;
     }
     .btn-secondary {
@@ -508,48 +496,30 @@
           <form id="expense-form" style="display:flex; flex-direction:column; gap:8px;">
             <input type="hidden" id="edit-fbkey" value="">
             
-            <!-- LINHA 1: CONTROLES SEGMENTADOS INLINE ULTRA COMPACTOS -->
+            <!-- LINHA 1: CONTROLES POR LISTA (SELECTS) EM 3 COLUNAS -->
             <div class="form-row-3">
               <div class="form-group-compact">
                 <label class="lbl-compact">Quem Pagou</label>
-                <div class="radio-segmented">
-                  <div class="radio-btn">
-                    <input type="radio" id="payer1" name="payer" value="Você" checked>
-                    <label for="payer1">Você</label>
-                  </div>
-                  <div class="radio-btn">
-                    <input type="radio" id="payer2" name="payer" value="Namorada">
-                    <label for="payer2">Ela</label>
-                  </div>
-                </div>
+                <select id="expense-payer">
+                  <option value="Você">Você</option>
+                  <option value="Namorada">Namorada</option>
+                </select>
               </div>
 
               <div class="form-group-compact">
                 <label class="lbl-compact">Âmbito</label>
-                <div class="radio-segmented">
-                  <div class="radio-btn">
-                    <input type="radio" id="scope1" name="scope" value="Compartilhado" checked>
-                    <label for="scope1">Juntos</label>
-                  </div>
-                  <div class="radio-btn">
-                    <input type="radio" id="scope2" name="scope" value="Pessoal">
-                    <label for="scope2">Solo</label>
-                  </div>
-                </div>
+                <select id="expense-scope">
+                  <option value="Compartilhado">Juntos</option>
+                  <option value="Pessoal">Solo (Pessoal)</option>
+                </select>
               </div>
 
               <div class="form-group-compact">
                 <label class="lbl-compact">Pagamento</label>
-                <div class="radio-segmented">
-                  <div class="radio-btn">
-                    <input type="radio" id="pay-pix" name="paymentMethod" value="Pix/Débito" checked onchange="toggleCreditCardSelect()">
-                    <label for="pay-pix">⚡ Pix</label>
-                  </div>
-                  <div class="radio-btn">
-                    <input type="radio" id="pay-card" name="paymentMethod" value="Cartão de Crédito" onchange="toggleCreditCardSelect()">
-                    <label for="pay-card">💳 Cartão</label>
-                  </div>
-                </div>
+                <select id="expense-payment-method" onchange="toggleCreditCardSelect()">
+                  <option value="Pix/Débito">⚡ Pix / Débito</option>
+                  <option value="Cartão de Crédito">💳 Cartão Crédito</option>
+                </select>
               </div>
             </div>
 
@@ -1143,7 +1113,7 @@
     }
 
     function toggleCreditCardSelect() {
-      const isCardSelected = document.getElementById('pay-card').checked;
+      const isCardSelected = document.getElementById('expense-payment-method').value === 'Cartão de Crédito';
       const wrapper = document.getElementById('card-select-wrapper');
       if (isCardSelected) {
         wrapper.style.display = 'flex';
@@ -1312,14 +1282,14 @@
       const isAltSplit = document.getElementById('chk-alt-split').checked;
 
       const user1Pct = isAltSplit ? parseInt(document.getElementById('split-user1-pct').value) : defaultSplitPct;
-      const isCard = document.getElementById('pay-card').checked;
-      const paymentMethod = isCard ? 'Cartão de Crédito' : 'Pix/Débito';
+      const paymentMethod = document.getElementById('expense-payment-method').value;
+      const isCard = paymentMethod === 'Cartão de Crédito';
       const selectedCardId = isCard ? document.getElementById('selected-card-id').value : '';
       const cardObj = creditCards.find(c => c.fbKey === selectedCardId);
 
       const newExpense = {
-        payer: document.querySelector('input[name="payer"]:checked').value,
-        scope: document.querySelector('input[name="scope"]:checked').value,
+        payer: document.getElementById('expense-payer').value,
+        scope: document.getElementById('expense-scope').value,
         paymentMethod: paymentMethod,
         cardNickname: cardObj ? cardObj.nickname : '',
         user1Pct: user1Pct,
@@ -1341,7 +1311,7 @@
 
       document.getElementById('desc').value = '';
       document.getElementById('amount').value = '';
-      document.getElementById('pay-pix').checked = true;
+      document.getElementById('expense-payment-method').value = 'Pix/Débito';
       toggleCreditCardSelect();
       document.getElementById('chk-alt-split').checked = false;
       toggleAltSplitDrawer();
@@ -1357,12 +1327,9 @@
       document.getElementById('expense-date').value = item.date;
       document.getElementById('category').value = item.category;
 
-      document.querySelector(`input[name="payer"][value="${item.payer}"]`).checked = true;
-      document.querySelector(`input[name="scope"][value="${item.scope}"]`).checked = true;
-
-      const isCard = item.paymentMethod === 'Cartão de Crédito';
-      document.getElementById('pay-card').checked = isCard;
-      document.getElementById('pay-pix').checked = !isCard;
+      document.getElementById('expense-payer').value = item.payer;
+      document.getElementById('expense-scope').value = item.scope;
+      document.getElementById('expense-payment-method').value = item.paymentMethod || 'Pix/Débito';
       toggleCreditCardSelect();
 
       const pct = (item.user1Pct !== undefined) ? item.user1Pct : defaultSplitPct;
