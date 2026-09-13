@@ -91,10 +91,10 @@
     .menu-overlay.open { display: block; opacity: 1; }
 
     .menu-drawer {
-      position: fixed; top: 0; right: -320px; width: 300px; height: 100vh;
+      position: fixed; top: 0; right: -340px; width: 320px; height: 100vh;
       background: var(--card-dark); border-left: 1px solid var(--card-border);
-      z-index: 201; padding: 20px; display: flex; flex-direction: column; gap: 20px;
-      box-shadow: -8px 0 24px rgba(0,0,0,0.5); transition: right 0.3s ease;
+      z-index: 201; padding: 20px; display: flex; flex-direction: column; gap: 16px;
+      box-shadow: -8px 0 24px rgba(0,0,0,0.5); transition: right 0.3s ease; overflow-y: auto;
     }
     .menu-drawer.open { right: 0; }
     .menu-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
@@ -211,7 +211,7 @@
       border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer;
     }
 
-    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list, .notes-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; }
+    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list, .notes-list, .cards-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; }
     .list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius-md); background: #0D1117; border: 1px solid var(--card-border); }
     .item-main { display: flex; align-items: center; justify-content: space-between; }
     .item-info { display: flex; align-items: center; gap: 10px; }
@@ -232,6 +232,7 @@
     .badge-pending { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
     .badge-personal { background: rgba(163, 113, 247, 0.15); color: var(--accent-purple); }
     .badge-split { background: rgba(88, 166, 255, 0.15); color: var(--accent-blue); }
+    .badge-card { background: rgba(255, 179, 0, 0.15); color: var(--accent-yellow); }
 
     .btn-action { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border: 1px solid rgba(63, 185, 80, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
     .btn-disabled { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: default; }
@@ -269,7 +270,7 @@
           <polygon points="22,16 34,35 15,31" fill="#FF8A65" />
           <polygon points="78,16 85,31 66,35" fill="#FF8A65" />
           <circle cx="50" cy="52" r="38" fill="#30363D" />
-          <path d="M 50,42 Q 30,35 20,55 Q 18,78 50,88 Q 82,78 80,55 Q 70,35 50,42 Z" fill="#F0F6FC" />
+          <path d="M 50,42 Q 30,35 20,55 Q 18,78 50,88 Q 82,78 50,42 Z" fill="#F0F6FC" />
           <ellipse cx="36" cy="50" rx="8" ry="10" fill="#FFB300" />
           <ellipse cx="64" cy="50" rx="8" ry="10" fill="#FFB300" />
           <ellipse cx="36" cy="50" rx="3" ry="8" fill="#0D1117" />
@@ -350,7 +351,20 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <!-- GERENCIAMENTO DE CARTÕES DE CRÉDITO -->
+        <div class="form-group" style="border-top:1px solid var(--card-border); pt:12px; margin-top:4px;">
+          <label>💳 Meus Cartões de Crédito</label>
+          <form id="card-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
+            <input type="text" id="credit-card-nickname" placeholder="Apelido do Cartão (Ex: Nubank Roxo)" required style="font-size:12px; padding:8px 10px;">
+            <div style="display:flex; gap:8px;">
+              <input type="number" id="credit-card-due-day" placeholder="Dia Vencimento (1-31)" min="1" max="31" required style="font-size:12px; padding:8px 10px;">
+              <button type="submit" class="btn-submit" style="width: auto; padding: 0 14px; font-size:12px;">+ Adicionar</button>
+            </div>
+          </form>
+          <div class="cards-list" id="menu-cards-list" style="max-height: 140px;"></div>
+        </div>
+
+        <div class="form-group" style="border-top:1px solid var(--card-border); pt:12px;">
           <label>Divisão Padrão do Casal</label>
           <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Ajuste a proporção padrão baseada nos salários:</p>
           <div class="slider-container">
@@ -443,6 +457,23 @@
                   <label for="scope2">Pessoal</label>
                 </div>
               </div>
+            </div>
+
+            <!-- FORMA DE PAGAMENTO -->
+            <div class="form-group">
+              <label>Forma de Pagamento</label>
+              <select id="payment-method" onchange="toggleCreditCardSelect()">
+                <option value="Pix/Débito">⚡ Pix / Débito (À vista)</option>
+                <option value="Cartão de Crédito">💳 Cartão de Crédito</option>
+              </select>
+            </div>
+
+            <!-- SELETOR DINÂMICO DE CARTÃO DE CRÉDITO -->
+            <div class="form-group" id="card-select-wrapper" style="display:none;">
+              <label>Escolher Cartão</label>
+              <select id="selected-card-id" onchange="handleCardSelectionChange()">
+                <option value="">Selecione um cartão cadastrado...</option>
+              </select>
             </div>
 
             <div class="form-group">
@@ -766,6 +797,7 @@
     let isSignupMode = false;
 
     let expenses = [];
+    let creditCards = [];
     let vaults = [];
     let marketItems = [];
     let tasks = [];
@@ -903,6 +935,94 @@
       alert("Configurações salvas com sucesso!");
     }
 
+    // --- GERENCIAMENTO DE CARTÕES ---
+    document.getElementById('card-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!currentCoupleId) return;
+      const nickname = document.getElementById('credit-card-nickname').value.trim();
+      const dueDay = parseInt(document.getElementById('credit-card-due-day').value);
+
+      if (dueDay < 1 || dueDay > 31) {
+        alert("Por favor, informe um dia de vencimento válido (entre 1 e 31).");
+        return;
+      }
+
+      db.ref(`couples/${currentCoupleId}/creditCards`).push({ nickname, dueDay });
+      document.getElementById('credit-card-nickname').value = '';
+      document.getElementById('credit-card-due-day').value = '';
+    });
+
+    function deleteCard(fbKey) {
+      if (!currentCoupleId) return;
+      if (confirm("Deseja remover este cartão da lista?")) {
+        db.ref(`couples/${currentCoupleId}/creditCards/${fbKey}`).remove();
+      }
+    }
+
+    function renderCards() {
+      const menuList = document.getElementById('menu-cards-list');
+      const selectForm = document.getElementById('selected-card-id');
+      menuList.innerHTML = '';
+      selectForm.innerHTML = '<option value="">Selecione um cartão cadastrado...</option>';
+
+      creditCards.forEach(card => {
+        // Renderiza no menu lateral
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.style.padding = '8px 10px';
+        item.innerHTML = `
+          <div class="item-main">
+            <div>
+              <div class="item-title" style="font-size:12px;">💳 ${card.nickname}</div>
+              <div class="item-sub" style="font-size:10px;">Vence todo dia <b>${card.dueDay}</b></div>
+            </div>
+            <button class="btn-icon" onclick="deleteCard('${card.fbKey}')" title="Excluir">🗑️</button>
+          </div>
+        `;
+        menuList.appendChild(item);
+
+        // Popula o select do formulário de lançamento
+        const opt = document.createElement('option');
+        opt.value = card.fbKey;
+        opt.innerText = `💳 ${card.nickname} (Venc. dia ${card.dueDay})`;
+        selectForm.appendChild(opt);
+      });
+
+      if (creditCards.length === 0) {
+        menuList.innerHTML = `<div style="text-align:center; padding:6px; color:var(--text-muted); font-size:11px;">Nenhum cartão cadastrado.</div>`;
+      }
+    }
+
+    function toggleCreditCardSelect() {
+      const method = document.getElementById('payment-method').value;
+      const wrapper = document.getElementById('card-select-wrapper');
+      if (method === 'Cartão de Crédito') {
+        wrapper.style.display = 'block';
+      } else {
+        wrapper.style.display = 'none';
+        document.getElementById('selected-card-id').value = '';
+      }
+    }
+
+    function handleCardSelectionChange() {
+      const cardId = document.getElementById('selected-card-id').value;
+      if (!cardId) return;
+      const card = creditCards.find(c => c.fbKey === cardId);
+      if (!card) return;
+
+      const today = new Date();
+      let dueYear = today.getFullYear();
+      let dueMonth = today.getMonth();
+
+      // Se o dia atual já passou do dia de vencimento, a compra cai no mês seguinte
+      if (today.getDate() >= card.dueDay) {
+        dueMonth += 1;
+      }
+
+      const calculatedDueDate = new Date(dueYear, dueMonth, card.dueDay);
+      document.getElementById('expense-date').valueAsDate = calculatedDueDate;
+    }
+
     function toggleAltSplitDrawer() {
       const chk = document.getElementById('chk-alt-split');
       const drawer = document.getElementById('alt-split-drawer');
@@ -965,6 +1085,12 @@
             updateSplitLabel(defaultSplitPct);
           }
         }
+      });
+
+      db.ref(`couples/${currentCoupleId}/creditCards`).on('value', snapshot => {
+        const data = snapshot.val();
+        creditCards = data ? Object.keys(data).map(key => ({ fbKey: key, ...data[key] })) : [];
+        renderCards();
       });
 
       db.ref(`couples/${currentCoupleId}/expenses`).on('value', snapshot => {
@@ -1038,10 +1164,15 @@
       const isAltSplit = document.getElementById('chk-alt-split').checked;
 
       const user1Pct = isAltSplit ? parseInt(document.getElementById('split-user1-pct').value) : defaultSplitPct;
+      const paymentMethod = document.getElementById('payment-method').value;
+      const selectedCardId = document.getElementById('selected-card-id').value;
+      const cardObj = creditCards.find(c => c.fbKey === selectedCardId);
 
       const newExpense = {
         payer: document.querySelector('input[name="payer"]:checked').value,
         scope: document.querySelector('input[name="scope"]:checked').value,
+        paymentMethod: paymentMethod,
+        cardNickname: cardObj ? cardObj.nickname : '',
         user1Pct: user1Pct,
         desc: document.getElementById('desc').value,
         amount: parseFloat(document.getElementById('amount').value),
@@ -1061,6 +1192,8 @@
 
       document.getElementById('desc').value = '';
       document.getElementById('amount').value = '';
+      document.getElementById('payment-method').value = 'Pix/Débito';
+      toggleCreditCardSelect();
       document.getElementById('chk-alt-split').checked = false;
       toggleAltSplitDrawer();
     });
@@ -1077,6 +1210,10 @@
 
       document.querySelector(`input[name="payer"][value="${item.payer}"]`).checked = true;
       document.querySelector(`input[name="scope"][value="${item.scope}"]`).checked = true;
+
+      const pm = item.paymentMethod || 'Pix/Débito';
+      document.getElementById('payment-method').value = pm;
+      toggleCreditCardSelect();
 
       const pct = (item.user1Pct !== undefined) ? item.user1Pct : defaultSplitPct;
       if (pct !== defaultSplitPct) {
@@ -1169,6 +1306,7 @@
 
         const personalBadge = item.scope === 'Pessoal' ? `<span class="badge badge-personal">PESSOAL</span> ` : '';
         const splitBadge = pct1 !== defaultSplitPct ? `<span class="badge badge-split" title="Você: ${formatBRL(v1)} | Namorada: ${formatBRL(v2)}">SPLIT ${pct1}/${pct2}</span> ` : '';
+        const cardBadge = item.paymentMethod === 'Cartão de Crédito' ? `<span class="badge badge-card">💳 ${item.cardNickname || 'Cartão'}</span> ` : '';
 
         itemEl.innerHTML = `
           <div class="item-main">
@@ -1188,8 +1326,9 @@
             </div>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; pt:6px; border-top:1px solid rgba(255,255,255,0.05);">
-            <div>
+            <div style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;">
               ${personalBadge}
+              ${cardBadge}
               ${splitBadge}
               <span class="badge ${item.paid ? 'badge-paid' : 'badge-pending'}">${item.paid ? 'QUITADO' : 'PENDENTE'}</span>
             </div>
@@ -1450,7 +1589,7 @@
       if (isNaN(amount) || amount <= 0) return;
 
       db.ref(`couples/${currentCoupleId}/expenses`).push({
-        payer: 'Você', scope: 'Compartilhado', user1Pct: defaultSplitPct, desc: 'Compra de Mercado',
+        payer: 'Você', scope: 'Compartilhado', paymentMethod: 'Pix/Débito', cardNickname: '', user1Pct: defaultSplitPct, desc: 'Compra de Mercado',
         amount, category: 'Mercado', date: new Date().toISOString().slice(0, 10), paid: true
       });
 
