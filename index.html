@@ -83,6 +83,7 @@
     }
     .btn-hamburger:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); }
 
+    /* MENU HAMBÚRGUER (DRAWER) */
     .menu-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200;
@@ -93,13 +94,30 @@
     .menu-drawer {
       position: fixed; top: 0; right: -320px; width: 300px; height: 100vh;
       background: var(--card-dark); border-left: 1px solid var(--card-border);
-      z-index: 201; padding: 20px; display: flex; flex-direction: column; gap: 20px;
-      box-shadow: -8px 0 24px rgba(0,0,0,0.5); transition: right 0.3s ease;
+      z-index: 201; padding: 20px; display: flex; flex-direction: column; gap: 16px;
+      box-shadow: -8px 0 24px rgba(0,0,0,0.5); transition: right 0.3s ease; overflow-y: auto;
     }
     .menu-drawer.open { right: 0; }
     .menu-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
     .menu-header h2 { font-size: 16px; font-weight: 700; color: var(--text-main); }
     .btn-close-menu { background: transparent; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
+
+    /* MODAL FLUTUANTE DE GESTÃO DE CARTÕES */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 300;
+      display: none; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-card {
+      background: var(--card-dark); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); width: 100%; max-width: 400px; max-height: 90vh;
+      display: flex; flex-direction: column; gap: 14px; padding: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6); overflow-y: auto; position: relative;
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
+    .modal-header h3 { font-size: 16px; font-weight: 700; color: var(--text-main); }
 
     .bottom-nav {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -351,7 +369,12 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <!-- BOTÃO ACESSO Á GESTÃO DE CARTÕES -->
+        <button type="button" class="btn-secondary" style="border-color:var(--accent-yellow); color:var(--accent-yellow);" onclick="openCardsModal()">
+          💳 Gestão de Cartões
+        </button>
+
+        <div class="form-group" style="border-top:1px solid var(--card-border); pt:12px;">
           <label>Divisão Padrão do Casal</label>
           <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Ajuste a proporção padrão baseada nos salários:</p>
           <div class="slider-container">
@@ -362,6 +385,28 @@
 
         <button class="btn-submit" onclick="saveSettings()">Salvar Configurações</button>
         <button class="btn-secondary" style="border-color:var(--accent-red); color:var(--accent-red);" onclick="logout()">Encerrar Sessão (Sair)</button>
+      </div>
+    </div>
+
+    <!-- MODAL FLUTUANTE DE GESTÃO DE CARTÕES -->
+    <div class="modal-overlay" id="cards-modal-overlay" onclick="closeCardsModalOnBackdrop(event)">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>💳 Gestão de Cartões de Crédito</h3>
+          <button class="btn-close-menu" onclick="closeCardsModal()">✕</button>
+        </div>
+
+        <form id="card-form" style="display:flex; flex-direction:column; gap:10px;">
+          <input type="text" id="credit-card-nickname" placeholder="Apelido do Cartão (Ex: Nubank Roxo, XP)" required>
+          <input type="number" id="credit-card-due-day" placeholder="Dia de Vencimento da Fatura (1 a 31)" min="1" max="31" required>
+          <button type="submit" class="btn-submit">+ Cadastrar Cartão</button>
+        </form>
+
+        <div style="border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 4px;">
+          <label style="margin-bottom:8px;">Cartões Cadastrados</label>
+          <p style="font-size:10px; color:var(--text-muted); margin-bottom:10px;">Clique na estrela ⭐ para definir o cartão padrão das compras.</p>
+          <div class="cards-list" id="modal-cards-list" style="max-height: 220px;"></div>
+        </div>
       </div>
     </div>
 
@@ -376,9 +421,8 @@
     <!-- PILAR 1: FINANÇAS -->
     <div id="section-financas" class="main-section active">
       <div class="sub-tabs">
-        <div class="sub-tab active" onclick="switchSubView('financas', 'resumo', this)">Balanço</div>
+        <div class="sub-tab active" onclick="switchSubView('financas', 'resumo', this)">Balanço & Análise</div>
         <div class="sub-tab" onclick="switchSubView('financas', 'lancamentos', this)">Lançamentos</div>
-        <div class="sub-tab" onclick="switchSubView('financas', 'cartoes', this)">Cartões 💳</div>
         <div class="sub-tab" onclick="switchSubView('financas', 'cofres', this)">Cofres 🎯</div>
       </div>
 
@@ -595,24 +639,6 @@
           </div>
 
           <div class="expense-list" id="expense-list"></div>
-        </div>
-      </div>
-
-      <!-- ÁREA DE GESTÃO ELEGANTE DE CARTÕES -->
-      <div id="sub-financas-cartoes" class="sub-view">
-        <div class="card">
-          <div class="card-title">Gestão de Cartões de Crédito 💳</div>
-          <form id="card-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
-            <input type="text" id="credit-card-nickname" placeholder="Apelido do Cartão (Ex: Nubank Roxo, XP)" required>
-            <input type="number" id="credit-card-due-day" placeholder="Dia Vencimento da Fatura (1 a 31)" min="1" max="31" required>
-            <button type="submit" class="btn-submit">+ Cadastrar Cartão</button>
-          </form>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Cartões do Casal</div>
-          <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Selecione ⭐ para definir o cartão padrão nas compras.</p>
-          <div class="cards-list" id="cards-dedicated-list"></div>
         </div>
       </div>
 
@@ -925,6 +951,22 @@
       drawer.classList.toggle('open');
     }
 
+    /* CONTROLE DO MODAL DE CARTÕES */
+    function openCardsModal() {
+      toggleMenu(); // fecha o menu hamburguer
+      document.getElementById('cards-modal-overlay').classList.add('open');
+    }
+
+    function closeCardsModal() {
+      document.getElementById('cards-modal-overlay').classList.remove('open');
+    }
+
+    function closeCardsModalOnBackdrop(e) {
+      if (e.target.id === 'cards-modal-overlay') {
+        closeCardsModal();
+      }
+    }
+
     function updateDefaultSplitLabel(val) {
       const p1 = parseInt(val);
       const p2 = 100 - p1;
@@ -982,9 +1024,9 @@
     }
 
     function renderCards() {
-      const list = document.getElementById('cards-dedicated-list');
+      const modalList = document.getElementById('modal-cards-list');
       const selectForm = document.getElementById('selected-card-id');
-      list.innerHTML = '';
+      modalList.innerHTML = '';
       selectForm.innerHTML = '';
 
       let defaultCardKey = null;
@@ -994,11 +1036,12 @@
 
         const item = document.createElement('div');
         item.className = 'list-item';
+        item.style.padding = '8px 12px';
         item.innerHTML = `
           <div class="item-main">
             <div>
-              <div class="item-title">💳 ${card.nickname} ${card.isDefault ? '⭐ (Padrão)' : ''}</div>
-              <div class="item-sub">Vencimento da fatura: Todo dia <b>${card.dueDay}</b></div>
+              <div class="item-title" style="font-size:12px;">💳 ${card.nickname} ${card.isDefault ? '<span style="color:var(--accent-yellow);">⭐ (Padrão)</span>' : ''}</div>
+              <div class="item-sub" style="font-size:11px;">Vencimento: Todo dia <b>${card.dueDay}</b></div>
             </div>
             <div>
               ${!card.isDefault ? `<button class="btn-icon" onclick="setDefaultCard('${card.fbKey}')" title="Tornar Padrão">⭐</button>` : ''}
@@ -1006,7 +1049,7 @@
             </div>
           </div>
         `;
-        list.appendChild(item);
+        modalList.appendChild(item);
 
         const opt = document.createElement('option');
         opt.value = card.fbKey;
@@ -1019,7 +1062,7 @@
       }
 
       if (creditCards.length === 0) {
-        list.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhum cartão cadastrado. Cadastre o primeiro acima!</div>`;
+        modalList.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhum cartão cadastrado.</div>`;
         selectForm.innerHTML = '<option value="">Nenhum cartão cadastrado...</option>';
       }
     }
