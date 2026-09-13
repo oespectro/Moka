@@ -63,25 +63,44 @@
 
     header {
       background: var(--card-dark); border: 1px solid var(--card-border);
-      padding: 16px 20px; border-radius: var(--radius-lg);
+      padding: 14px 18px; border-radius: var(--radius-lg);
       display: flex; align-items: center; justify-content: space-between;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative;
     }
-    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
     .mascot-avatar {
-      width: 48px; height: 48px; background: #0D1117; border-radius: 50%;
+      width: 44px; height: 44px; background: #0D1117; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       border: 1px solid var(--card-border); padding: 4px;
     }
-    .brand-title h1 { font-size: 20px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
+    .brand-title h1 { font-size: 19px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
     .brand-title p { font-size: 11px; color: var(--accent-yellow); font-weight: 500; }
 
-    .btn-hamburger {
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    .btn-icon-header {
       background: transparent; border: 1px solid var(--card-border); color: var(--text-main);
-      width: 40px; height: 40px; border-radius: var(--radius-md); font-size: 20px;
-      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
+      width: 38px; height: 38px; border-radius: var(--radius-md); font-size: 18px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; position: relative;
     }
-    .btn-hamburger:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); }
+    .btn-icon-header:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); }
+
+    .noti-badge-dot {
+      position: absolute; top: 6px; right: 6px; width: 8px; height: 8px;
+      background: var(--accent-yellow); border-radius: 50%; display: none;
+    }
+    .noti-badge-dot.active { display: block; }
+
+    /* MENU SUSPENSO DE NOTIFICAÇÕES (DROPDOWN) */
+    .noti-dropdown {
+      position: absolute; top: 62px; right: 18px; width: 280px;
+      background: var(--card-dark); border: 1px solid var(--card-border);
+      border-radius: var(--radius-md); padding: 14px; box-shadow: 0 10px 28px rgba(0,0,0,0.6);
+      z-index: 150; display: none; flex-direction: column; gap: 10px;
+    }
+    .noti-dropdown.open { display: flex; }
+    .noti-dropdown-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
+    .noti-dropdown-header h4 { font-size: 12px; font-weight: 700; color: var(--accent-yellow); text-transform: uppercase; }
 
     /* MENU HAMBÚRGUER (DRAWER) */
     .menu-overlay {
@@ -140,14 +159,6 @@
     .main-section.active { display: flex; }
     .sub-view { display: none; flex-direction: column; gap: 16px; }
     .sub-view.active { display: flex; }
-
-    .alert-banner {
-      background: rgba(255, 179, 0, 0.08); border: 1px solid rgba(255, 179, 0, 0.25);
-      padding: 12px 14px; border-radius: var(--radius-md); display: flex; align-items: center;
-      justify-content: space-between; font-size: 12px; color: #FFE082;
-    }
-    .alert-header { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--accent-yellow); }
-    .btn-close-banner { background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 2px 6px; }
 
     .card {
       background: var(--card-dark); border-radius: var(--radius-lg); padding: 18px;
@@ -348,7 +359,28 @@
           <p>Gestão & Vida a Dois</p>
         </div>
       </div>
-      <button class="btn-hamburger" onclick="toggleMenu()" title="Configurações">☰</button>
+      
+      <div class="header-actions">
+        <!-- BOTÃO DO SINO DE NOTIFICAÇÕES -->
+        <button class="btn-icon-header" onclick="toggleNotifications()" title="Lembretes & Notificações">
+          🔔
+          <span class="noti-badge-dot" id="noti-badge-dot"></span>
+        </button>
+
+        <!-- BOTÃO HAMBÚRGUER -->
+        <button class="btn-hamburger" onclick="toggleMenu()" title="Configurações">☰</button>
+      </div>
+
+      <!-- DROPDOWN FLUTUANTE DE NOTIFICAÇÕES -->
+      <div class="noti-dropdown" id="noti-dropdown">
+        <div class="noti-dropdown-header">
+          <h4>🐱 Moka Lembretes</h4>
+          <button class="btn-icon" onclick="dismissNotification()" title="Limpar Lembrete">✕</button>
+        </div>
+        <div style="font-size:12px; color:var(--text-main);" id="dropdown-reminder-text">
+          Sincronizado na Nuvem!
+        </div>
+      </div>
     </header>
 
     <!-- MENU HAMBÚRGUER (DRAWER LATERAL) -->
@@ -369,7 +401,6 @@
           </div>
         </div>
 
-        <!-- BOTÃO ACESSO Á GESTÃO DE CARTÕES -->
         <button type="button" class="btn-secondary" style="border-color:var(--accent-yellow); color:var(--accent-yellow);" onclick="openCardsModal()">
           💳 Gestão de Cartões
         </button>
@@ -408,14 +439,6 @@
           <div class="cards-list" id="modal-cards-list" style="max-height: 220px;"></div>
         </div>
       </div>
-    </div>
-
-    <div class="alert-banner" id="moka-reminders">
-      <div>
-        <div class="alert-header">🐱 Moka Lembretes</div>
-        <div id="reminder-text">Sincronizado na Nuvem!</div>
-      </div>
-      <button class="btn-close-banner" onclick="hideBanner()">✕</button>
     </div>
 
     <!-- PILAR 1: FINANÇAS -->
@@ -491,7 +514,6 @@
               </div>
             </div>
 
-            <!-- FORMA DE PAGAMENTO CLEAN -->
             <div class="form-group">
               <label>Forma de Pagamento</label>
               <div class="radio-group">
@@ -506,7 +528,6 @@
               </div>
             </div>
 
-            <!-- SELETOR CLEAN DE CARTÃO -->
             <div class="form-group" id="card-select-wrapper" style="display:none;">
               <label>Qual Cartão de Crédito?</label>
               <select id="selected-card-id" onchange="handleCardSelectionChange()">
@@ -852,7 +873,30 @@
       return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    function hideBanner() { document.getElementById('moka-reminders').style.display = 'none'; }
+    /* CONTROLE PERSISTENTE DAS NOTIFICAÇÕES (LOCALSTORAGE + SINO) */
+    function checkNotificationStatus() {
+      const isDismissed = localStorage.getItem('moka_reminder_dismissed');
+      const dot = document.getElementById('noti-badge-dot');
+      if (isDismissed === 'true') {
+        dot.classList.remove('active');
+        document.getElementById('dropdown-reminder-text').innerText = "Nenhum novo lembrete por enquanto! ✨";
+      } else {
+        dot.classList.add('active');
+        document.getElementById('dropdown-reminder-text').innerText = "Sincronizado na Nuvem! Tudo atualizado.";
+      }
+    }
+
+    function toggleNotifications() {
+      const dropdown = document.getElementById('noti-dropdown');
+      dropdown.classList.toggle('open');
+    }
+
+    function dismissNotification() {
+      localStorage.setItem('moka_reminder_dismissed', 'true');
+      document.getElementById('noti-badge-dot').classList.remove('active');
+      document.getElementById('dropdown-reminder-text').innerText = "Nenhum novo lembrete por enquanto! ✨";
+      document.getElementById('noti-dropdown').classList.remove('open');
+    }
 
     function loginWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -871,6 +915,7 @@
             document.getElementById('couple-code-display').innerText = currentCoupleId;
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'flex';
+            checkNotificationStatus();
             initCoupleListeners();
           } else {
             const promptCode = prompt("Se você possui o Código do Casal enviado por seu parceiro, digite-o abaixo (ou deixe em branco para criar um novo casal):");
@@ -885,6 +930,7 @@
             document.getElementById('couple-code-display').innerText = currentCoupleId;
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'flex';
+            checkNotificationStatus();
             initCoupleListeners();
           }
         });
@@ -947,13 +993,13 @@
     function toggleMenu() {
       const overlay = document.getElementById('menu-overlay');
       const drawer = document.getElementById('menu-drawer');
+      document.getElementById('noti-dropdown').classList.remove('open');
       overlay.classList.toggle('open');
       drawer.classList.toggle('open');
     }
 
-    /* CONTROLE DO MODAL DE CARTÕES */
     function openCardsModal() {
-      toggleMenu(); // fecha o menu hamburguer
+      toggleMenu();
       document.getElementById('cards-modal-overlay').classList.add('open');
     }
 
