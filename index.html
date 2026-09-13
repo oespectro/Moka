@@ -91,10 +91,10 @@
     .menu-overlay.open { display: block; opacity: 1; }
 
     .menu-drawer {
-      position: fixed; top: 0; right: -340px; width: 320px; height: 100vh;
+      position: fixed; top: 0; right: -320px; width: 300px; height: 100vh;
       background: var(--card-dark); border-left: 1px solid var(--card-border);
-      z-index: 201; padding: 20px; display: flex; flex-direction: column; gap: 16px;
-      box-shadow: -8px 0 24px rgba(0,0,0,0.5); transition: right 0.3s ease; overflow-y: auto;
+      z-index: 201; padding: 20px; display: flex; flex-direction: column; gap: 20px;
+      box-shadow: -8px 0 24px rgba(0,0,0,0.5); transition: right 0.3s ease;
     }
     .menu-drawer.open { right: 0; }
     .menu-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
@@ -351,20 +351,7 @@
           </div>
         </div>
 
-        <!-- GERENCIAMENTO DE CARTÕES DE CRÉDITO -->
-        <div class="form-group" style="border-top:1px solid var(--card-border); pt:12px; margin-top:4px;">
-          <label>💳 Meus Cartões de Crédito</label>
-          <form id="card-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
-            <input type="text" id="credit-card-nickname" placeholder="Apelido do Cartão (Ex: Nubank Roxo)" required style="font-size:12px; padding:8px 10px;">
-            <div style="display:flex; gap:8px;">
-              <input type="number" id="credit-card-due-day" placeholder="Dia Vencimento (1-31)" min="1" max="31" required style="font-size:12px; padding:8px 10px;">
-              <button type="submit" class="btn-submit" style="width: auto; padding: 0 14px; font-size:12px;">+ Adicionar</button>
-            </div>
-          </form>
-          <div class="cards-list" id="menu-cards-list" style="max-height: 140px;"></div>
-        </div>
-
-        <div class="form-group" style="border-top:1px solid var(--card-border); pt:12px;">
+        <div class="form-group">
           <label>Divisão Padrão do Casal</label>
           <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Ajuste a proporção padrão baseada nos salários:</p>
           <div class="slider-container">
@@ -389,8 +376,9 @@
     <!-- PILAR 1: FINANÇAS -->
     <div id="section-financas" class="main-section active">
       <div class="sub-tabs">
-        <div class="sub-tab active" onclick="switchSubView('financas', 'resumo', this)">Balanço & Análise</div>
+        <div class="sub-tab active" onclick="switchSubView('financas', 'resumo', this)">Balanço</div>
         <div class="sub-tab" onclick="switchSubView('financas', 'lancamentos', this)">Lançamentos</div>
+        <div class="sub-tab" onclick="switchSubView('financas', 'cartoes', this)">Cartões 💳</div>
         <div class="sub-tab" onclick="switchSubView('financas', 'cofres', this)">Cofres 🎯</div>
       </div>
 
@@ -459,20 +447,26 @@
               </div>
             </div>
 
-            <!-- FORMA DE PAGAMENTO -->
+            <!-- FORMA DE PAGAMENTO CLEAN -->
             <div class="form-group">
               <label>Forma de Pagamento</label>
-              <select id="payment-method" onchange="toggleCreditCardSelect()">
-                <option value="Pix/Débito">⚡ Pix / Débito (À vista)</option>
-                <option value="Cartão de Crédito">💳 Cartão de Crédito</option>
-              </select>
+              <div class="radio-group">
+                <div class="radio-btn">
+                  <input type="radio" id="pay-pix" name="paymentMethod" value="Pix/Débito" checked onchange="toggleCreditCardSelect()">
+                  <label for="pay-pix">⚡ Pix / Débito</label>
+                </div>
+                <div class="radio-btn">
+                  <input type="radio" id="pay-card" name="paymentMethod" value="Cartão de Crédito" onchange="toggleCreditCardSelect()">
+                  <label for="pay-card">💳 Cartão Crédito</label>
+                </div>
+              </div>
             </div>
 
-            <!-- SELETOR DINÂMICO DE CARTÃO DE CRÉDITO -->
+            <!-- SELETOR CLEAN DE CARTÃO -->
             <div class="form-group" id="card-select-wrapper" style="display:none;">
-              <label>Escolher Cartão</label>
+              <label>Qual Cartão de Crédito?</label>
               <select id="selected-card-id" onchange="handleCardSelectionChange()">
-                <option value="">Selecione um cartão cadastrado...</option>
+                <option value="">Nenhum cartão selecionado...</option>
               </select>
             </div>
 
@@ -601,6 +595,24 @@
           </div>
 
           <div class="expense-list" id="expense-list"></div>
+        </div>
+      </div>
+
+      <!-- ÁREA DE GESTÃO ELEGANTE DE CARTÕES -->
+      <div id="sub-financas-cartoes" class="sub-view">
+        <div class="card">
+          <div class="card-title">Gestão de Cartões de Crédito 💳</div>
+          <form id="card-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            <input type="text" id="credit-card-nickname" placeholder="Apelido do Cartão (Ex: Nubank Roxo, XP)" required>
+            <input type="number" id="credit-card-due-day" placeholder="Dia Vencimento da Fatura (1 a 31)" min="1" max="31" required>
+            <button type="submit" class="btn-submit">+ Cadastrar Cartão</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Cartões do Casal</div>
+          <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Selecione ⭐ para definir o cartão padrão nas compras.</p>
+          <div class="cards-list" id="cards-dedicated-list"></div>
         </div>
       </div>
 
@@ -816,13 +828,11 @@
 
     function hideBanner() { document.getElementById('moka-reminders').style.display = 'none'; }
 
-    // LOGIN COM GOOGLE
     function loginWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider).catch(err => alert("Erro ao entrar com Google: " + err.message));
     }
 
-    // AUTH STATE
     auth.onAuthStateChanged(user => {
       if (user) {
         currentUser = user;
@@ -935,7 +945,7 @@
       alert("Configurações salvas com sucesso!");
     }
 
-    // --- GERENCIAMENTO DE CARTÕES ---
+    // --- GESTÃO DE CARTÕES ---
     document.getElementById('card-form').addEventListener('submit', (e) => {
       e.preventDefault();
       if (!currentCoupleId) return;
@@ -947,10 +957,22 @@
         return;
       }
 
-      db.ref(`couples/${currentCoupleId}/creditCards`).push({ nickname, dueDay });
+      const isFirstCard = creditCards.length === 0;
+
+      db.ref(`couples/${currentCoupleId}/creditCards`).push({
+        nickname, dueDay, isDefault: isFirstCard
+      });
+
       document.getElementById('credit-card-nickname').value = '';
       document.getElementById('credit-card-due-day').value = '';
     });
+
+    function setDefaultCard(fbKey) {
+      if (!currentCoupleId) return;
+      creditCards.forEach(c => {
+        db.ref(`couples/${currentCoupleId}/creditCards/${c.fbKey}`).update({ isDefault: c.fbKey === fbKey });
+      });
+    }
 
     function deleteCard(fbKey) {
       if (!currentCoupleId) return;
@@ -960,47 +982,56 @@
     }
 
     function renderCards() {
-      const menuList = document.getElementById('menu-cards-list');
+      const list = document.getElementById('cards-dedicated-list');
       const selectForm = document.getElementById('selected-card-id');
-      menuList.innerHTML = '';
-      selectForm.innerHTML = '<option value="">Selecione um cartão cadastrado...</option>';
+      list.innerHTML = '';
+      selectForm.innerHTML = '';
+
+      let defaultCardKey = null;
 
       creditCards.forEach(card => {
-        // Renderiza no menu lateral
+        if (card.isDefault) defaultCardKey = card.fbKey;
+
         const item = document.createElement('div');
         item.className = 'list-item';
-        item.style.padding = '8px 10px';
         item.innerHTML = `
           <div class="item-main">
             <div>
-              <div class="item-title" style="font-size:12px;">💳 ${card.nickname}</div>
-              <div class="item-sub" style="font-size:10px;">Vence todo dia <b>${card.dueDay}</b></div>
+              <div class="item-title">💳 ${card.nickname} ${card.isDefault ? '⭐ (Padrão)' : ''}</div>
+              <div class="item-sub">Vencimento da fatura: Todo dia <b>${card.dueDay}</b></div>
             </div>
-            <button class="btn-icon" onclick="deleteCard('${card.fbKey}')" title="Excluir">🗑️</button>
+            <div>
+              ${!card.isDefault ? `<button class="btn-icon" onclick="setDefaultCard('${card.fbKey}')" title="Tornar Padrão">⭐</button>` : ''}
+              <button class="btn-icon" onclick="deleteCard('${card.fbKey}')" title="Excluir">🗑️</button>
+            </div>
           </div>
         `;
-        menuList.appendChild(item);
+        list.appendChild(item);
 
-        // Popula o select do formulário de lançamento
         const opt = document.createElement('option');
         opt.value = card.fbKey;
-        opt.innerText = `💳 ${card.nickname} (Venc. dia ${card.dueDay})`;
+        opt.innerText = `💳 ${card.nickname} (Dia ${card.dueDay})`;
         selectForm.appendChild(opt);
       });
 
+      if (defaultCardKey) {
+        selectForm.value = defaultCardKey;
+      }
+
       if (creditCards.length === 0) {
-        menuList.innerHTML = `<div style="text-align:center; padding:6px; color:var(--text-muted); font-size:11px;">Nenhum cartão cadastrado.</div>`;
+        list.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:12px;">Nenhum cartão cadastrado. Cadastre o primeiro acima!</div>`;
+        selectForm.innerHTML = '<option value="">Nenhum cartão cadastrado...</option>';
       }
     }
 
     function toggleCreditCardSelect() {
-      const method = document.getElementById('payment-method').value;
+      const isCardSelected = document.getElementById('pay-card').checked;
       const wrapper = document.getElementById('card-select-wrapper');
-      if (method === 'Cartão de Crédito') {
+      if (isCardSelected) {
         wrapper.style.display = 'block';
+        handleCardSelectionChange();
       } else {
         wrapper.style.display = 'none';
-        document.getElementById('selected-card-id').value = '';
       }
     }
 
@@ -1014,7 +1045,6 @@
       let dueYear = today.getFullYear();
       let dueMonth = today.getMonth();
 
-      // Se o dia atual já passou do dia de vencimento, a compra cai no mês seguinte
       if (today.getDate() >= card.dueDay) {
         dueMonth += 1;
       }
@@ -1164,8 +1194,9 @@
       const isAltSplit = document.getElementById('chk-alt-split').checked;
 
       const user1Pct = isAltSplit ? parseInt(document.getElementById('split-user1-pct').value) : defaultSplitPct;
-      const paymentMethod = document.getElementById('payment-method').value;
-      const selectedCardId = document.getElementById('selected-card-id').value;
+      const isCard = document.getElementById('pay-card').checked;
+      const paymentMethod = isCard ? 'Cartão de Crédito' : 'Pix/Débito';
+      const selectedCardId = isCard ? document.getElementById('selected-card-id').value : '';
       const cardObj = creditCards.find(c => c.fbKey === selectedCardId);
 
       const newExpense = {
@@ -1192,7 +1223,7 @@
 
       document.getElementById('desc').value = '';
       document.getElementById('amount').value = '';
-      document.getElementById('payment-method').value = 'Pix/Débito';
+      document.getElementById('pay-pix').checked = true;
       toggleCreditCardSelect();
       document.getElementById('chk-alt-split').checked = false;
       toggleAltSplitDrawer();
@@ -1211,8 +1242,9 @@
       document.querySelector(`input[name="payer"][value="${item.payer}"]`).checked = true;
       document.querySelector(`input[name="scope"][value="${item.scope}"]`).checked = true;
 
-      const pm = item.paymentMethod || 'Pix/Débito';
-      document.getElementById('payment-method').value = pm;
+      const isCard = item.paymentMethod === 'Cartão de Crédito';
+      document.getElementById('pay-card').checked = isCard;
+      document.getElementById('pay-pix').checked = !isCard;
       toggleCreditCardSelect();
 
       const pct = (item.user1Pct !== undefined) ? item.user1Pct : defaultSplitPct;
