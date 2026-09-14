@@ -320,6 +320,7 @@
       <div class="auth-divider"><span>ou com e-mail</span></div>
 
       <form id="auth-form" style="display:flex; flex-direction:column; gap:8px;">
+        <input type="text" id="auth-nickname" placeholder="Seu Apelido (Ex: Lucas, Ju)" required>
         <input type="email" id="auth-email" placeholder="Seu E-mail" required>
         <input type="password" id="auth-password" placeholder="Sua Senha" required>
         
@@ -362,7 +363,7 @@
       </div>
       
       <div class="header-actions">
-        <!-- BOTÃO DO SINO (SVG OUTLINE ELEGANTE) -->
+        <!-- BOTÃO DO SINO -->
         <button class="btn-header-outline" onclick="toggleNotifications()" title="Lembretes & Notificações">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -371,7 +372,7 @@
           <span class="noti-badge-dot" id="noti-badge-dot"></span>
         </button>
 
-        <!-- BOTÃO HAMBÚRGUER (SVG OUTLINE ELEGANTE) -->
+        <!-- BOTÃO HAMBÚRGUER -->
         <button class="btn-header-outline" onclick="toggleMenu()" title="Configurações">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -403,8 +404,13 @@
 
       <div style="display:flex; flex-direction:column; gap:14px;">
         <div class="form-group-compact">
+          <label class="lbl-compact">Seu Apelido</label>
+          <input type="text" id="settings-user-nickname" placeholder="Seu Apelido">
+        </div>
+
+        <div class="form-group-compact">
           <label class="lbl-compact">Seu Perfil</label>
-          <div style="font-size:12px; color:var(--text-main); font-weight:600;" id="user-email-display">-</div>
+          <div style="font-size:11px; color:var(--text-muted);" id="user-email-display">-</div>
           <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
             Código do Casal: <b id="couple-code-display" style="color:var(--accent-yellow); font-family:monospace;">-</b>
             <button class="btn-icon" onclick="copyCoupleCode()" title="Copiar Código">📋</button>
@@ -417,7 +423,7 @@
 
         <div class="form-group-compact" style="border-top:1px solid var(--card-border); pt:10px;">
           <label class="lbl-compact">Divisão Padrão do Casal</label>
-          <p style="font-size:10px; color:var(--text-muted); margin-bottom:6px;">Ajuste a proporção padrão baseada nos salários:</p>
+          <p style="font-size:10px; color:var(--text-muted); margin-bottom:6px;">Proporção padrão baseada nos salários:</p>
           <div class="slider-container">
             <input type="range" id="default-split-slider" min="0" max="100" value="50" oninput="updateDefaultSplitLabel(this.value)">
             <span class="slider-label" id="default-split-pct-label">50% / 50%</span>
@@ -464,11 +470,11 @@
           <div class="card-title"><span>Balanço do Casal</span></div>
           <div class="balance-grid">
             <div class="balance-box">
-              <div class="label">Você Pagou</div>
+              <div class="label" id="label-user1-paid">Você Pagou</div>
               <div class="val" id="total-user1">R$ 0,00</div>
             </div>
             <div class="balance-box">
-              <div class="label">Namorada Pagou</div>
+              <div class="label" id="label-user2-paid">Parceiro(a) Pagou</div>
               <div class="val" id="total-user2">R$ 0,00</div>
             </div>
           </div>
@@ -496,13 +502,13 @@
           <form id="expense-form" style="display:flex; flex-direction:column; gap:8px;">
             <input type="hidden" id="edit-fbkey" value="">
             
-            <!-- LINHA 1: CONTROLES POR LISTA (SELECTS) EM 3 COLUNAS -->
+            <!-- CONTROLES POR SELECTS EM 3 COLUNAS -->
             <div class="form-row-3">
               <div class="form-group-compact">
                 <label class="lbl-compact">Quem Pagou</label>
                 <select id="expense-payer">
-                  <option value="Você">Você</option>
-                  <option value="Namorada">Namorada</option>
+                  <option value="user1">Você</option>
+                  <option value="user2">Parceiro(a)</option>
                 </select>
               </div>
 
@@ -523,7 +529,7 @@
               </div>
             </div>
 
-            <!-- CARTÃO SELEÇÃO (EXIBIDO SE CARTÃO FOR ESCOLHIDO) -->
+            <!-- CARTÃO SELEÇÃO -->
             <div class="form-group-compact" id="card-select-wrapper" style="display:none;">
               <label class="lbl-compact">Qual Cartão de Crédito?</label>
               <select id="selected-card-id" onchange="handleCardSelectionChange()">
@@ -531,7 +537,7 @@
               </select>
             </div>
 
-            <!-- LINHA 2: DESCRIÇÃO & VALOR -->
+            <!-- DESCRIÇÃO & VALOR -->
             <div class="form-row-2">
               <div class="form-group-compact">
                 <label class="lbl-compact">Descrição</label>
@@ -543,7 +549,7 @@
               </div>
             </div>
 
-            <!-- LINHA 3: VENCIMENTO & CATEGORIA -->
+            <!-- VENCIMENTO & CATEGORIA -->
             <div class="form-row-2">
               <div class="form-group-compact">
                 <label class="lbl-compact">Vencimento</label>
@@ -583,11 +589,11 @@
 
               <div class="split-values-grid">
                 <div class="split-value-card">
-                  <div class="p-title">Sua parte</div>
+                  <div class="p-title" id="split-card-user1-title">Sua parte</div>
                   <div class="p-val" id="split-val-user1">R$ 0,00 (50%)</div>
                 </div>
                 <div class="split-value-card">
-                  <div class="p-title">Parte Namorada</div>
+                  <div class="p-title" id="split-card-user2-title">Parte Parceiro(a)</div>
                   <div class="p-val" id="split-val-user2">R$ 0,00 (50%)</div>
                 </div>
               </div>
@@ -634,8 +640,6 @@
                   <label class="lbl-compact">Quem Pagou</label>
                   <select id="filter-payer" onchange="renderFinancas()">
                     <option value="TODOS">Todos</option>
-                    <option value="Você">Você</option>
-                    <option value="Namorada">Namorada</option>
                   </select>
                 </div>
               </div>
@@ -712,9 +716,7 @@
               <div>
                 <label class="lbl-compact">Responsável</label>
                 <select id="task-assignee">
-                  <option value="Você">Você</option>
-                  <option value="Namorada">Namorada</option>
-                  <option value="Juntos 👥">Juntos 👥</option>
+                  <!-- Alimentado Dinamicamente -->
                 </select>
               </div>
               <div>
@@ -801,8 +803,7 @@
           <form id="note-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
               <select id="note-sender">
-                <option value="Você">De: Você</option>
-                <option value="Namorada">De: Namorada</option>
+                <!-- Alimentado Dinamicamente -->
               </select>
               <select id="note-type">
                 <option value="Vale Especial">🎟️ Vale Especial</option>
@@ -853,6 +854,9 @@
 
     let currentUser = null;
     let currentCoupleId = null;
+    let userNickname = "Você";
+    let partnerNickname = "Parceiro(a)";
+    let partnerUid = null;
     let isSignupMode = false;
 
     let expenses = [];
@@ -871,6 +875,41 @@
 
     function formatBRL(val) {
       return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function updateDynamicNamesUI() {
+      document.getElementById('label-user1-paid').innerText = `${userNickname} Pagou`;
+      document.getElementById('label-user2-paid').innerText = `${partnerNickname} Pagou`;
+      document.getElementById('split-card-user1-title').innerText = `Parte de ${userNickname}`;
+      document.getElementById('split-card-user2-title').innerText = `Parte de ${partnerNickname}`;
+
+      const payerSelect = document.getElementById('expense-payer');
+      const curPayerVal = payerSelect.value;
+      payerSelect.innerHTML = `
+        <option value="${userNickname}">${userNickname}</option>
+        <option value="${partnerNickname}">${partnerNickname}</option>
+      `;
+      if (curPayerVal) payerSelect.value = curPayerVal;
+
+      const filterPayer = document.getElementById('filter-payer');
+      filterPayer.innerHTML = `
+        <option value="TODOS">Todos</option>
+        <option value="${userNickname}">${userNickname}</option>
+        <option value="${partnerNickname}">${partnerNickname}</option>
+      `;
+
+      const taskAssignee = document.getElementById('task-assignee');
+      taskAssignee.innerHTML = `
+        <option value="${userNickname}">${userNickname}</option>
+        <option value="${partnerNickname}">${partnerNickname}</option>
+        <option value="Juntos 👥">Juntos 👥</option>
+      `;
+
+      const noteSender = document.getElementById('note-sender');
+      noteSender.innerHTML = `
+        <option value="${userNickname}">De: ${userNickname}</option>
+        <option value="${partnerNickname}">De: ${partnerNickname}</option>
+      `;
     }
 
     function checkNotificationStatus() {
@@ -911,21 +950,27 @@
           const userData = snapshot.val();
           if (userData && userData.coupleId) {
             currentCoupleId = userData.coupleId;
+            userNickname = userData.nickname || "Você";
+            document.getElementById('settings-user-nickname').value = userNickname;
             document.getElementById('couple-code-display').innerText = currentCoupleId;
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'flex';
             checkNotificationStatus();
             initCoupleListeners();
           } else {
+            const promptNick = prompt("Como gostaria de ser chamado(a) no app? (Seu Apelido):") || "Você";
             const promptCode = prompt("Se você possui o Código do Casal enviado por seu parceiro, digite-o abaixo (ou deixe em branco para criar um novo casal):");
             const finalCoupleId = promptCode && promptCode.trim() ? promptCode.trim().toUpperCase() : ('MOKA-' + Math.random().toString(36).substring(2, 6).toUpperCase());
             
             db.ref(`users/${user.uid}`).set({
               email: user.email || user.displayName,
+              nickname: promptNick.trim(),
               coupleId: finalCoupleId
             });
 
+            userNickname = promptNick.trim();
             currentCoupleId = finalCoupleId;
+            document.getElementById('settings-user-nickname').value = userNickname;
             document.getElementById('couple-code-display').innerText = currentCoupleId;
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'flex';
@@ -960,6 +1005,7 @@
 
     document.getElementById('auth-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      const nickname = document.getElementById('auth-nickname').value.trim();
       const email = document.getElementById('auth-email').value.trim();
       const pass = document.getElementById('auth-password').value;
       const coupleCodeInput = document.getElementById('auth-couple-code').value.trim().toUpperCase();
@@ -969,6 +1015,7 @@
           const finalCoupleId = coupleCodeInput ? coupleCodeInput : ('MOKA-' + Math.random().toString(36).substring(2, 6).toUpperCase());
           return db.ref(`users/${cred.user.uid}`).set({
             email: email,
+            nickname: nickname,
             coupleId: finalCoupleId
           });
         }).catch(err => alert("Erro ao criar conta: " + err.message));
@@ -1019,7 +1066,14 @@
     }
 
     function saveSettings() {
-      if (!currentCoupleId) return;
+      if (!currentCoupleId || !currentUser) return;
+      
+      const newNick = document.getElementById('settings-user-nickname').value.trim();
+      if (newNick) {
+        userNickname = newNick;
+        db.ref(`users/${currentUser.uid}/nickname`).set(newNick);
+      }
+
       defaultSplitPct = parseInt(document.getElementById('default-split-slider').value);
       db.ref(`couples/${currentCoupleId}/settings/defaultSplitPct`).set(defaultSplitPct);
       
@@ -1028,6 +1082,8 @@
         updateSplitLabel(defaultSplitPct);
       }
 
+      updateDynamicNamesUI();
+      renderFinancas();
       toggleMenu();
       alert("Configurações salvas com sucesso!");
     }
@@ -1190,6 +1246,22 @@
 
     function initCoupleListeners() {
       if (!currentCoupleId) return;
+
+      db.ref(`users`).orderByChild('coupleId').equalTo(currentCoupleId).on('value', snapshot => {
+        const usersObj = snapshot.val();
+        if (usersObj) {
+          Object.keys(usersObj).forEach(uKey => {
+            if (uKey !== currentUser.uid) {
+              partnerUid = uKey;
+              partnerNickname = usersObj[uKey].nickname || "Parceiro(a)";
+            } else {
+              userNickname = usersObj[uKey].nickname || "Você";
+            }
+          });
+          updateDynamicNamesUI();
+          renderFinancas();
+        }
+      });
 
       db.ref(`couples/${currentCoupleId}/settings/defaultSplitPct`).on('value', snapshot => {
         const val = snapshot.val();
@@ -1401,6 +1473,9 @@
       if (filterPayer !== 'TODOS') { filteredExpenses = filteredExpenses.filter(e => e.payer === filterPayer); activeFilterCount++; }
       if (filterCat !== 'TODOS') { filteredExpenses = filteredExpenses.filter(e => e.category === filterCat); activeFilterCount++; }
 
+      // ORDENAÇÃO: Lançamentos mais recentes no topo por data
+      filteredExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
       const toggleBtn = document.getElementById('btn-toggle-filter');
       const labelBtn = document.getElementById('filter-btn-label');
       if (activeFilterCount > 0) {
@@ -1422,7 +1497,7 @@
         const v2 = (item.amount * pct2) / 100;
 
         const personalBadge = item.scope === 'Pessoal' ? `<span class="badge badge-personal">PESSOAL</span> ` : '';
-        const splitBadge = pct1 !== defaultSplitPct ? `<span class="badge badge-split" title="Você: ${formatBRL(v1)} | Namorada: ${formatBRL(v2)}">SPLIT ${pct1}/${pct2}</span> ` : '';
+        const splitBadge = pct1 !== defaultSplitPct ? `<span class="badge badge-split" title="${userNickname}: ${formatBRL(v1)} | ${partnerNickname}: ${formatBRL(v2)}">SPLIT ${pct1}/${pct2}</span> ` : '';
         const cardBadge = item.paymentMethod === 'Cartão de Crédito' ? `<span class="badge badge-card">💳 ${item.cardNickname || 'Cartão'}</span> ` : '';
 
         itemEl.innerHTML = `
@@ -1465,10 +1540,10 @@
           const u1Pct = (item.user1Pct !== undefined ? item.user1Pct : defaultSplitPct) / 100;
           const user1Share = item.amount * u1Pct;
 
-          if (item.payer === 'Você') {
+          if (item.payer === userNickname || item.payer === 'Você') {
             totalPaidUser1 += item.amount;
             netBalanceUser1 += (item.amount - user1Share);
-          } else if (item.payer === 'Namorada') {
+          } else if (item.payer === partnerNickname || item.payer === 'Namorada') {
             totalPaidUser2 += item.amount;
             netBalanceUser1 -= user1Share;
           }
@@ -1509,10 +1584,10 @@
         msgEl.innerHTML = "🎉 Balanço em perfeito equilíbrio!";
         btnSettle.style.display = 'none';
       } else if (netBalanceUser1 > 0) {
-        msgEl.innerHTML = `Namorada acerta <b>${formatBRL(netBalanceUser1)}</b> com Você`;
+        msgEl.innerHTML = `<b>${partnerNickname}</b> acerta <b>${formatBRL(netBalanceUser1)}</b> com <b>${userNickname}</b>`;
         btnSettle.style.display = 'block';
       } else {
-        msgEl.innerHTML = `Você acerta <b>${formatBRL(Math.abs(netBalanceUser1))}</b> com a Namorada`;
+        msgEl.innerHTML = `<b>${userNickname}</b> acerta <b>${formatBRL(Math.abs(netBalanceUser1))}</b> com <b>${partnerNickname}</b>`;
         btnSettle.style.display = 'block';
       }
 
@@ -1706,7 +1781,7 @@
       if (isNaN(amount) || amount <= 0) return;
 
       db.ref(`couples/${currentCoupleId}/expenses`).push({
-        payer: 'Você', scope: 'Compartilhado', paymentMethod: 'Pix/Débito', cardNickname: '', user1Pct: defaultSplitPct, desc: 'Compra de Mercado',
+        payer: userNickname, scope: 'Compartilhado', paymentMethod: 'Pix/Débito', cardNickname: '', user1Pct: defaultSplitPct, desc: 'Compra de Mercado',
         amount, category: 'Mercado', date: new Date().toISOString().slice(0, 10), paid: true
       });
 
@@ -1798,7 +1873,7 @@
       db.ref(`couples/${currentCoupleId}/tasks/${fbKey}`).update({ done: true });
 
       if (task.rotate && task.assignee !== 'Juntos 👥') {
-        const nextAssignee = task.assignee === 'Você' ? 'Namorada' : 'Você';
+        const nextAssignee = task.assignee === userNickname ? partnerNickname : userNickname;
         db.ref(`couples/${currentCoupleId}/tasks`).push({
           title: task.title,
           assignee: nextAssignee,
