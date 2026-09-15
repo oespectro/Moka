@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Moka">
-  <meta name="theme-color" content="#161B22">
+  <meta name="theme-color" content="#0B130E">
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f431.svg">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -18,25 +18,37 @@
 
   <style>
     :root {
-      --bg-dark: #0D1117;
-      --card-dark: #161B22;
-      --card-border: #30363D;
-      --text-main: #F0F6FC;
-      --text-muted: #8B949E;
-      --accent-yellow: #FFB300;
-      --accent-blue: #58A6FF;
-      --accent-green: #3FB950;
-      --accent-red: #F85149;
-      --accent-purple: #A371F7;
-      --accent-pink: #FF7B72;
-      --radius-lg: 16px;
-      --radius-md: 10px;
-      --radius-sm: 6px;
+      /* PALETA EMERALD GREEN & MINT */
+      --emerald-primary: #007A33;
+      --emerald-dark: #005222;
+      --emerald-light: #00A344;
+      --mint-accent: #66B3A1;
+      --mint-glow: rgba(102, 179, 161, 0.15);
+      --crisp-white: #FFFFFF;
+      
+      --bg-dark: #0B130E;
+      --card-dark: #121E17;
+      --card-border: #1F3327;
+      --input-bg: #070D0A;
+      
+      --text-main: #FFFFFF;
+      --text-muted: #8E9F95;
+      
+      --accent-yellow: #F3C623;
+      --accent-blue: #66B3A1;
+      --accent-green: #00A344;
+      --accent-red: #E65353;
+      --accent-purple: #9D72E5;
+      --accent-pink: #E86A92;
+      
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
     }
 
     html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 12px; padding-bottom: 90px; }
+    body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 12px; padding-bottom: 96px; }
 
     .app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 14px; position: relative; }
 
@@ -44,73 +56,74 @@
     .auth-container { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 440px; margin: auto; }
     .auth-card {
       background: var(--card-dark); border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 14px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4); text-align: center;
+      border-radius: var(--radius-lg); padding: 28px 24px; display: flex; flex-direction: column; gap: 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 0 1px var(--mint-accent); text-align: center;
     }
-    .auth-title { font-size: 22px; font-weight: 700; color: var(--text-main); }
-    .auth-sub { font-size: 13px; color: var(--text-muted); margin-top: -6px; }
+    .auth-title { font-size: 24px; font-weight: 800; color: var(--crisp-white); letter-spacing: -0.5px; }
+    .auth-sub { font-size: 13px; color: var(--mint-accent); margin-top: -6px; font-weight: 500; }
 
     .btn-google {
-      width: 100%; background: #ffffff; color: #1f1f1f; border: 1px solid var(--card-border);
-      padding: 10px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
-      display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: background 0.2s;
+      width: 100%; background: var(--crisp-white); color: #0B130E; border: 1px solid var(--card-border);
+      padding: 12px; border-radius: var(--radius-md); font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .btn-google:hover { background: #f1f1f1; }
+    .btn-google:hover { background: #f0f0f0; transform: translateY(-1px); }
 
     .auth-divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 11px; margin: 4px 0; }
     .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--card-border); }
-    .auth-divider span { padding: 0 8px; }
+    .auth-divider span { padding: 0 10px; }
 
     /* HEADER & BOTOES OUTLINE */
     header {
       background: var(--card-dark); border: 1px solid var(--card-border);
-      padding: 10px 14px; border-radius: var(--radius-lg);
+      padding: 12px 16px; border-radius: var(--radius-lg);
       display: flex; align-items: center; justify-content: space-between;
       box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative;
     }
-    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
     .mascot-avatar {
-      width: 38px; height: 38px; background: #0D1117; border-radius: 50%;
+      width: 42px; height: 42px; background: var(--input-bg); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      border: 1px solid var(--card-border); padding: 3px;
+      border: 1.5px solid var(--mint-accent); padding: 3px; box-shadow: 0 0 10px var(--mint-glow);
     }
-    .brand-title h1 { font-size: 17px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
-    .brand-title p { font-size: 10px; color: var(--accent-yellow); font-weight: 500; }
+    .brand-title h1 { font-size: 18px; font-weight: 800; color: var(--crisp-white); letter-spacing: -0.5px; }
+    .brand-title p { font-size: 10px; color: var(--mint-accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
     .header-actions { display: flex; align-items: center; gap: 10px; }
 
     .btn-header-outline {
-      background: transparent; border: 1px solid var(--card-border); color: var(--text-muted);
-      width: 36px; height: 36px; border-radius: var(--radius-md);
+      background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-muted);
+      width: 38px; height: 38px; border-radius: var(--radius-md);
       display: flex; align-items: center; justify-content: center; cursor: pointer;
       transition: all 0.2s ease; position: relative; padding: 0;
     }
-    .btn-header-outline svg { stroke: var(--text-muted); transition: stroke 0.2s ease; }
-    .btn-header-outline:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); }
-    .btn-header-outline:hover svg { stroke: var(--accent-yellow); }
+    .btn-header-outline svg { stroke: var(--mint-accent); transition: stroke 0.2s ease; }
+    .btn-header-outline:hover { border-color: var(--mint-accent); background: var(--card-dark); }
+    .btn-header-outline:hover svg { stroke: var(--crisp-white); }
 
     .noti-badge-dot {
-      position: absolute; top: 6px; right: 6px; width: 6px; height: 6px;
-      background: var(--accent-yellow); border-radius: 50%; display: none;
-      box-shadow: 0 0 6px var(--accent-yellow);
+      position: absolute; top: 6px; right: 6px; width: 8px; height: 8px;
+      background: var(--emerald-light); border-radius: 50%; display: none;
+      box-shadow: 0 0 8px var(--mint-accent);
     }
     .noti-badge-dot.active { display: block; }
 
     /* MENU SUSPENSO DE NOTIFICAÇÕES (DROPDOWN) */
     .noti-dropdown {
-      position: absolute; top: 56px; right: 14px; width: 280px;
-      background: var(--card-dark); border: 1px solid var(--card-border);
-      border-radius: var(--radius-md); padding: 12px; box-shadow: 0 10px 28px rgba(0,0,0,0.6);
-      z-index: 150; display: none; flex-direction: column; gap: 8px;
+      position: absolute; top: 62px; right: 16px; width: 280px;
+      background: var(--card-dark); border: 1px solid var(--mint-accent);
+      border-radius: var(--radius-md); padding: 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+      z-index: 150; display: none; flex-direction: column; gap: 8px; backdrop-filter: blur(8px);
     }
     .noti-dropdown.open { display: flex; }
-    .noti-dropdown-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 6px; }
-    .noti-dropdown-header h4 { font-size: 11px; font-weight: 700; color: var(--accent-yellow); text-transform: uppercase; }
+    .noti-dropdown-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
+    .noti-dropdown-header h4 { font-size: 11px; font-weight: 800; color: var(--mint-accent); text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* MENU HAMBÚRGUER (DRAWER) */
     .menu-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 200;
       display: none; opacity: 0; transition: opacity 0.3s ease;
     }
     .menu-overlay.open { display: block; opacity: 1; }
@@ -118,18 +131,18 @@
     .menu-drawer {
       position: fixed; top: 0; right: -320px; width: 300px; height: 100vh;
       background: var(--card-dark); border-left: 1px solid var(--card-border);
-      z-index: 201; padding: 20px; display: flex; flex-direction: column; gap: 16px;
-      box-shadow: -8px 0 24px rgba(0,0,0,0.5); transition: right 0.3s ease; overflow-y: auto;
+      z-index: 201; padding: 24px 20px; display: flex; flex-direction: column; gap: 18px;
+      box-shadow: -8px 0 32px rgba(0,0,0,0.6); transition: right 0.3s ease; overflow-y: auto;
     }
     .menu-drawer.open { right: 0; }
     .menu-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
-    .menu-header h2 { font-size: 15px; font-weight: 700; color: var(--text-main); }
-    .btn-close-menu { background: transparent; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
+    .menu-header h2 { font-size: 16px; font-weight: 800; color: var(--crisp-white); }
+    .btn-close-menu { background: transparent; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
 
     /* MODAL FLUTUANTE DE GESTÃO DE CARTÕES */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 300;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 300;
       display: none; align-items: center; justify-content: center; padding: 16px;
     }
     .modal-overlay.open { display: flex; }
@@ -137,28 +150,30 @@
     .modal-card {
       background: var(--card-dark); border: 1px solid var(--card-border);
       border-radius: var(--radius-lg); width: 100%; max-width: 400px; max-height: 90vh;
-      display: flex; flex-direction: column; gap: 12px; padding: 18px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.6); overflow-y: auto; position: relative;
+      display: flex; flex-direction: column; gap: 14px; padding: 20px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.7); overflow-y: auto; position: relative;
     }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
-    .modal-header h3 { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
+    .modal-header h3 { font-size: 15px; font-weight: 800; color: var(--crisp-white); }
 
     .bottom-nav {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 100%; max-width: 440px; background: #161B22; border-top: 1px solid var(--card-border);
-      display: flex; justify-content: space-around; padding: 10px 0; z-index: 100;
+      width: 100%; max-width: 440px; background: rgba(18, 30, 23, 0.92); backdrop-filter: blur(12px); border-top: 1px solid var(--card-border);
+      display: flex; justify-content: space-around; padding: 10px 0 12px 0; z-index: 100;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.3);
     }
     .nav-item {
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
       background: transparent; border: none; color: var(--text-muted); font-size: 10px; font-weight: 700; cursor: pointer;
+      padding: 4px 12px; border-radius: var(--radius-sm); transition: all 0.2s ease;
     }
-    .nav-item svg { stroke: var(--text-muted); transition: stroke 0.2s; }
-    .nav-item.active { color: var(--accent-yellow); }
-    .nav-item.active svg { stroke: var(--accent-yellow); }
+    .nav-item svg { stroke: var(--text-muted); transition: all 0.2s; }
+    .nav-item.active { color: var(--crisp-white); }
+    .nav-item.active svg { stroke: var(--mint-accent); transform: scale(1.1); }
 
-    .sub-tabs { display: flex; background: #161B22; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 3px; gap: 2px; }
-    .sub-tab { flex: 1; text-align: center; padding: 6px 4px; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 6px; transition: all 0.2s; }
-    .sub-tab.active { background: var(--card-border); color: var(--accent-yellow); }
+    .sub-tabs { display: flex; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 4px; gap: 4px; }
+    .sub-tab { flex: 1; text-align: center; padding: 8px 6px; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: var(--radius-sm); transition: all 0.2s; }
+    .sub-tab.active { background: var(--emerald-primary); color: var(--crisp-white); box-shadow: 0 2px 8px rgba(0,122,51,0.4); }
 
     .main-section { display: none; flex-direction: column; gap: 14px; }
     .main-section.active { display: flex; }
@@ -166,126 +181,129 @@
     .sub-view.active { display: flex; }
 
     .card {
-      background: var(--card-dark); border-radius: var(--radius-lg); padding: 14px 16px;
-      border: 1px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      background: var(--card-dark); border-radius: var(--radius-lg); padding: 16px 18px;
+      border: 1px solid var(--card-border); box-shadow: 0 6px 16px rgba(0,0,0,0.25);
     }
     .card-title {
-      font-size: 12px; font-weight: 700; margin-bottom: 10px;
+      font-size: 12px; font-weight: 800; margin-bottom: 12px;
       display: flex; align-items: center; justify-content: space-between;
-      color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--mint-accent); text-transform: uppercase; letter-spacing: 0.6px;
     }
 
-    .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .balance-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); padding: 10px; border-radius: var(--radius-md); text-align: center; }
-    .balance-box .label { font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
-    .balance-box .val { font-size: 14px; font-weight: 700; color: var(--text-main); }
+    .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .balance-box { background: var(--input-bg); border: 1px solid var(--card-border); padding: 12px; border-radius: var(--radius-md); text-align: center; }
+    .balance-box .label { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+    .balance-box .val { font-size: 15px; font-weight: 800; color: var(--crisp-white); }
     
     .settlement-card {
-      background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.2);
-      padding: 10px; border-radius: var(--radius-md); text-align: center;
-      color: var(--accent-blue); font-weight: 600; font-size: 12px;
-      display: flex; flex-direction: column; gap: 6px; align-items: center;
+      background: var(--mint-glow); border: 1px solid var(--mint-accent);
+      padding: 12px; border-radius: var(--radius-md); text-align: center;
+      color: var(--mint-accent); font-weight: 700; font-size: 12px;
+      display: flex; flex-direction: column; gap: 8px; align-items: center;
     }
 
     .category-breakdown { display: flex; flex-direction: column; gap: 8px; }
-    .category-row { display: flex; flex-direction: column; gap: 4px; cursor: pointer; background: rgba(255,255,255,0.01); padding: 6px 8px; border-radius: var(--radius-md); border: 1px solid transparent; }
-    .category-row:hover { border-color: var(--card-border); }
-    .category-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-main); }
-    .category-bar-bg { width: 100%; height: 5px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
-    .category-bar-fill { height: 100%; background: var(--accent-yellow); border-radius: 3px; transition: width 0.3s ease; }
-    .category-items-dropdown { display: none; flex-direction: column; gap: 4px; padding-top: 6px; border-top: 1px dashed var(--card-border); margin-top: 4px; }
+    .category-row { display: flex; flex-direction: column; gap: 6px; cursor: pointer; background: var(--input-bg); padding: 8px 10px; border-radius: var(--radius-md); border: 1px solid var(--card-border); transition: border-color 0.2s; }
+    .category-row:hover { border-color: var(--mint-accent); }
+    .category-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--crisp-white); font-weight: 600; }
+    .category-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+    .category-bar-fill { height: 100%; background: var(--mint-accent); border-radius: 4px; transition: width 0.3s ease; }
+    .category-items-dropdown { display: none; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px dashed var(--card-border); margin-top: 4px; }
     .category-items-dropdown.open { display: flex; }
     .dropdown-item { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); }
 
-    .filter-wrapper { margin-bottom: 10px; }
+    .filter-wrapper { margin-bottom: 12px; }
     .btn-toggle-filter {
-      width: 100%; background: #0D1117; border: 1px solid var(--card-border);
-      color: var(--text-muted); padding: 6px 10px; border-radius: var(--radius-md);
-      font-size: 11px; font-weight: 600; cursor: pointer; display: flex;
+      width: 100%; background: var(--input-bg); border: 1px solid var(--card-border);
+      color: var(--text-muted); padding: 8px 12px; border-radius: var(--radius-md);
+      font-size: 11px; font-weight: 700; cursor: pointer; display: flex;
       align-items: center; justify-content: space-between; transition: all 0.2s;
     }
-    .btn-toggle-filter:hover { border-color: var(--accent-yellow); color: var(--text-main); }
-    .btn-toggle-filter.active-filter { border-color: var(--accent-yellow); color: var(--accent-yellow); }
+    .btn-toggle-filter:hover { border-color: var(--mint-accent); color: var(--crisp-white); }
+    .btn-toggle-filter.active-filter { border-color: var(--mint-accent); color: var(--mint-accent); background: var(--mint-glow); }
 
     .filter-collapsible {
-      display: none; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border);
-      padding: 10px; border-radius: var(--radius-md); margin-top: 6px;
-      flex-direction: column; gap: 8px;
+      display: none; background: var(--input-bg); border: 1px solid var(--card-border);
+      padding: 12px; border-radius: var(--radius-md); margin-top: 8px;
+      flex-direction: column; gap: 10px;
     }
     .filter-collapsible.open { display: flex; }
 
-    .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    .date-input-wrapper { display: flex; align-items: center; gap: 4px; background: #0D1117; border: 1px solid var(--card-border); padding: 4px 8px; border-radius: var(--radius-sm); }
-    .date-input-wrapper svg { stroke: var(--text-muted); flex-shrink: 0; }
-    .date-input-wrapper input { border: none; padding: 0; background: transparent; font-size: 11px; }
+    .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .date-input-wrapper { display: flex; align-items: center; gap: 6px; background: var(--card-dark); border: 1px solid var(--card-border); padding: 6px 10px; border-radius: var(--radius-sm); }
+    .date-input-wrapper svg { stroke: var(--mint-accent); flex-shrink: 0; }
+    .date-input-wrapper input { border: none; padding: 0; background: transparent; font-size: 11px; color: var(--crisp-white); }
 
-    /* FORMULÁRIO ULTRA MINIMALISTA BASEADO EM SELECTS */
-    .form-group-compact { display: flex; flex-direction: column; gap: 3px; }
-    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .form-group-compact { display: flex; flex-direction: column; gap: 4px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 
-    label.lbl-compact { display: block; font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1px; }
+    label.lbl-compact { display: block; font-size: 10px; font-weight: 700; color: var(--mint-accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
     
     input, select, textarea {
-      width: 100%; padding: 6px 8px; border: 1px solid var(--card-border); border-radius: var(--radius-sm);
-      font-size: 11px; outline: none; background-color: #0D1117; color: var(--text-main); transition: all 0.2s;
+      width: 100%; padding: 8px 10px; border: 1px solid var(--card-border); border-radius: var(--radius-sm);
+      font-size: 12px; outline: none; background-color: var(--input-bg); color: var(--crisp-white); transition: all 0.2s;
     }
-    input:focus, select:focus, textarea:focus { border-color: var(--accent-yellow); }
+    input:focus, select:focus, textarea:focus { border-color: var(--mint-accent); box-shadow: 0 0 8px var(--mint-glow); }
 
     .btn-submit {
-      width: 100%; background: var(--accent-yellow); color: #0D1117; border: none; padding: 8px;
-      border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer;
+      width: 100%; background: var(--emerald-primary); color: var(--crisp-white); border: none; padding: 10px;
+      border-radius: var(--radius-sm); font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,122,51,0.3);
     }
+    .btn-submit:hover { background: var(--emerald-light); transform: translateY(-1px); }
     .btn-secondary {
-      width: 100%; background: transparent; color: var(--text-main); border: 1px solid var(--card-border); padding: 8px;
-      border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;
+      width: 100%; background: transparent; color: var(--crisp-white); border: 1px solid var(--card-border); padding: 10px;
+      border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
     }
+    .btn-secondary:hover { border-color: var(--mint-accent); color: var(--mint-accent); }
 
-    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list, .notes-list, .cards-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
-    .list-item { display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: var(--radius-md); background: #0D1117; border: 1px solid var(--card-border); }
+    .expense-list, .market-list, .roles-list, .tasks-list, .events-list, .vaults-list, .due-list, .notes-list, .cards-list { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; }
+    .list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius-md); background: var(--input-bg); border: 1px solid var(--card-border); }
     .item-main { display: flex; align-items: center; justify-content: space-between; }
-    .item-info { display: flex; align-items: center; gap: 8px; }
-    .tag-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--card-border); display: flex; align-items: center; justify-content: center; font-size: 14px; }
-    .item-title { font-size: 12px; font-weight: 600; color: var(--text-main); }
+    .item-info { display: flex; align-items: center; gap: 10px; }
+    .tag-icon { width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--card-dark); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-size: 15px; }
+    .item-title { font-size: 12px; font-weight: 700; color: var(--crisp-white); }
     .item-sub { font-size: 10px; color: var(--text-muted); }
 
     .reward-box {
-      background: rgba(255, 123, 114, 0.08); border: 1px dashed rgba(255, 123, 114, 0.3);
-      padding: 6px 10px; border-radius: var(--radius-sm); font-size: 11px; color: var(--accent-pink);
-      display: flex; align-items: center; gap: 6px; font-weight: 600;
+      background: rgba(232, 106, 146, 0.1); border: 1px dashed var(--accent-pink);
+      padding: 8px 12px; border-radius: var(--radius-sm); font-size: 11px; color: var(--accent-pink);
+      display: flex; align-items: center; gap: 8px; font-weight: 700;
     }
 
-    .due-soon { border-color: var(--accent-yellow) !important; background: rgba(255, 179, 0, 0.05) !important; }
+    .due-soon { border-color: var(--mint-accent) !important; background: var(--mint-glow) !important; }
 
-    .badge { font-size: 8px; font-weight: 700; padding: 2px 5px; border-radius: 4px; text-transform: uppercase; }
-    .badge-paid { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
-    .badge-pending { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
-    .badge-personal { background: rgba(163, 113, 247, 0.15); color: var(--accent-purple); }
-    .badge-split { background: rgba(88, 166, 255, 0.15); color: var(--accent-blue); }
-    .badge-card { background: rgba(255, 179, 0, 0.15); color: var(--accent-yellow); }
+    .badge { font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .badge-paid { background: rgba(0, 163, 68, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+    .badge-pending { background: rgba(230, 83, 83, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+    .badge-personal { background: rgba(157, 114, 229, 0.2); color: var(--accent-purple); }
+    .badge-split { background: var(--mint-glow); color: var(--mint-accent); border: 1px solid var(--mint-accent); }
+    .badge-card { background: rgba(243, 198, 35, 0.15); color: var(--accent-yellow); }
 
-    .btn-action { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border: 1px solid rgba(63, 185, 80, 0.4); padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: 600; cursor: pointer; }
-    .btn-disabled { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 3px 8px; border-radius: 5px; font-size: 10px; cursor: default; }
+    .btn-action { background: var(--emerald-primary); color: var(--crisp-white); border: none; padding: 5px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-action:hover { background: var(--emerald-light); }
+    .btn-disabled { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 5px 10px; border-radius: 6px; font-size: 10px; cursor: default; }
 
-    .btn-icon { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; padding: 2px 4px; }
-    .btn-icon:hover { color: var(--text-main); }
+    .btn-icon { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; padding: 3px 5px; transition: color 0.2s; }
+    .btn-icon:hover { color: var(--crisp-white); }
 
-    .market-checkbox { width: 16px; height: 16px; accent-color: var(--accent-yellow); cursor: pointer; }
+    .market-checkbox { width: 18px; height: 18px; accent-color: var(--emerald-primary); cursor: pointer; }
     .list-item.checked .item-title { text-decoration: line-through; color: var(--text-muted); }
 
     .alt-split-box {
-      display: none; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
-      padding: 10px; border-radius: var(--radius-sm); flex-direction: column; gap: 8px;
+      display: none; background: var(--input-bg); border: 1px solid var(--card-border);
+      padding: 12px; border-radius: var(--radius-sm); flex-direction: column; gap: 10px;
     }
     .alt-split-box.open { display: flex; }
-    .slider-container { display: flex; align-items: center; gap: 8px; }
-    .slider-container input[type="range"] { flex: 1; accent-color: var(--accent-yellow); cursor: pointer; }
-    .slider-label { font-size: 11px; font-weight: 700; color: var(--accent-yellow); min-width: 70px; text-align: right; }
+    .slider-container { display: flex; align-items: center; gap: 10px; }
+    .slider-container input[type="range"] { flex: 1; accent-color: var(--emerald-primary); cursor: pointer; }
+    .slider-label { font-size: 11px; font-weight: 800; color: var(--mint-accent); min-width: 70px; text-align: right; }
     
-    .split-values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 2px; }
-    .split-value-card { background: #0D1117; border: 1px solid var(--card-border); padding: 6px 8px; border-radius: var(--radius-sm); text-align: center; }
-    .split-value-card .p-title { font-size: 9px; color: var(--text-muted); margin-bottom: 1px; }
-    .split-value-card .p-val { font-size: 11px; font-weight: 700; color: var(--accent-yellow); }
+    .split-values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 2px; }
+    .split-value-card { background: var(--card-dark); border: 1px solid var(--card-border); padding: 8px 10px; border-radius: var(--radius-sm); text-align: center; }
+    .split-value-card .p-title { font-size: 9px; color: var(--text-muted); margin-bottom: 2px; font-weight: 600; }
+    .split-value-card .p-val { font-size: 11px; font-weight: 800; color: var(--mint-accent); }
   </style>
 </head>
 <body>
@@ -295,18 +313,18 @@
     <div class="auth-card">
       <div style="margin: 0 auto;" class="mascot-avatar">
         <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="18,10 38,38 10,32" fill="#30363D" />
-          <polygon points="82,10 90,32 62,38" fill="#30363D" />
-          <polygon points="22,16 34,35 15,31" fill="#FF8A65" />
-          <polygon points="78,16 85,31 66,35" fill="#FF8A65" />
-          <circle cx="50" cy="52" r="38" fill="#30363D" />
-          <path d="M 50,42 Q 30,35 20,55 Q 18,78 50,88 Q 82,78 50,42 Z" fill="#F0F6FC" />
-          <ellipse cx="36" cy="50" rx="8" ry="10" fill="#FFB300" />
-          <ellipse cx="64" cy="50" rx="8" ry="10" fill="#FFB300" />
-          <ellipse cx="36" cy="50" rx="3" ry="8" fill="#0D1117" />
-          <ellipse cx="64" cy="50" rx="3" ry="8" fill="#0D1117" />
-          <polygon points="50,62 46,58 54,58" fill="#FF8A65" />
-          <path d="M 50,62 Q 45,67 40,64 M 50,62 Q 55,67 60,64" stroke="#0D1117" stroke-width="2" stroke-linecap="round" fill="none" />
+          <polygon points="18,10 38,38 10,32" fill="#1F3327" />
+          <polygon points="82,10 90,32 62,38" fill="#1F3327" />
+          <polygon points="22,16 34,35 15,31" fill="#66B3A1" />
+          <polygon points="78,16 85,31 66,35" fill="#66B3A1" />
+          <circle cx="50" cy="52" r="38" fill="#121E17" stroke="#66B3A1" stroke-width="2" />
+          <path d="M 50,42 Q 30,35 20,55 Q 18,78 50,88 Q 82,78 50,42 Z" fill="#FFFFFF" />
+          <ellipse cx="36" cy="50" rx="8" ry="10" fill="#007A33" />
+          <ellipse cx="64" cy="50" rx="8" ry="10" fill="#007A33" />
+          <ellipse cx="36" cy="50" rx="3" ry="8" fill="#0B130E" />
+          <ellipse cx="64" cy="50" rx="3" ry="8" fill="#0B130E" />
+          <polygon points="50,62 46,58 54,58" fill="#66B3A1" />
+          <path d="M 50,62 Q 45,67 40,64 M 50,62 Q 55,67 60,64" stroke="#0B130E" stroke-width="2" stroke-linecap="round" fill="none" />
         </svg>
       </div>
       <div class="auth-title">Moka</div>
@@ -319,7 +337,7 @@
 
       <div class="auth-divider"><span>ou com e-mail</span></div>
 
-      <form id="auth-form" style="display:flex; flex-direction:column; gap:8px;">
+      <form id="auth-form" style="display:flex; flex-direction:column; gap:10px;">
         <input type="text" id="auth-nickname" placeholder="Seu Apelido (Ex: Lucas, Ju)" required>
         <input type="email" id="auth-email" placeholder="Seu E-mail" required>
         <input type="password" id="auth-password" placeholder="Sua Senha" required>
@@ -342,18 +360,18 @@
       <div class="brand">
         <div class="mascot-avatar">
           <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="18,10 38,38 10,32" fill="#30363D" />
-            <polygon points="82,10 90,32 62,38" fill="#30363D" />
-            <polygon points="22,16 34,35 15,31" fill="#FF8A65" />
-            <polygon points="78,16 85,31 66,35" fill="#FF8A65" />
-            <circle cx="50" cy="52" r="38" fill="#30363D" />
-            <path d="M 50,42 Q 30,35 20,55 Q 18,78 50,88 Q 82,78 50,42 Z" fill="#F0F6FC" />
-            <ellipse cx="36" cy="50" rx="8" ry="10" fill="#FFB300" />
-            <ellipse cx="64" cy="50" rx="8" ry="10" fill="#FFB300" />
-            <ellipse cx="36" cy="50" rx="3" ry="8" fill="#0D1117" />
-            <ellipse cx="64" cy="50" rx="3" ry="8" fill="#0D1117" />
-            <polygon points="50,62 46,58 54,58" fill="#FF8A65" />
-            <path d="M 50,62 Q 45,67 40,64 M 50,62 Q 55,67 60,64" stroke="#0D1117" stroke-width="2" stroke-linecap="round" fill="none" />
+            <polygon points="18,10 38,38 10,32" fill="#1F3327" />
+            <polygon points="82,10 90,32 62,38" fill="#1F3327" />
+            <polygon points="22,16 34,35 15,31" fill="#66B3A1" />
+            <polygon points="78,16 85,31 66,35" fill="#66B3A1" />
+            <circle cx="50" cy="52" r="38" fill="#121E17" stroke="#66B3A1" stroke-width="2" />
+            <path d="M 50,42 Q 30,35 20,55 Q 18,78 50,88 Q 82,78 50,42 Z" fill="#FFFFFF" />
+            <ellipse cx="36" cy="50" rx="8" ry="10" fill="#007A33" />
+            <ellipse cx="64" cy="50" rx="8" ry="10" fill="#007A33" />
+            <ellipse cx="36" cy="50" rx="3" ry="8" fill="#0B130E" />
+            <ellipse cx="64" cy="50" rx="3" ry="8" fill="#0B130E" />
+            <polygon points="50,62 46,58 54,58" fill="#66B3A1" />
+            <path d="M 50,62 Q 45,67 40,64 M 50,62 Q 55,67 60,64" stroke="#0B130E" stroke-width="2" stroke-linecap="round" fill="none" />
           </svg>
         </div>
         <div class="brand-title">
@@ -402,7 +420,7 @@
         <button class="btn-close-menu" onclick="toggleMenu()">✕</button>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; flex-direction:column; gap:16px;">
         <div class="form-group-compact">
           <label class="lbl-compact">Seu Apelido</label>
           <input type="text" id="settings-user-nickname" placeholder="Seu Apelido">
@@ -412,16 +430,16 @@
           <label class="lbl-compact">Seu Perfil</label>
           <div style="font-size:11px; color:var(--text-muted);" id="user-email-display">-</div>
           <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
-            Código do Casal: <b id="couple-code-display" style="color:var(--accent-yellow); font-family:monospace;">-</b>
+            Código do Casal: <b id="couple-code-display" style="color:var(--mint-accent); font-family:monospace;">-</b>
             <button class="btn-icon" onclick="copyCoupleCode()" title="Copiar Código">📋</button>
           </div>
         </div>
 
-        <button type="button" class="btn-secondary" style="border-color:var(--accent-yellow); color:var(--accent-yellow);" onclick="openCardsModal()">
+        <button type="button" class="btn-secondary" style="border-color:var(--mint-accent); color:var(--mint-accent);" onclick="openCardsModal()">
           💳 Gestão de Cartões
         </button>
 
-        <div class="form-group-compact" style="border-top:1px solid var(--card-border); pt:10px;">
+        <div class="form-group-compact" style="border-top:1px solid var(--card-border); padding-top:12px;">
           <label class="lbl-compact">Divisão Padrão do Casal</label>
           <p style="font-size:10px; color:var(--text-muted); margin-bottom:6px;">Proporção padrão baseada nos salários:</p>
           <div class="slider-container">
@@ -443,13 +461,13 @@
           <button class="btn-close-menu" onclick="closeCardsModal()">✕</button>
         </div>
 
-        <form id="card-form" style="display:flex; flex-direction:column; gap:8px;">
+        <form id="card-form" style="display:flex; flex-direction:column; gap:10px;">
           <input type="text" id="credit-card-nickname" placeholder="Apelido do Cartão (Ex: Nubank, XP)" required>
           <input type="number" id="credit-card-due-day" placeholder="Dia de Vencimento da Fatura (1 a 31)" min="1" max="31" required>
           <button type="submit" class="btn-submit">+ Cadastrar Cartão</button>
         </form>
 
-        <div style="border-top: 1px solid var(--card-border); padding-top: 8px; margin-top: 2px;">
+        <div style="border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 4px;">
           <label class="lbl-compact" style="margin-bottom:6px;">Cartões Cadastrados</label>
           <p style="font-size:10px; color:var(--text-muted); margin-bottom:8px;">Clique em ⭐ para definir o cartão padrão.</p>
           <div class="cards-list" id="modal-cards-list" style="max-height: 200px;"></div>
@@ -499,10 +517,9 @@
       <div id="sub-financas-lancamentos" class="sub-view">
         <div class="card">
           <div class="card-title"><span id="form-title">Novo Lançamento</span></div>
-          <form id="expense-form" style="display:flex; flex-direction:column; gap:8px;">
+          <form id="expense-form" style="display:flex; flex-direction:column; gap:10px;">
             <input type="hidden" id="edit-fbkey" value="">
             
-            <!-- CONTROLES POR SELECTS EM 3 COLUNAS -->
             <div class="form-row-3">
               <div class="form-group-compact">
                 <label class="lbl-compact">Quem Pagou</label>
@@ -529,7 +546,6 @@
               </div>
             </div>
 
-            <!-- CARTÃO SELEÇÃO -->
             <div class="form-group-compact" id="card-select-wrapper" style="display:none;">
               <label class="lbl-compact">Qual Cartão de Crédito?</label>
               <select id="selected-card-id" onchange="handleCardSelectionChange()">
@@ -537,7 +553,6 @@
               </select>
             </div>
 
-            <!-- DESCRIÇÃO & VALOR -->
             <div class="form-row-2">
               <div class="form-group-compact">
                 <label class="lbl-compact">Descrição</label>
@@ -549,7 +564,6 @@
               </div>
             </div>
 
-            <!-- VENCIMENTO & CATEGORIA -->
             <div class="form-row-2">
               <div class="form-group-compact">
                 <label class="lbl-compact">Vencimento</label>
@@ -574,9 +588,8 @@
               </div>
             </div>
 
-            <!-- CHECKBOX DE DIVISÃO ALTERNATIVA -->
             <div style="display:flex; align-items:center; gap:6px; font-size:10px; color:var(--text-muted); margin: 2px 0;">
-              <input type="checkbox" id="chk-alt-split" style="width:13px; height:13px; accent-color:var(--accent-yellow);" onchange="toggleAltSplitDrawer()">
+              <input type="checkbox" id="chk-alt-split" style="width:14px; height:14px; accent-color:var(--emerald-primary);" onchange="toggleAltSplitDrawer()">
               <label for="chk-alt-split" style="margin:0; font-size:10px; text-transform:none; cursor:pointer;">⚙️ Divisão alternativa (% pontual nesta compra)</label>
             </div>
 
@@ -599,7 +612,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn-submit" id="btn-save-expense" style="margin-top:2px;">+ Salvar Lançamento</button>
+            <button type="submit" class="btn-submit" id="btn-save-expense" style="margin-top:4px;">+ Salvar Lançamento</button>
           </form>
         </div>
 
@@ -659,7 +672,7 @@
                 </select>
               </div>
 
-              <button type="button" style="background:transparent; border:none; color:var(--accent-yellow); font-size:10px; font-weight:700; cursor:pointer; text-align:right; margin-top:2px;" onclick="resetFilters()">Limpar Filtros</button>
+              <button type="button" style="background:transparent; border:none; color:var(--mint-accent); font-size:10px; font-weight:700; cursor:pointer; text-align:right; margin-top:2px;" onclick="resetFilters()">Limpar Filtros</button>
             </div>
           </div>
 
@@ -670,10 +683,10 @@
       <div id="sub-financas-cofres" class="sub-view">
         <div class="card">
           <div class="card-title"><span id="vault-form-title">Cofre dos Sonhos 🎯</span></div>
-          <form id="vault-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+          <form id="vault-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
             <input type="hidden" id="edit-vault-fbkey" value="">
             <input type="text" id="vault-title" placeholder="Nome da Meta (Ex: Viagem de Fim de Ano)" required>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <input type="number" id="vault-target" placeholder="Meta Total (R$)" required>
               <input type="number" id="vault-monthly" placeholder="Meta Mensal/Parceiro (R$)" required>
             </div>
@@ -695,13 +708,13 @@
       <div id="sub-casa-mercado" class="sub-view active">
         <div class="card">
           <div class="card-title">Lista de Mercado</div>
-          <form id="market-form" style="display:flex; gap:6px; margin-bottom:12px;">
+          <form id="market-form" style="display:flex; gap:8px; margin-bottom:12px;">
             <input type="text" id="market-input" placeholder="Adicionar item (Ex: Sabão, Arroz)" required>
-            <button type="submit" class="btn-submit" style="width: auto; padding: 0 14px;">+</button>
+            <button type="submit" class="btn-submit" style="width: auto; padding: 0 16px;">+</button>
           </form>
           <div class="market-list" id="market-list"></div>
-          <div style="margin-top: 12px; pt: 8px; border-top: 1px solid var(--card-border);">
-            <button type="button" class="btn-submit" onclick="convertMarketToExpense()" style="background: var(--accent-green); color: white;">🛒 Finalizar Compra & Converter em Gasto</button>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--card-border);">
+            <button type="button" class="btn-submit" onclick="convertMarketToExpense()" style="background: var(--emerald-primary);">🛒 Finalizar Compra & Converter em Gasto</button>
           </div>
         </div>
       </div>
@@ -709,10 +722,10 @@
       <div id="sub-casa-tarefas" class="sub-view">
         <div class="card">
           <div class="card-title">Nova Tarefa 🏆</div>
-          <form id="task-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+          <form id="task-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
             <input type="text" id="task-input" placeholder="O que precisa ser feito? (Ex: Lavar a louça)" required>
             
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <div>
                 <label class="lbl-compact">Responsável</label>
                 <select id="task-assignee">
@@ -738,7 +751,7 @@
             </div>
 
             <div style="display:flex; align-items:center; gap:6px; font-size:10px; color:var(--text-muted); padding:2px 0;">
-              <input type="checkbox" id="task-rotate" style="width:14px; height:14px; accent-color:var(--accent-yellow);">
+              <input type="checkbox" id="task-rotate" style="width:14px; height:14px; accent-color:var(--emerald-primary);">
               <label for="task-rotate" style="margin:0; font-size:10px; text-transform:none; cursor:pointer;">🔄 Alternar/Revezar parceiro a cada conclusão</label>
             </div>
 
@@ -761,7 +774,7 @@
       <div id="sub-casa-calendario" class="sub-view">
         <div class="card">
           <div class="card-title">Calendário & Datas Especiais</div>
-          <form id="event-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+          <form id="event-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
             <input type="text" id="event-title" placeholder="Nome do Evento (Ex: Aniversário de Namoro)" required>
             <input type="date" id="event-date" required>
             <button type="submit" class="btn-submit">+ Salvar Data Especial</button>
@@ -781,9 +794,9 @@
       <div id="sub-roles-lista" class="sub-view active">
         <div class="card">
           <div class="card-title">Moka Rolês & Indicações 🍿</div>
-          <form id="role-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+          <form id="role-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
             <input type="text" id="role-title" placeholder="Filme, Restaurante ou Show" required>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <select id="role-type">
                 <option value="Filme / Série">🎬 Filme / Série</option>
                 <option value="Restaurante">🍽️ Restaurante</option>
@@ -800,8 +813,8 @@
       <div id="sub-roles-notes" class="sub-view">
         <div class="card">
           <div class="card-title">Enviar Love Note ou Vale 🎁</div>
-          <form id="note-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+          <form id="note-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <select id="note-sender">
                 <!-- Alimentado Dinamicamente -->
               </select>
@@ -821,22 +834,23 @@
 
     <nav class="bottom-nav">
       <button class="nav-item active" onclick="switchMainSection('financas', this)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
         <span>Finanças</span>
       </button>
       <button class="nav-item" onclick="switchMainSection('casa', this)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         <span>Casa</span>
       </button>
       <button class="nav-item" onclick="switchMainSection('roles', this)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
         <span>Rolês</span>
       </button>
     </nav>
   </div>
 
   <script>
-    const firebaseConfig = {
+    // 1. Banco de PRODUÇÃO (Oficial do Casal)
+    const prodConfig = {
       apiKey: "AIzaSyAj8jvjRWAoPx0bXOrWwvFarluxA7lZwAk",
       authDomain: "moka-couple-finance.firebaseapp.com",
       databaseURL: "https://moka-couple-finance-default-rtdb.firebaseio.com",
@@ -846,9 +860,42 @@
       appId: "1:309921510474:web:78be6e87d052782fa762b3"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    // 2. Banco de HOMOLOGAÇÃO (Testes dos Amigos / Staging)
+    const stagingConfig = {
+      apiKey: "AIzaSyAGGVNfCAwSI4Nb8Nv3vJMqXlMwIdPHCDw",
+      authDomain: "moka-homol.firebaseapp.com",
+      databaseURL: "https://moka-homol-default-rtdb.firebaseio.com",
+      projectId: "moka-homol",
+      storageBucket: "moka-homol.firebasestorage.app",
+      messagingSenderId: "279177061532",
+      appId: "1:279177061532:web:0884464b8f466284923959"
+    };
+
+    // 3. Detecção Automática do Ambiente por Hostname
+    const isStaging = 
+      window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname.includes('staging') ||
+      window.location.hostname.includes('homol') ||
+      window.location.hostname.includes('vercel.app');
+
+    // Seleciona a configuração ativa dinamicamente
+    const activeConfig = isStaging ? stagingConfig : prodConfig;
+
+    firebase.initializeApp(activeConfig);
     const auth = firebase.auth();
     const db = firebase.database();
+
+    // Banner indicativo de homologação
+    if (isStaging) {
+      window.addEventListener('DOMContentLoaded', () => {
+        const banner = document.createElement('div');
+        banner.innerText = '🧪 AMBIENTE DE HOMOLOGAÇÃO (MOKA-HOMOL)';
+        banner.style.cssText = 'background: #66B3A1; color: #0B130E; font-size: 10px; font-weight: 800; text-align: center; padding: 3px 0; width: 100%; position: fixed; top: 0; left: 0; z-index: 9999;';
+        document.body.prepend(banner);
+        document.body.style.paddingTop = '22px';
+      });
+    }
 
     document.getElementById('expense-date').valueAsDate = new Date();
 
@@ -1137,11 +1184,11 @@
 
         const item = document.createElement('div');
         item.className = 'list-item';
-        item.style.padding = '6px 10px';
+        item.style.padding = '8px 12px';
         item.innerHTML = `
           <div class="item-main">
             <div>
-              <div class="item-title" style="font-size:11px;">💳 ${card.nickname} ${card.isDefault ? '<span style="color:var(--accent-yellow);">⭐ (Padrão)</span>' : ''}</div>
+              <div class="item-title" style="font-size:11px;">💳 ${card.nickname} ${card.isDefault ? '<span style="color:var(--mint-accent);">⭐ (Padrão)</span>' : ''}</div>
               <div class="item-sub" style="font-size:10px;">Vencimento: Todo dia <b>${card.dueDay}</b></div>
             </div>
             <div>
@@ -1473,7 +1520,6 @@
       if (filterPayer !== 'TODOS') { filteredExpenses = filteredExpenses.filter(e => e.payer === filterPayer); activeFilterCount++; }
       if (filterCat !== 'TODOS') { filteredExpenses = filteredExpenses.filter(e => e.category === filterCat); activeFilterCount++; }
 
-      // ORDENAÇÃO: Lançamentos mais recentes no topo por data
       filteredExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       const toggleBtn = document.getElementById('btn-toggle-filter');
@@ -1510,14 +1556,14 @@
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-weight:700; font-size:12px;">${formatBRL(item.amount)}</div>
+              <div style="font-weight:800; font-size:13px; color:var(--crisp-white);">${formatBRL(item.amount)}</div>
               <div style="margin-top:2px;">
                 <button class="btn-icon" onclick="editExpense('${item.fbKey}')" title="Editar">✏️</button>
                 <button class="btn-icon" onclick="deleteExpense('${item.fbKey}')" title="Excluir">🗑️</button>
               </div>
             </div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; pt:4px; border-top:1px solid rgba(255,255,255,0.05);">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:6px; border-top:1px solid var(--card-border);">
             <div style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;">
               ${personalBadge}
               ${cardBadge}
@@ -1727,8 +1773,8 @@
           </div>
           <div class="item-sub">Acumulado: ${formatBRL(v.current)} de ${formatBRL(v.target)} (${pct}%)</div>
           <div class="item-sub">Meta por parceiro: <b>${formatBRL(v.monthly / 2)}/mês</b></div>
-          <div style="width:100%; height:5px; background:rgba(255,255,255,0.05); border-radius:3px; margin-top:4px;">
-            <div style="width:${pct}%; height:100%; background:var(--accent-yellow); border-radius:3px;"></div>
+          <div style="width:100%; height:6px; background:rgba(255,255,255,0.06); border-radius:4px; margin-top:4px;">
+            <div style="width:${pct}%; height:100%; background:var(--mint-accent); border-radius:4px;"></div>
           </div>
           <button class="btn-action" style="margin-top:4px; align-self:flex-start;" onclick="addDeposit('${v.fbKey}', ${v.current})">+ Fazer Depósito</button>
         `;
@@ -1821,11 +1867,11 @@
           if (t.done) {
             rewardHTML = `<div class="reward-box">🎉 Revelado: ${t.reward}</div>`;
           } else {
-            rewardHTML = `<div class="reward-box" style="opacity:0.7;">🔒 Recompensa Secreta Guardada!</div>`;
+            rewardHTML = `<div class="reward-box" style="opacity:0.75;">🔒 Recompensa Secreta Guardada!</div>`;
           }
         }
 
-        const recurrenceBadge = t.recurrence && t.recurrence !== 'Pontual' ? `<span class="badge" style="background:rgba(88, 166, 255, 0.15); color:var(--accent-blue);">🔁 ${t.recurrence}</span> ` : '';
+        const recurrenceBadge = t.recurrence && t.recurrence !== 'Pontual' ? `<span class="badge" style="background:var(--mint-glow); color:var(--mint-accent); border:1px solid var(--mint-accent);">🔁 ${t.recurrence}</span> ` : '';
 
         if (!t.done) {
           item.innerHTML = `
@@ -1980,9 +2026,9 @@
               <div class="item-title" style="${n.redeemed ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${n.type === 'Vale Especial' ? '🎟️' : '💌'} ${n.title}</div>
               <div class="item-sub">Enviado por <b>${n.sender}</b></div>
             </div>
-            <button class="${n.redeemed ? 'btn-disabled' : 'btn-action'}" style="background:rgba(255, 123, 114, 0.2); color:var(--accent-pink); border-color:rgba(255, 123, 114, 0.4);" onclick="toggleNoteRedeem('${n.fbKey}', ${n.redeemed})">${n.redeemed ? '✓ Usado' : 'Resgatar Vale'}</button>
+            <button class="${n.redeemed ? 'btn-disabled' : 'btn-action'}" style="background:rgba(232, 106, 146, 0.2); color:var(--accent-pink); border: 1px solid rgba(232, 106, 146, 0.4);" onclick="toggleNoteRedeem('${n.fbKey}', ${n.redeemed})">${n.redeemed ? '✓ Usado' : 'Resgatar Vale'}</button>
           </div>
-          <div style="font-size:11px; color:var(--text-main); background:rgba(255,255,255,0.02); padding:6px 8px; border-radius:6px; border:1px solid var(--card-border);">
+          <div style="font-size:11px; color:var(--crisp-white); background:var(--card-dark); padding:8px 10px; border-radius:var(--radius-sm); border:1px solid var(--card-border);">
             ${n.content}
           </div>
         `;
